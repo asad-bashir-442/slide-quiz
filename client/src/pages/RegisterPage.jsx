@@ -46,7 +46,7 @@ export function RegisterPage() {
               Set up your profile to start building interactive quizzes for your
               presentations.
             </p>
-            <Link to="login">
+            <Link to="/login">
               <button className="btn btn-outline btn-secondary btn-wide btn-lg rounded-lg">
                 Login
               </button>
