@@ -4,7 +4,7 @@ export function QuizDetailCard({quizName, description, dateCreated, numQuestions
             <div className="card-body">
                 <h2 className="card-title">{quizName}</h2>
                 <p>{description}</p>
-                <div class="badges">
+                <div className="badges">
                     <div className="badge badge-ghost">Created on: {dateCreated}</div>
                     <div className="badge badge-ghost">{numQuestions} questions</div>
                 </div>
