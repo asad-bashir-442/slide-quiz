@@ -1,16 +1,16 @@
 export function DashWelcomePanel({ username }) {
     return (
-        <div className="w-[90%] mx-auto mt-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
+        <div className="w-[90%] mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
 
             {/* Left Column */}
-            <div className="flex-1">
-                <h1 className="text-3xl font-bold">
+            <div className="flex-1 p-4">
+                <h1 className="text-3xl font-bold mb-2 px-2 p-8 pt-2">
                     Welcome, {username}
                 </h1>
 
-                <h3 className="text-lg opacity-70 mb-4">
-                    Manage your quizzes and view results
-                </h3>
+                <h2 className="text-lg opacity-70 mb-4 pb-8 pl-0">
+                    Manage your quizzes and view results.
+                </h2>
 
                 <div className="tabs tabs-box">
                     <input type="radio" name="my_tabs_1" className="tab  [--tab-bg:theme(colors.primary)]" aria-label="My Quizzes" defaultChecked/>
