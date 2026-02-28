@@ -1,5 +1,5 @@
 import {DashWelcomePanel} from "../components/dashboard/DashWelcomePanel.jsx";
-import {QuizDetailCard} from "../components/dashboard/QuizDetailCard.jsx";
+
 
 export function Dashboard() {
     return (
