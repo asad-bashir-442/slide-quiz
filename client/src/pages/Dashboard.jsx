@@ -7,8 +7,8 @@ export function Dashboard() {
         Dashboard Page
 
      <DashWelcomePanel username={"User"}/>
-        <QuizDetailCard quizName="Example" description="lorem ipsum "
-                        dateCreated={new Date()} numQuestions="13" />
+        {/*<QuizDetailCard quizName="Example" description="lorem ipsum "*/}
+        {/*                dateCreated={new Date()} numQuestions="13" />*/}
     </div>
     )
 }
