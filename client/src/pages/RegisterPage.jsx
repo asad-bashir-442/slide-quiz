@@ -1,3 +1,59 @@
+import { Link } from "react-router";
 export function RegisterPage() {
-  return <div className="flex flex-1 flex-col">register page</div>;
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center">
+      <div className="bg-base-200 p-6 rounded-lg">
+        <div className=" flex items-center gap-16">
+          <form
+            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col gap-6 rounded-2xl"
+            action=""
+          >
+            <div>
+              <p className="text-md font-semibold mb-2">Username</p>
+              <input
+                type="text"
+                placeholder="Username"
+                className="input input-neutral input-lg rounded-lg"
+              />
+            </div>
+
+            <div>
+              <p className="text-md font-semibold mb-2">Email</p>
+              <input
+                type="email"
+                placeholder="Email"
+                className="input input-neutral input-lg rounded-lg"
+              />
+            </div>
+
+            <div>
+              <p className="text-md font-semibold mb-2">Password</p>
+              <input
+                type="password"
+                placeholder="Password"
+                className="input input-neutral input-lg rounded-lg"
+              />
+            </div>
+
+            <button className="btn btn-primary w-full btn-lg rounded-lg">
+              Login
+            </button>
+          </form>
+
+          <div className="mx-auto flex flex-col gap-5">
+            <h1 className="text-5xl font-bold">SlideQuiz Register</h1>
+            <p className="max-w-[48ch]">
+              Set up your profile to start building interactive quizzes for your
+              presentations.
+            </p>
+            <Link to="login">
+              <button className="btn btn-outline btn-secondary btn-wide btn-lg rounded-lg">
+                Login
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
