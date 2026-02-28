@@ -36,7 +36,7 @@ export function LoginPage() {
             <p className>
               Sign in to access your quizzes and continue where you left off.
             </p>
-            <Link to="register">
+            <Link to="/register">
               <button className="btn btn-outline btn-secondary btn-wide btn-lg rounded-lg">
                 Register
               </button>

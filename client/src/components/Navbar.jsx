@@ -14,13 +14,13 @@ export function Navbar() {
         </div>
       </div>
       <div className="join flex-none">
-        <Link to="register">
+        <Link to="/register">
           <button className="btn join-item bg-primary text-primary-content rounded-lg">
             Register
           </button>
         </Link>
 
-        <Link to="login">
+        <Link to="/login">
           <button className="btn join-item rounded-lg">Login</button>
         </Link>
       </div>
