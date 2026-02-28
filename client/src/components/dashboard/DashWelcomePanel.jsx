@@ -12,9 +12,9 @@ export function DashWelcomePanel({ username }) {
                     Manage your quizzes and view results
                 </h3>
 
-                <div role="tablist" className="tabs tabs-box">
-                    <a role="tab" className="tab tab-active">My Quizzes</a>
-                    <a role="tab" className="tab">Quiz Results</a>
+                <div className="tabs tabs-box">
+                    <input type="radio" name="my_tabs_1" className="tab  [--tab-bg:theme(colors.primary)]" aria-label="My Quizzes" defaultChecked/>
+                    <input type="radio" name="my_tabs_1" className="tab [--tab-bg:theme(colors.primary)]" aria-label="Quiz Results"  />
                 </div>
             </div>
 
