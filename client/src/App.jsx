@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import {Dashboard} from "./pages/Dashboard.jsx";
 export function App() {
   return (
     <div className="max-w-[95%] mx-auto pt-4 flex flex-col h-full">
