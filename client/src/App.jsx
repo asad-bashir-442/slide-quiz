@@ -12,6 +12,7 @@ export function App() {
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="dashboard" element={<Dashboard />} />
       </Routes>
 
       <Footer />
