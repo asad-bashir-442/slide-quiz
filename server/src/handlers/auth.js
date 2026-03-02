@@ -47,45 +47,50 @@ export const register = async (req, res) => {
         });
     }
 
-    // TODO: User exists?
-    let exists = false;
-
-    if (exists) {
-        return res.code(409).send({
-            statusCode: 409,
-            message: "Email in use.",
-        });
-    }
-
-    // Hash and insert
     try {
+        const connection = await req.server.mysql.getConnection();
+        const { name, email } = req.body;
+
+        // User exists?
+        const [existing] = await connection.query(
+            "SELECT ID FROM Users WHERE Email = ? LIMIT 1",
+            [email],
+        );
+
+        if (existing.length > 0) {
+            return res.code(409).send({
+                statusCode: 409,
+                message: "Email in use.",
+            });
+        }
+
+        // Hash and insert
         const hash = await bcrypt.hash(req.body.password, hashamt);
 
-        // TODO: Insert token & data
-        const user = {
-            hash,
-            id: 0,
-            name: req.body.name,
-            email: req.body.email,
-        };
+        const [result] = await connection.query(
+            `INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)`,
+            [name, email, hash],
+        );
 
         const token = router.jwt.sign(
             {
-                id: user.id,
-                name: user.name,
-                email: user.email,
+                id: result.insertId,
+                name: name,
+                email: email,
             },
 
             { expiresIn: expires },
         );
 
+        connection.release();
+
         return res.code(200).send({
             statusCode: 200,
             data: { token },
-            message: `User ${user.name} (${user.email}) created.`,
+            message: `User ${name} (${email}) created.`,
         });
     } catch (err) {
-        consola.error(`[auth] Could not hash password - ${err}`);
+        consola.error(`[auth] Could not create user - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -113,32 +118,24 @@ export const login = async (req, res) => {
         });
     }
 
-    // TODO: Find user
-    const user = {
-        hash: "TODO THIS!!",
-        id: 0,
-        name: "Bobby",
-        email: req.body.email,
-    };
-
     try {
-        if (!user) {
+        const connection = await req.server.mysql.getConnection();
+
+        // User exists?
+        const [users] = await connection.query(
+            "SELECT ID, Username, Email, Password FROM Users WHERE Email = ? LIMIT 1",
+            [req.body.email],
+        );
+
+        if (users.length == 0) {
             return res.code(401).send({
                 statusCode: 401,
                 message: "Invalid username/password.",
             });
         }
-    } catch (err) {
-        consola.error(`[auth] ${err}`);
 
-        res.code(500).send({
-            statusCode: 500,
-            message: "Internal server error.",
-        });
-    }
-
-    try {
-        const match = await bcrypt.compare(req.body.password, user.hash);
+        const user = users[0];
+        const match = await bcrypt.compare(req.body.password, user.Password);
 
         if (!match) {
             return res.code(401).send({
@@ -149,18 +146,20 @@ export const login = async (req, res) => {
 
         const token = router.jwt.sign(
             {
-                id: user.id,
-                name: user.name,
-                email: user.email,
+                id: user.ID,
+                name: user.Username,
+                email: user.Email,
             },
 
             { expiresIn: expires },
         );
 
+        connection.release();
+
         return res.code(200).send({
             statusCode: 200,
             data: { token },
-            message: `Welcome "${user.name}".`,
+            message: `Welcome ${user.Username}.`,
         });
     } catch (err) {
         consola.error(`[auth] Could not compare password - ${err}`);

@@ -3,6 +3,7 @@ import Fastify from "fastify";
 import jwt from "@fastify/jwt";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
+import mysql from "@fastify/mysql";
 
 const fastify = Fastify();
 const secret = process.env.JWT_SECRET;
@@ -25,6 +26,11 @@ fastify.register(multipart, {
         files: parseInt(process.env.UPLOAD_AMOUNT),
         headerPairs: 2000,
     },
+});
+
+fastify.register(mysql, {
+    promise: true,
+    connectionString: String(process.env.DSN),
 });
 
 export default fastify;
