@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router";
 export function RegisterPage() {
+  let navigate = useNavigate();
+  const { login } = useAuth();
   const [username, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +19,7 @@ export function RegisterPage() {
     console.log(errors);
   }, [errors]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     const newErrors = {
@@ -40,11 +44,35 @@ export function RegisterPage() {
 
     if (!newErrors.username && !newErrors.email && !newErrors.password) {
       const userData = {
-        username,
+        name: username,
         email,
         password,
       };
-      console.log(userData);
+
+      let url = "http://localhost:3000/@me/register";
+
+      let options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      };
+
+      try {
+        const res = await fetch(url, options);
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.log(data.message);
+        }
+
+        login(data.data.token);
+        navigate("/");
+        console.log(data.message);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
