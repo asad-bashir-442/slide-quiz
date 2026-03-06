@@ -13,7 +13,7 @@ npm i # or pnpm
 cp .env.example .env
 ```
 
-## Developmment Commands Cheat Sheet
+## Development Commands Cheat Sheet
 
 All commands can be found in the [package.json](package.json).
 

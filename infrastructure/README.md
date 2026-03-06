@@ -23,7 +23,7 @@ make dev-up
 docker compose -f docker-compose.dev.yml up -d
 ```
 
-## Developmment Commands Cheat Sheet
+## Development Commands Cheat Sheet
 
 All commands can be found in the [Makefile](Makefile).
 
