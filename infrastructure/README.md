@@ -27,7 +27,7 @@ docker compose -f docker-compose.dev.yml up -d
 
 All commands can be found in the [Makefile](Makefile).
 
-```
+```sh
 # Clean volumes (will wipe the database and cache, do not do this while running)
 make clean
 
