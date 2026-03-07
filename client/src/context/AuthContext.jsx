@@ -25,8 +25,13 @@ export function AuthProvider({ children }) {
     setUser(decoded);
   }
 
+  function logout() {
+    localStorage.removeItem("token");
+    setUser(null);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

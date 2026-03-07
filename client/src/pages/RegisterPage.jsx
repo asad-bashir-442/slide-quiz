@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router";
+import { registerUser } from "../api/auth";
 export function RegisterPage() {
   let navigate = useNavigate();
   const { login } = useAuth();
@@ -49,27 +50,10 @@ export function RegisterPage() {
         password,
       };
 
-      let url = "http://localhost:3000/@me/register";
-
-      let options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      };
-
       try {
-        const res = await fetch(url, options);
-        const data = await res.json();
-
-        if (!res.ok) {
-          console.log(data.message);
-        }
-
+        const data = await registerUser(userData);
         login(data.data.token);
         navigate("/");
-        console.log(data.message);
       } catch (error) {
         console.log(error);
       }

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { loginUser } from "../api/auth";
+
 export function LoginPage() {
   let navigate = useNavigate();
   const { login } = useAuth();
@@ -33,28 +35,13 @@ export function LoginPage() {
         password,
       };
 
-      let url = "http://localhost:3000/@me/login";
-
-      let options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      };
-
       try {
-        const res = await fetch(url, options);
-        const data = await res.json();
-
-        if (!res.ok) {
-          console.log(data.message);
-        }
-
+        const data = await loginUser(userData);
         login(data.data.token);
         navigate("/");
-        console.log(data.message);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
