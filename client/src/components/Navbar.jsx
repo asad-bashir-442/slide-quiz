@@ -39,7 +39,9 @@ export function Navbar() {
           </Link>
 
           <Link to="/login">
-            <button className="btn join-item rounded-lg">Login</button>
+            <button className="btn join-item rounded-lg bg-secondary">
+              Login
+            </button>
           </Link>
         </div>
       )}

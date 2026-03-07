@@ -60,7 +60,7 @@ export function LoginPage() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`input input-lg rounded-lg ${errors.email ? "input-error" : "input-neutral"}`}
+                className={`input input-lg rounded-lg focus:outline-primary ${errors.email ? "input-error" : "input-neutral"}`}
               />
               {errors.email && (
                 <p className="text-error mt-2">{errors.email}</p>
@@ -74,7 +74,7 @@ export function LoginPage() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`input input-lg rounded-lg ${errors.password ? "input-error" : "input-neutral"}`}
+                className={`input input-lg rounded-lg  ${errors.password ? "input-error" : "input-neutral"}`}
               />
               {errors.password && (
                 <p className="text-error mt-2">{errors.password}</p>

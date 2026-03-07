@@ -16,3 +16,9 @@ body,
     @apply bg-base-300;
   }
 }
+
+* {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
