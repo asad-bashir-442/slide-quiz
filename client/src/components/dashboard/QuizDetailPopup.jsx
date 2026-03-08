@@ -38,19 +38,19 @@ export function QuizDetailPopup({modalId = "edit_quiz_modal", quizName, dateCrea
 
                     {/* Tags */}
                     <div className="flex gap-2">
-                        <span className="badge badge-primary">Created: {dateCreated}</span>
-                        <span className="badge badge-secondary">Modified: {dateModified}</span>
+                        <span className="badge badge-ghost">Created: {dateCreated}</span>
+                        <span className="badge badge-ghost">Modified: {dateModified}</span>
                     </div>
 
                 </div>
 
                 {/* Buttons */}
                 <div className="modal-action justify-between mt-6">
-                    <button className="btn btn-neutral">Edit Quiz</button>
-                    <button className="btn btn-errpr">Delete Quiz</button>
-                    <button className="btn btn-secondary">Cancel</button>
+                    <button className="btn btn-secondary">Edit Quiz</button>
+                    <button className="btn btn-error">Delete Quiz</button>
+                    <button className="btn btn-primary">Done</button>
                     <form method="dialog">
-                        <button className="btn">Close</button>
+                        <button className="btn">Cancel</button>
                     </form>
                 </div>
 
