@@ -1,0 +1,31 @@
+# TODO: https://docs.docker.com/compose/how-tos/use-secrets/
+
+services:
+    database:
+        image: mariadb
+        container_name: slidequiz-database
+        restart: always
+        environment:
+            MARIADB_DATABASE: slidequiz
+            MARIADB_USER: slidequiz
+            MARIADB_PASSWORD: slidequiz
+            MARIADB_ROOT_PASSWORD: slidequiz-root
+        volumes:
+            - ./volume/mariadb:/var/lib/mysql:Z
+            - ./config/SlideQuiz.sql:/docker-entrypoint-initdb.d/SlideQuiz.sql:ro
+        ports:
+            - "3306:3306"
+
+    cache:
+        image: redis
+        container_name: slidequiz-cache
+        restart: always
+        command: ["redis-server", "--appendonly", "yes"]
+        volumes:
+            - ./volume/redis:/data:Z
+        ports:
+            - "6379:6379"
+
+networks:
+    default:
+        name: slidequiz
