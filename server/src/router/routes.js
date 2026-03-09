@@ -3,7 +3,7 @@ import router from "./router.js";
 import auth from "../middleware/auth.js";
 import allow from "../middleware/allow.js";
 
-import { register, login, whoami } from "../handlers/auth.js";
+import { register, login, whoami, update } from "../handlers/auth.js";
 
 // Public routes
 router.register(async (r) => {
@@ -20,4 +20,5 @@ router.register(async (r) => {
 
     // Auth
     r.post("/@me", { onRequest: [r.auth] }, whoami);
+    r.patch("/@me", { onRequest: [r.auth] }, update);
 });

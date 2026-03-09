@@ -4,6 +4,7 @@ import consola from "consola";
 import bcrypt from "bcrypt";
 import Joi from "joi";
 
+// TODO: Should be part of the .env
 const hashamt = 10;
 const expires = "10h";
 
@@ -26,6 +27,17 @@ const loginSchema = Joi.object({
         .required(),
 
     password: Joi.string().min(5).max(20).required(),
+});
+
+const updateSchema = Joi.object({
+    name: Joi.string().alphanum().min(3).max(15),
+    email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net", "ca"] },
+    }),
+
+    password: Joi.string().min(5).max(20).required(),
+    newPassword: Joi.string().min(5).max(20),
 });
 
 export const register = async (req, res) => {
@@ -171,7 +183,125 @@ export const login = async (req, res) => {
     }
 };
 
-export const whoami = async (req, res) => {
+export const update = async (req, res) => {
+    const { id } = req.user;
+
+    // Empty body?
+    if (!req.body || !id) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Missing body.",
+        });
+    }
+
+    // Valid body?
+    const { error } = updateSchema.validate(req.body);
+
+    if (error) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Invalid update body.",
+        });
+    }
+
+    try {
+        const connection = await req.server.mysql.getConnection();
+
+        // User exists?
+        const [users] = await connection.query(
+            "SELECT ID, Password FROM Users WHERE ID = ? LIMIT 1",
+            [id],
+        );
+
+        // Should never be possible. We should still check
+        if (users.length == 0) {
+            return res.code(401).send({
+                statusCode: 401,
+                message: "Invalid user.",
+            });
+        }
+
+        const user = users[0];
+        const match = await bcrypt.compare(req.body.password, user.Password);
+
+        // Check for password
+        if (!match) {
+            return res.code(401).send({
+                statusCode: 401,
+                message: "Invalid password.",
+            });
+        }
+
+        const details = {
+            name: req.user.name,
+            email: req.user.email,
+            password: user.Password,
+        };
+
+        // Is there a new username?
+        if (req.body.name) {
+            details.name = req.body.name;
+            consola.info(`${id} has changed their name.`);
+        }
+
+        // Is the new email in use?
+        if (req.body.email) {
+            const [emails] = await connection.query(
+                "SELECT 1 FROM Users WHERE Email = ? LIMIT 1",
+                [req.body.email],
+            );
+
+            if (emails.length > 0) {
+                return res.code(409).send({
+                    statusCode: 409,
+                    message: "Email in use.",
+                });
+            }
+
+            details.email = req.body.email;
+            consola.info(`${id} has changed their email.`);
+        }
+
+        // Is there a new password?
+        if (req.body.newPassword) {
+            details.password = await bcrypt.hash(req.body.newPassword, hashamt);
+            consola.info(`${id} has changed their password.`);
+        }
+
+        // Update content
+        await connection.query(
+            "UPDATE Users SET Username = ?, Email = ?, Password = ? WHERE ID = ?",
+            [details.name, details.email, details.password, id],
+        );
+
+        const token = router.jwt.sign(
+            {
+                id,
+                name: details.name,
+                email: details.email,
+            },
+
+            { expiresIn: expires },
+        );
+
+        connection.release();
+
+        return res.code(200).send({
+            statusCode: 200,
+            data: { token },
+            message: `Updated ${details.name}.`,
+        });
+    } catch (err) {
+        consola.error(`[auth] Could not compare password - ${err}`);
+
+        return res.code(500).send({
+            statusCode: 500,
+            message: "Internal server error.",
+        });
+    }
+};
+
+export const whoami = (req, res) => {
     res.send({
         statusCode: 200,
         message: `Found ${req.user.name}.`,
