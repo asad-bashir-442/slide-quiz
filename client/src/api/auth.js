@@ -18,11 +18,9 @@ export async function registerUser(userData) {
       throw new Error(data.message || "Something went wrong");
     }
 
-    console.log(data);
-
     return data;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
