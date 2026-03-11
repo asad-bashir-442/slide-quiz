@@ -18,7 +18,7 @@ export function Dashboard() {
       {/*    dateCreated="2026-03-01"*/}
       {/*    dateModified="2026-03-05"*/}
       {/*/>*/}
-      <DashWelcomePanel username={"User"} />
+      <DashWelcomePanel />
       <QuizDetailCard
         quizName="Example"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut condimentum eget ante a fermentum. Nulla facilisi. Quisque rhoncus gravida leo, eu tincidunt elit vestibulum et. Phasellus orci eros, varius vitae sem luctus, eleifend pulvinar mi"

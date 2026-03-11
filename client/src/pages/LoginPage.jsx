@@ -38,7 +38,7 @@ export function LoginPage() {
       try {
         const data = await loginUser(userData);
         login(data.data.token);
-        navigate("/");
+        navigate("/dashboard");
       } catch (error) {
         console.log(error);
       }

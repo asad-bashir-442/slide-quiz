@@ -2,11 +2,12 @@ import { Menu } from "lucide-react";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Search } from "lucide-react";
+import { NavLink } from "react-router";
 export function Navbar() {
   const { user } = useAuth();
   return (
-    <div className="navbar bg-base-100 shadow-sm rounded-lg">
-      <div className="flex-1">
+    <div className="navbar justify-between bg-base-100 shadow-sm rounded-lg">
+      <div>
         <div className="flex flex-row items-center gap-3">
           <Menu />
           <Link to="/">
@@ -16,6 +17,18 @@ export function Navbar() {
           </Link>
         </div>
       </div>
+      {user && (
+        <nav>
+          <NavLink
+            className={({ isActive }) =>
+              isActive ? "text-primary underline" : "text-base-content"
+            }
+            to="dashboard"
+          >
+            Dashboard
+          </NavLink>
+        </nav>
+      )}
       {user ? (
         <div className="flex items-center gap-3">
           <Search className="w-6 h-6" />
