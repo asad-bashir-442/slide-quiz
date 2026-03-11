@@ -46,16 +46,6 @@ export function SettingsPage() {
     }
   }
 
-  if (!user) {
-    return (
-      <div className="flex flex-1 flex-col justify-center items-center">
-        <h1 className="text-3xl">You must be signed in to access this page</h1>
-        <Link to="/login">
-          <p className="link link-primary">Sign In</p>
-        </Link>
-      </div>
-    );
-  }
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
       <form
