@@ -3,45 +3,27 @@ import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { loginUser } from "../api/auth";
+import { Mail, KeyRound } from "lucide-react";
 
 export function LoginPage() {
   let navigate = useNavigate();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const newErrors = { email: "", password: "" };
-
-    if (email.trim().length === 0) {
-      newErrors.email = "Email is required";
-    }
-
-    if (password.trim().length < 5) {
-      newErrors.password = "Password must be at least 5 characters";
-    }
-
-    setErrors(newErrors);
-
-    if (!newErrors.email && !newErrors.password) {
-      const userData = {
-        email,
-        password,
-      };
-
-      try {
-        const data = await loginUser(userData);
-        login(data.data.token);
-        navigate("/");
-      } catch (error) {
-        console.log(error);
-      }
+    const userData = {
+      email,
+      password,
+    };
+    try {
+      const data = await loginUser(userData);
+      login(data.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -50,38 +32,53 @@ export function LoginPage() {
       <div className="w-254.5 bg-base-200 p-6 rounded-lg">
         <div className="flex items-center">
           <form
-            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col gap-6 rounded-2xl"
+            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col rounded-2xl"
             onSubmit={handleSubmit}
           >
-            <div>
-              <p className="text-md font-semibold mb-2">Email</p>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`input input-lg rounded-lg focus:outline-primary ${errors.email ? "input-error" : "input-neutral"}`}
-              />
-              {errors.email && (
-                <p className="text-error mt-2">{errors.email}</p>
-              )}
-            </div>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend text-base-content/70 text-lg">
+                Email
+              </legend>
+              <label className="input validator">
+                <Mail className="text-base-content/70" />
+                <input
+                  required
+                  minLength="5"
+                  maxLength="30"
+                  title="Enter a valid email address"
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
 
-            <div>
-              <p className="text-md font-semibold mb-2">Password</p>
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`input input-lg rounded-lg  ${errors.password ? "input-error" : "input-neutral"}`}
-              />
-              {errors.password && (
-                <p className="text-error mt-2">{errors.password}</p>
-              )}
-            </div>
+              <p className="validator-hint">Enter a valid email address</p>
+            </fieldset>
 
-            <button className="btn btn-primary w-full btn-lg rounded-lg">
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend text-base-content/70 text-lg">
+                Password
+              </legend>
+              <label className="input validator">
+                <KeyRound className="text-base-content/70" />
+                <input
+                  pattern="[A-Za-z0-9]{5,10}"
+                  minLength="3"
+                  maxLength="15"
+                  required
+                  title="Must be between 3-15 characters, Username can only contain letters and digits"
+                  type="password"
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+
+              <p className="validator-hint">Must be between 5-30 characters</p>
+            </fieldset>
+
+            <button className="btn btn-primary w-full btn-lg rounded-lg mt-2">
               Login
             </button>
           </form>
