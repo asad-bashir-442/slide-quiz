@@ -22,7 +22,7 @@ export function App() {
     <div className="max-w-[95%] mx-auto pt-4 flex flex-col h-full">
       <Navbar />
       <Routes>
-        <Route index element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
 

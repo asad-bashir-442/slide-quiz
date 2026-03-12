@@ -11,7 +11,6 @@ export function RegisterPage() {
   const [username, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [serverMessage, setServerMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {
@@ -27,12 +26,12 @@ export function RegisterPage() {
     try {
       setIsLoading(true);
       const data = await registerUser(userData);
+      console.log(`Data Object is ${data}`);
       setIsLoading(false);
       login(data.data.token);
       navigate("/");
     } catch (error) {
-      console.dir(error.message);
-      setServerMessage(error.message);
+      console.dir(`Error Object is ${error}`);
       toast.error(error.message);
       setIsLoading(false);
     }
