@@ -17,9 +17,11 @@ export function AuthProvider({ children }) {
           setUser(decoded);
         } else {
           localStorage.removeItem("token");
+          setUser(null);
         }
       } catch (error) {
         localStorage.removeItem("token");
+        setUser(null);
       }
     }
     setLoading(false);
