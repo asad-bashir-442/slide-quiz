@@ -4,6 +4,7 @@ let options = {
     "Content-Type": "application/json",
   },
 };
+const token = localStorage.getItem("token");
 export async function registerUser(userData) {
   const url = `${BASE_URL}/@me/register`;
 
@@ -19,22 +20,6 @@ export async function registerUser(userData) {
   }
 
   return data;
-  // try {
-  //   const res = await fetch(url, {
-  //     ...options,
-  //     method: "POST",
-  //     body: JSON.stringify(userData),
-  //   });
-  //   const data = await res.json();
-
-  //   if (!res.ok) {
-  //     throw new Error(data.message || "Something went wrong");
-  //   }
-
-  //   return data;
-  // } catch (error) {
-  //   throw error;
-  // }
 }
 
 export async function loginUser(userData) {
@@ -51,21 +36,24 @@ export async function loginUser(userData) {
     throw new Error(data.message || "Something went wrong");
   }
   return data;
+}
 
-  // try {
-  //   const res = await fetch(url, {
-  //     ...options,
-  //     method: "POST",
-  //     body: JSON.stringify(userData),
-  //   });
+export async function createQuiz(userData) {
+  const url = `${BASE_URL}/@me/quiz`;
+  const res = await fetch(url, {
+    ...options,
+    method: "POST",
+    body: JSON.stringify(userData),
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-  //   const data = await res.json();
+  const data = await res.json();
 
-  //   if (!res.ok) {
-  //     throw new Error(data.message || "Something went wrong");
-  //   }
-  //   return data;
-  // } catch (error) {
-  //   throw error;
-  // }
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+  return data;
 }
