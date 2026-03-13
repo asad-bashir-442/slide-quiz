@@ -44,6 +44,7 @@ export const getQuizzes = async (req, res) => {
 
         for (const quiz of results) {
             quizzes.push({
+                id: quiz.ID,
                 name: quiz.Name,
                 description: quiz.Description,
                 automaticDefault: quiz.AutomaticDefault,
