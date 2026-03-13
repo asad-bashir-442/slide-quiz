@@ -5,6 +5,7 @@ import allow from "../middleware/allow.js";
 
 import { register, login, whoami, update } from "../handlers/auth.js";
 import {
+    getQuizzes,
     createQuiz,
     getQuiz,
     updateQuiz,
@@ -29,7 +30,9 @@ router.register(async (r) => {
     r.patch("/@me", { onRequest: [r.auth] }, update);
 
     // Quiz
+    r.get("/@me/quiz", { onRequest: [r.auth] }, getQuizzes);
     r.post("/@me/quiz", { onRequest: [r.auth] }, createQuiz);
+
     r.get("/@me/quiz/:id", { onRequest: [r.auth] }, getQuiz);
     r.patch("/@me/quiz/:id", { onRequest: [r.auth] }, updateQuiz);
     r.delete("/@me/quiz/:id", { onRequest: [r.auth] }, deleteQuiz);
