@@ -1,4 +1,5 @@
 import { MCQEditor } from "../components/quiz-creation/MCQEditor.jsx";
+import {QuestionNoButton} from "../components/quiz-creation/QuestionNoButton.jsx";
 
 export function QuizCreatorPage() {
     const date = new Date();
@@ -18,7 +19,7 @@ export function QuizCreatorPage() {
 
                 {/* Left column (25%) */}
                 <div className="w-1/4 p-6 border-r bg-base-200">
-                    <h2 className="text-xl font-semibold mb-4">Question List</h2>
+                    <QuestionNoButton num={1} />
                 </div>
 
                 {/* Right column (75%) */}
