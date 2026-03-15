@@ -1,20 +1,32 @@
+import { MCQEditor } from "../components/quiz-creation/MCQEditor.jsx";
+
 export function QuizCreatorPage() {
     const date = new Date();
-    const time = date.getTime();
+    const time = date.getHours() + ':' + date.getMinutes();
+
     return (
-        <div>
-        <div className="title">
-        <h1>Quiz Title</h1>
-        <h2>Saved - {{time}}</h2>
-        </div>
+        <div className="w-full">
 
-        <div>
-            <h2>question list</h2>
-        </div>
+            {/* Top header */}
+            <div className="title p-6 border-b">
+                <h1 className="text-3xl font-bold">Quiz Title</h1>
+                <h2 className="opacity-70">Saved - {time}</h2>
+            </div>
 
-        <div>
-            <h2>editor list</h2>
+            {/* Two column layout */}
+            <div className="flex w-full">
+
+                {/* Left column (25%) */}
+                <div className="w-1/4 p-6 border-r bg-base-200">
+                    <h2 className="text-xl font-semibold mb-4">Question List</h2>
+                </div>
+
+                {/* Right column (75%) */}
+                <div className="w-3/4 p-6">
+                    <MCQEditor questionName="Example Question" questionNum={13} />
+                </div>
+
+            </div>
         </div>
-        </div>
-    )
+    );
 }
