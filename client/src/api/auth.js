@@ -76,3 +76,22 @@ export async function getQuizById(id) {
   }
   return data;
 }
+
+export async function getAllQuizzes(page = 1) {
+  const url = `${BASE_URL}/@me/quiz?page=${page}`;
+  const res = await fetch(url, {
+    ...options,
+    method: "GET",
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+  return data;
+}

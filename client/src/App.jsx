@@ -10,6 +10,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx";
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
+import { PageNotFound } from "./pages/PageNotFound.jsx";
 export function App() {
   const { loading } = useAuth();
 
@@ -34,6 +35,7 @@ export function App() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="quiz/:id" element={<QuizDetailPage />} />
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
 
       <Footer />
