@@ -11,6 +11,7 @@ import { useAuth } from "./context/AuthContext.jsx";
 import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx";
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
 import { PageNotFound } from "./pages/PageNotFound.jsx";
+import { Toaster } from "sonner";
 export function App() {
   const { loading } = useAuth();
 
@@ -23,12 +24,12 @@ export function App() {
   }
   return (
     <div className="max-w-[95%] mx-auto pt-4 flex flex-col h-full">
+      <Toaster richColors position="top-right" />
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
-        <Route path="quizCreator" element={<QuizCreatorPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="dashboard" element={<Dashboard />} />

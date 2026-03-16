@@ -44,6 +44,7 @@ export function Dashboard() {
             description={quiz.description}
             dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
             numQuestions="13"
+            id={quiz.id}
           />
         ))}
       </div>
