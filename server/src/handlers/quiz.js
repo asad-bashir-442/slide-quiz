@@ -1,6 +1,11 @@
 import consola from "consola";
 import Joi from "joi";
 
+// TODO: Should be part of the .env
+const limitamt = 10;
+
+const quizzesSchema = Joi.number().min(1).max(500).integer();
+
 const quizSchema = Joi.object({
     name: Joi.string().trim().min(3).max(50).required(),
     description: Joi.string().trim().min(5).max(250).required(),
@@ -12,6 +17,58 @@ const quizUpdateSchema = Joi.object({
     description: Joi.string().trim().min(5).max(250),
     automatic: Joi.boolean(),
 });
+
+export const getQuizzes = async (req, res) => {
+    const uid = req.user.id;
+    const page = req.query?.page || 1;
+
+    const { error } = quizzesSchema.validate(page);
+
+    if (error) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Invalid page number.",
+        });
+    }
+
+    try {
+        const connection = await req.server.mysql.getConnection();
+        const offset = (parseInt(page) - 1) * limitamt;
+
+        const [results] = await connection.query(
+            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt LIMIT ?, ?",
+            [uid, offset, limitamt]
+        );
+
+        const quizzes = [];
+
+        for (const quiz of results) {
+            quizzes.push({
+                id: quiz.ID,
+                name: quiz.Name,
+                description: quiz.Description,
+                automaticDefault: quiz.AutomaticDefault,
+                createdAt: quiz.CreatedAt,
+                updatedAt: quiz.UpdatedAt,
+            })
+        }
+
+        connection.release();
+
+        return res.code(200).send({
+            statusCode: 200,
+            message: "Found quizzes.",
+            data: quizzes,
+        });
+    } catch (err) {
+        consola.info(`[auth] Cannot fetch quizzes - ${err}`);
+
+        return res.code(500).send({
+            statusCode: 500,
+            message: "Internal server error.",
+        });
+    }
+}
 
 export const createQuiz = async (req, res) => {
     // Empty body?

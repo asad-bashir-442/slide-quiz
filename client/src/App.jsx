@@ -8,6 +8,7 @@ import { Dashboard } from "./pages/Dashboard.jsx";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
+import {QuizCreatorPage} from "./pages/QuizCreatorPage.jsx";
 export function App() {
   const { loading } = useAuth();
 
@@ -25,6 +26,7 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="quizCreator" element={<QuizCreatorPage />} />
 
         <Route
           path="dashboard"
