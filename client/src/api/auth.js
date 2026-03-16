@@ -57,3 +57,22 @@ export async function createQuiz(userData) {
   }
   return data;
 }
+
+export async function getQuizById(id) {
+  const url = `${BASE_URL}/@me/quiz/${id}`;
+  const res = await fetch(url, {
+    ...options,
+    method: "GET",
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+  return data;
+}

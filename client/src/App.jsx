@@ -8,7 +8,8 @@ import { Dashboard } from "./pages/Dashboard.jsx";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
-import {QuizCreatorPage} from "./pages/QuizCreatorPage.jsx";
+import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx";
+import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
 export function App() {
   const { loading } = useAuth();
 
@@ -28,23 +29,11 @@ export function App() {
         <Route path="register" element={<RegisterPage />} />
         <Route path="quizCreator" element={<QuizCreatorPage />} />
 
-        <Route
-          path="dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route element={<ProtectedRoute />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="quiz/:id" element={<QuizDetailPage />} />
+        </Route>
       </Routes>
 
       <Footer />
