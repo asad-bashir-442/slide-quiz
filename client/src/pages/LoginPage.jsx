@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { loginUser } from "../api/auth";
 import { Mail, KeyRound } from "lucide-react";
+import { Toaster, toast } from "sonner";
 
 export function LoginPage() {
   let navigate = useNavigate();
@@ -21,14 +22,17 @@ export function LoginPage() {
     try {
       const data = await loginUser(userData);
       login(data.data.token);
+      toast.success(data.message);
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
   }
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
+      <Toaster richColors position="top-right" />
       <div className="w-254.5 bg-base-200 p-6 rounded-lg">
         <div className="flex items-center">
           <form
@@ -45,6 +49,7 @@ export function LoginPage() {
                   required
                   minLength="5"
                   maxLength="30"
+                  autoFocus
                   title="Enter a valid email address"
                   type="email"
                   placeholder="Enter email"

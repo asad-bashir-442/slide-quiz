@@ -26,7 +26,7 @@ export function RegisterPage() {
     try {
       setIsLoading(true);
       const data = await registerUser(userData);
-      console.log(`Data Object is ${data}`);
+      toast.success(data.message);
       setIsLoading(false);
       login(data.data.token);
       navigate("/");
@@ -39,7 +39,7 @@ export function RegisterPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
-      <Toaster richColors />
+      <Toaster richColors position="top-right" />
       <div className="bg-base-200 p-6 rounded-lg">
         <div className=" flex items-center gap-16">
           <form
@@ -53,7 +53,7 @@ export function RegisterPage() {
               <label className="input validator">
                 <User className="text-base-content/70" />
                 <input
-                  pattern="[A-Za-z0-9]{5,10}"
+                  pattern="[A-Za-z0-9]{3,15}"
                   minLength="3"
                   maxLength="15"
                   autoFocus
