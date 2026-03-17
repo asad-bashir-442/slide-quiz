@@ -1,17 +1,24 @@
-import { Routes, Route } from "react-router";
 import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import { RegisterPage } from "./pages/RegisterPage";
+
+import { LoginPage } from "./pages/auth/LoginPage";
+import { RegisterPage } from "./pages/auth/RegisterPage";
+import { SettingsPage } from "./pages/SettingsPage";
+
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+
 import { Dashboard } from "./pages/Dashboard.jsx";
-import { SettingsPage } from "./pages/SettingsPage";
-import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
-import { useAuth } from "./context/AuthContext.jsx";
-import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx";
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
+import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
+
+import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { PageNotFound } from "./pages/PageNotFound.jsx";
+
+import { useAuth } from "./context/AuthContext.jsx";
+
 import { Toaster } from "sonner";
+import { Routes, Route } from "react-router";
+
 export function App() {
   const { loading } = useAuth();
 

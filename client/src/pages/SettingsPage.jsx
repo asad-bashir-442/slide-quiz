@@ -7,7 +7,7 @@ import { KeyRound, User, Mail } from "lucide-react";
 import { updateUser } from "../api/auth";
 
 export function SettingsPage() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const { user, logout, login } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [username, setUsername] = useState("");

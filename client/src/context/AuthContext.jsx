@@ -27,13 +27,12 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  function login(token) {
+  const login = (token) => {
     localStorage.setItem("token", token);
-    const decoded = jwtDecode(token);
-    setUser(decoded);
+    setUser(jwtDecode(token));
   }
 
-  function logout() {
+  const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
   }

@@ -27,8 +27,8 @@ export function ResultDetailCard({
               </div>
             </div>
 
-        <div className="status-all min-[900px]:flex justify-between w-full">
             <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
+              <div className="stat">
                 <div className="stat-title">Average</div>
                 <div className="stat-value">{(averageScore * 100).toFixed(0)}%</div>
               </div>
