@@ -1,9 +1,14 @@
+// TODO: These need to be read in from a config or something
+// Maybe VITE has something?
+// Should also split these
 const BASE_URL = "http://localhost:3000";
+
 let options = {
   headers: {
     "Content-Type": "application/json",
   },
 };
+
 export async function registerUser(userData) {
   const url = `${BASE_URL}/@me/register`;
 

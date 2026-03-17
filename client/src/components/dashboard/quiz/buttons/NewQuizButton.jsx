@@ -1,14 +1,19 @@
 import { createQuiz } from "../../../../api/auth";
 
-import { useNavigate } from "react-router";
-import { useState } from "react";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
+import { useState } from "react";
 
 export function NewQuizButton() {
   const [quizName, setQuizName] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
   const navigate = useNavigate();
+
+  {
+    // TODO: ?
+    /* Open the modal using document.getElementById('ID').showModal() method */
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -135,9 +140,4 @@ export function NewQuizButton() {
       </dialog>
     </>
   );
-
-  {
-    // TODO: ?
-    /* Open the modal using document.getElementById('ID').showModal() method */
-  }
 }

@@ -36,7 +36,7 @@ export const getQuizzes = async (req, res) => {
         const offset = (parseInt(page) - 1) * limitamt;
 
         const [results] = await connection.query(
-            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt LIMIT ?, ?",
+            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?",
             [uid, offset, limitamt]
         );
 

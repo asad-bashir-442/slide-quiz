@@ -10,7 +10,7 @@ export function Navbar() {
   return (
     <div className="navbar justify-between bg-base-100 shadow-sm rounded-lg">
       <div>
-        <div className="flex flex-row items-center gap-3">
+        <div className="flex flex-row items-center gap-3 font-bold">
           <Menu />
           <Link to="/">
             <p className="text-2xl">

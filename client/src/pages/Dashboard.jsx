@@ -1,10 +1,23 @@
 import { NewQuizButton } from "../components/dashboard/quiz/buttons/NewQuizButton.jsx";
+import { ClearResultsButton } from "../components/dashboard/results/buttons/ClearResultsButton.jsx";
+
 import { QuizPanel } from "../components/dashboard/QuizPanel.jsx";
+import { ResultsPanel } from "../components/dashboard/ResultsPanel.jsx";
 
 import { useAuth } from "../context/AuthContext.jsx";
+import { useState } from "react";
 
 export function Dashboard() {
   const { user } = useAuth();
+
+  // TODO:
+  // Maybe have a way to automatically load this from the URL?
+  // It shouldn't be a separate route.
+
+  // NOTE:
+  // True -> Results
+  // False -> Quizzes
+  const [tabs, setTabs] = useState(false);
 
   return (
     <div className="w-[90%] mx-auto">
@@ -20,30 +33,28 @@ export function Dashboard() {
           </h2>
 
           <div className="tabs tabs-box">
-            <input
-              type="radio"
-              name="my_tabs_1"
-              className="tab  [--tab-bg:theme(colors.primary)]"
-              aria-label="My Quizzes"
-              defaultChecked
-            />
-
-            <input
-              type="radio"
-              name="my_tabs_1"
-              className="tab [--tab-bg:theme(colors.primary)]"
-              aria-label="Quiz Results"
-            />
+            <button
+              className={`tab [--tab-bg:theme(colors.primary)] ${!tabs ? 'tab-active' : ''}`}
+              onClick={() => setTabs(false)}
+            >
+              My Quizzes
+            </button>
+            <button
+              className={`tab [--tab-bg:theme(colors.primary)] ${tabs ? 'tab-active' : ''}`}
+              onClick={() => setTabs(true)}
+            >
+              Quiz Results
+            </button>
           </div>
         </div>
 
         {/* Right Column */}
         <div className="mt-6 md:mt-0 md:ml-6 w-full md:w-auto">
-          <NewQuizButton />
+          { !tabs ? <NewQuizButton /> : <ClearResultsButton /> }
         </div>
       </div>
 
-      <QuizPanel />
+      { !tabs ? <QuizPanel /> : <ResultsPanel /> }
     </div>
   );
 }

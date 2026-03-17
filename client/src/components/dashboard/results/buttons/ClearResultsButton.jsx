@@ -1,29 +1,19 @@
-import { truncateText } from "../../../../utility/truncate";
-import { deleteQuizById, getAllQuizzes } from "../../../../api/auth";
-
+import { X } from "lucide-react";
 import { toast } from "sonner";
 
-export function DeleteQuizButton({ id, quizName, setQuizzes }) {
-  const handleClick = (e) => {
-    e.stopPropagation();
-    document.getElementById("delete_quiz_modal").showModal();
-  }
-
+export function ClearResultsButton() {
   const handleClose = () => {
-    document.getElementById("delete_quiz_modal").close();
+    document.getElementById("clear_results_modal").close();
   }
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
 
+    // TODO: Connect this to the API
+
     try {
-      const data = await deleteQuizById(id);
-      const quizzes = await getAllQuizzes();
-
-      setQuizzes(quizzes.data);
+      toast.success("Cleared results!");
       handleClose();
-
-      toast.success(data.message);
     } catch (error) {
       toast.error(error.message);
     }
@@ -31,17 +21,22 @@ export function DeleteQuizButton({ id, quizName, setQuizzes }) {
 
   return (
     <>
-      <button className="btn btn-error" onClick={handleClick}>
-        Delete
+      <button
+        className="btn btn-error"
+        onClick={() => document.getElementById("clear_results_modal").showModal()}
+      >
+        <X />
+        Clear All Results
       </button>
+
       <dialog
-        id="delete_quiz_modal"
+        id="clear_results_modal"
         className="modal"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-box">
-            <h3 className="font-bold text-lg" title={quizName}>
-              Are you sure you want to delete {truncateText(quizName, 15)}
+            <h3 className="font-bold text-lg">
+              Are you sure you want to clear all results?
             </h3>
           <p className="text-center pt-4 font-bold">This action is irreversible!</p>
           <div className="modal-action">
@@ -49,7 +44,7 @@ export function DeleteQuizButton({ id, quizName, setQuizzes }) {
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                onClick={() => document.getElementById("delete_quiz_modal").close()}
+                onClick={() => document.getElementById("clear_results_modal").close()}
               >
                 ✕
               </button>
@@ -75,3 +70,4 @@ export function DeleteQuizButton({ id, quizName, setQuizzes }) {
     </>
   );
 }
+
