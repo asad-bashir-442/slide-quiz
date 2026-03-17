@@ -21,7 +21,7 @@ export function Dashboard() {
 
   return (
     <div className="w-[90%] mx-auto">
-      <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
+      <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start max-[900px]:text-center max-[900px]:block max-[900px]:p-4">
         {/* Left Column */}
         <div className="flex-1 p-4">
           <h1 className="text-3xl font-bold mb-2 px-2 p-8 pt-2">
@@ -32,19 +32,21 @@ export function Dashboard() {
             Manage your quizzes and view results.
           </h2>
 
-          <div className="tabs tabs-box">
-            <button
-              className={`tab [--tab-bg:theme(colors.primary)] ${!tabs ? 'tab-active' : ''}`}
-              onClick={() => setTabs(false)}
-            >
-              My Quizzes
-            </button>
-            <button
-              className={`tab [--tab-bg:theme(colors.primary)] ${tabs ? 'tab-active' : ''}`}
-              onClick={() => setTabs(true)}
-            >
-              Quiz Results
-            </button>
+          <div className="max-[900px]:flex max-[900px]:justify-center">
+            <div className="tabs tabs-box">
+              <button
+                className={`tab [--tab-bg:theme(colors.primary)] ${!tabs ? 'tab-active' : ''}`}
+                onClick={() => setTabs(false)}
+              >
+                My Quizzes
+              </button>
+              <button
+                className={`tab [--tab-bg:theme(colors.primary)] ${tabs ? 'tab-active' : ''}`}
+                onClick={() => setTabs(true)}
+              >
+                Quiz Results
+              </button>
+            </div>
           </div>
         </div>
 

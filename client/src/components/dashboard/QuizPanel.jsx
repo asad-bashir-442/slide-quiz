@@ -87,7 +87,7 @@ export function QuizPanel() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="grid grid-cols-3 gap-8 mb-12">
+        <div className="grid gap-8 mb-12 min-[1400px]:grid-cols-3 grid-cols-2 max-[900px]:grid-cols-1">
           {quizzes?.map((quiz) => (
             <QuizDetailCard
               key={quiz.id}

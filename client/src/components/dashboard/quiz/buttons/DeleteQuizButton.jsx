@@ -31,7 +31,7 @@ export function DeleteQuizButton({ id, quizName, setQuizzes }) {
 
   return (
     <>
-      <button className="btn btn-error" onClick={handleClick}>
+      <button className="btn btn-error max-[900px]:w-full max-[900px]:btn-outline" onClick={handleClick}>
         Delete
       </button>
       <dialog

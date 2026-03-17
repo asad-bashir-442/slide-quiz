@@ -1,4 +1,3 @@
-import { QuizDetailCard } from "../dashboard/quiz/details/QuizDetailCard.jsx";
 import { Loading } from "../utility/Loading.jsx";
 import { Error } from "../utility/Error.jsx";
 
@@ -25,7 +24,6 @@ export function ResultsPanel() {
         const data = {
           statusCode: 200,
           data: [
-
             { id: 0, name: "Countries of the world", lastPlayed: "2020-01-01", totalResponses: 25, averageScore: 0.5 },
             { id: 1, name: "Countries of the world 2", lastPlayed: "2020-01-01", totalResponses: 26, averageScore: 0.6 },
             { id: 2, name: "Countries of the world 2", lastPlayed: "2020-01-01", totalResponses: 26, averageScore: 0.6 },
@@ -68,7 +66,7 @@ export function ResultsPanel() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="grid grid-cols-3 gap-8 mb-12">
+        <div className="grid gap-8 mb-12 min-[1400px]:grid-cols-3 grid-cols-2 max-[900px]:grid-cols-1">
           {results?.map((result) => (
             <ResultDetailCard
               key={result.id}
