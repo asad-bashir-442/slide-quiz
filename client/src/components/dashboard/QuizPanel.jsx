@@ -106,7 +106,7 @@ export function QuizPanel() {
           <button
             onClick={loadMore}
             disabled={!hasMore || loadingMore}
-            className={`btn btn-outline ${!hasMore ? "btn-disabled" : "btn-primary"}`}
+            className={`btn btn-outline max-[900px]:w-[90%] ${!hasMore ? "btn-disabled" : "btn-primary"}`}
           >
             {loadingMore ? (
               <>

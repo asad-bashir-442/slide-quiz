@@ -1,10 +1,10 @@
-import { NewQuizButton } from "../components/dashboard/quiz/buttons/NewQuizButton.jsx";
-import { ClearResultsButton } from "../components/dashboard/results/buttons/ClearResultsButton.jsx";
+import { NewQuizButton } from "../../components/dashboard/quiz/buttons/NewQuizButton.jsx";
+import { ClearResultsButton } from "../../components/dashboard/results/buttons/ClearResultsButton.jsx";
 
-import { QuizPanel } from "../components/dashboard/QuizPanel.jsx";
-import { ResultsPanel } from "../components/dashboard/ResultsPanel.jsx";
+import { QuizPanel } from "../../components/dashboard/QuizPanel.jsx";
+import { ResultsPanel } from "../../components/dashboard/ResultsPanel.jsx";
 
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { useState } from "react";
 
 export function Dashboard() {

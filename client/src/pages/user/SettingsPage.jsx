@@ -1,6 +1,6 @@
-import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../context/ThemeContext";
-import { updateUser } from "../api/auth";
+import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
+import { updateUser } from "../../api/auth";
 
 import { KeyRound, User, Mail } from "lucide-react";
 import { toast } from "sonner";

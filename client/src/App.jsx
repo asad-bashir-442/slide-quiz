@@ -1,18 +1,18 @@
 import { HomePage } from "./pages/HomePage";
+import { PageNotFound } from "./pages/PageNotFound.jsx";
 
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
-import { SettingsPage } from "./pages/SettingsPage";
 
-import { Navbar } from "./components/Navbar";
-import { Footer } from "./components/Footer";
+import { Dashboard } from "./pages/user/Dashboard.jsx";
+import { SettingsPage } from "./pages/user/SettingsPage";
 
-import { Dashboard } from "./pages/Dashboard.jsx";
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
 import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
 
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
-import { PageNotFound } from "./pages/PageNotFound.jsx";
 
 import { useAuth } from "./context/AuthContext.jsx";
 
