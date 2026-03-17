@@ -1,65 +1,91 @@
-import { Menu } from "lucide-react";
-import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import { Search } from "lucide-react";
-import { NavLink } from "react-router";
+import { truncateText } from "../utility/truncate";
+
+import { Menu } from "lucide-react";
+import { toast } from "sonner";
+import { Link, useNavigate } from "react-router";
 
 export function Navbar() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
 
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+
+    toast.success("Successfully logged out");
+    navigate("/");
+  }
+
+  // TODO: Eventually put hosting/joining links in here
   return (
-    <div className="navbar justify-between bg-base-100 shadow-sm rounded-lg">
-      <div>
-        <div className="flex flex-row items-center gap-3 font-bold">
-          <Menu />
-          <Link to="/">
-            <p className="text-2xl">
-              Slide<span className="text-primary">Quiz</span>
-            </p>
-          </Link>
-        </div>
-      </div>
-      {user && (
-        <nav>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? "text-primary underline" : "text-base-content"
-            }
-            to="dashboard"
+    <div className="navbar bg-base-100 shadow-sm rounded-lg">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex="0" role="button" className="btn btn-ghost lg:hidden">
+            <Menu />
+          </div>
+
+          <ul
+            tabIndex="-1"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            Dashboard
-          </NavLink>
-        </nav>
-      )}
-      {user ? (
-        <div className="flex items-center gap-3">
-          <Search className="w-6 h-6" />
-
-          <Link to="/settings">
-            <div className="avatar avatar-placeholder">
-              <div className="bg-secondary text-neutral-content w-12 rounded-full">
-                <span className="text-xl">
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
-              </div>
-            </div>
-          </Link>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About</Link></li>
+            {user ? (
+              <li>
+                <a>{truncateText(user?.name, 10)}</a>
+                <ul className="p-2">
+                  <li><Link to="/dashboard">Dashboard</Link></li>
+                  <li><Link to="/settings">Settings</Link></li>
+                  <li><a onClick={handleLogout}>Logout</a></li>
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a>Profile</a>
+                <ul className="p-2">
+                  <li><Link to="/login">Login</Link></li>
+                  <li><Link to="/register">Register</Link></li>
+                </ul>
+              </li>
+            )}
+          </ul>
         </div>
-      ) : (
-        <div className="join flex-none">
-          <Link to="/register">
-            <button className="btn join-item bg-primary text-primary-content rounded-lg">
-              Register
-            </button>
-          </Link>
 
-          <Link to="/login">
-            <button className="btn join-item rounded-lg bg-secondary">
-              Login
-            </button>
-          </Link>
-        </div>
-      )}
+        <Link to="/" className="btn btn-ghost text-xl">
+          <span>Slide<span className="text-primary">Quiz</span></span>
+        </Link>
+      </div>
+
+      <div className="navbar-end max-lg:hidden">
+        <ul className="menu menu-horizontal px-1">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/about">About</Link></li>
+          {user ? (
+            <li>
+              <details>
+                <summary>{truncateText(user?.name, 10)}</summary>
+                <ul className="p-2">
+                  <li><Link to="/dashboard">Dashboard</Link></li>
+                  <li><Link to="/settings">Settings</Link></li>
+                  <li><a onClick={handleLogout}>Logout</a></li>
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <details>
+                <summary>Get Started</summary>
+                <ul className="p-2">
+                  <li><Link to="/login">Login</Link></li>
+                  <li><Link to="/register">Register</Link></li>
+                </ul>
+              </details>
+            </li>
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

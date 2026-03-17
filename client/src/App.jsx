@@ -1,5 +1,5 @@
-import { HomePage } from "./pages/HomePage";
-import { PageNotFound } from "./pages/PageNotFound.jsx";
+import { HomePage } from "./pages/landing/HomePage";
+import { AboutPage } from "./pages/landing/AboutPage";
 
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
@@ -9,6 +9,8 @@ import { SettingsPage } from "./pages/user/SettingsPage";
 
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
 import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
+
+import { PageNotFound } from "./pages/PageNotFound.jsx";
 
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
@@ -36,6 +38,8 @@ export function App() {
       <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
 
