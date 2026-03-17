@@ -13,9 +13,15 @@ export function AuthProvider({ children }) {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser(decoded);
+        if (decoded.exp * 1000 > Date.now()) {
+          setUser(decoded);
+        } else {
+          localStorage.removeItem("token");
+          setUser(null);
+        }
       } catch (error) {
         localStorage.removeItem("token");
+        setUser(null);
       }
     }
     setLoading(false);

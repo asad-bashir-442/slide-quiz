@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { loginUser } from "../api/auth";
 import { Mail, KeyRound } from "lucide-react";
+import { toast } from "sonner";
 
 export function LoginPage() {
   let navigate = useNavigate();
@@ -21,14 +22,16 @@ export function LoginPage() {
     try {
       const data = await loginUser(userData);
       login(data.data.token);
+      toast.success(data.message);
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
+    <div className="flex flex-1 items-center justify-center">
       <div className="w-254.5 bg-base-200 p-6 rounded-lg">
         <div className="flex items-center">
           <form
@@ -45,6 +48,7 @@ export function LoginPage() {
                   required
                   minLength="5"
                   maxLength="30"
+                  autoFocus
                   title="Enter a valid email address"
                   type="email"
                   placeholder="Enter email"
@@ -63,11 +67,9 @@ export function LoginPage() {
               <label className="input validator">
                 <KeyRound className="text-base-content/70" />
                 <input
-                  pattern="[A-Za-z0-9]{5,10}"
-                  minLength="3"
-                  maxLength="15"
+                  pattern="[A-Za-z0-9]{5,20}"
                   required
-                  title="Must be between 3-15 characters, Username can only contain letters and digits"
+                  title="Must be between 5-20 characters, Username can only contain letters and digits"
                   type="password"
                   placeholder="Enter Password"
                   value={password}
@@ -75,7 +77,7 @@ export function LoginPage() {
                 />
               </label>
 
-              <p className="validator-hint">Must be between 5-30 characters</p>
+              <p className="validator-hint">Must be between 5-20 characters</p>
             </fieldset>
 
             <button className="btn btn-primary w-full btn-lg rounded-lg mt-2">

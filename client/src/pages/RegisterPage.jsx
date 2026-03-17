@@ -4,11 +4,11 @@ import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router";
 import { registerUser } from "../api/auth";
 import { User, Mail, KeyRound } from "lucide-react";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 export function RegisterPage() {
   let navigate = useNavigate();
   const { login } = useAuth();
-  const [username, setuserName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -22,11 +22,10 @@ export function RegisterPage() {
       password,
     };
 
-    console.log(userData);
     try {
       setIsLoading(true);
       const data = await registerUser(userData);
-      console.log(`Data Object is ${data}`);
+      toast.success(data.message);
       setIsLoading(false);
       login(data.data.token);
       navigate("/");
@@ -38,8 +37,7 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
-      <Toaster richColors />
+    <div className="flex flex-1 items-center justify-center">
       <div className="bg-base-200 p-6 rounded-lg">
         <div className=" flex items-center gap-16">
           <form
@@ -53,16 +51,14 @@ export function RegisterPage() {
               <label className="input validator">
                 <User className="text-base-content/70" />
                 <input
-                  pattern="[A-Za-z0-9]{5,10}"
-                  minLength="3"
-                  maxLength="15"
+                  pattern="[A-Za-z0-9]{3,15}"
                   autoFocus
                   required
                   title="Must be between 3-15 characters, Username can only contain letters and digits"
                   type="text"
                   placeholder="Enter Username"
                   value={username}
-                  onChange={(e) => setuserName(e.target.value)}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
               </label>
               <p className="validator-hint">
@@ -98,11 +94,9 @@ export function RegisterPage() {
               <label className="input validator">
                 <KeyRound className="text-base-content/70" />
                 <input
-                  pattern="[A-Za-z0-9]{5,10}"
-                  minLength="3"
-                  maxLength="15"
+                  pattern="[A-Za-z0-9]{5,20}"
                   required
-                  title="Must be between 3-15 characters, Username can only contain letters and digits"
+                  title="Must be between 5-20 characters, Username can only contain letters and digits"
                   type="password"
                   placeholder="Enter Password"
                   value={password}
@@ -110,7 +104,7 @@ export function RegisterPage() {
                 />
               </label>
 
-              <p className="validator-hint">Must be between 5-30 characters</p>
+              <p className="validator-hint">Must be between 5-20 characters</p>
             </fieldset>
 
             <button className="btn btn-primary w-full btn-lg rounded-lg mt-2">

@@ -8,7 +8,10 @@ import { Dashboard } from "./pages/Dashboard.jsx";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
-import {QuizCreatorPage} from "./pages/QuizCreatorPage.jsx";
+import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx";
+import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
+import { PageNotFound } from "./pages/PageNotFound.jsx";
+import { Toaster } from "sonner";
 export function App() {
   const { loading } = useAuth();
 
@@ -20,32 +23,23 @@ export function App() {
     );
   }
   return (
-    <div className="max-w-[95%] mx-auto pt-4 flex flex-col h-full">
+    <div className="min-h-screen flex flex-col max-w-[95%] mx-auto pt-4">
+      <Toaster richColors position="top-right" />
       <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="quizCreator" element={<QuizCreatorPage />} />
+      <main className="flex-1 flex flex-col">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
 
-        <Route
-          path="dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="quiz/:id" element={<QuizDetailPage />} />
+          </Route>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </main>
 
       <Footer />
     </div>

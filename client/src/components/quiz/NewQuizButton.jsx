@@ -1,11 +1,13 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { createQuiz } from "../../api/auth";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 export function NewQuizButton() {
   const [quizName, setQuizName] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
+  let navigate = useNavigate();
   async function handleSubmit(e) {
     e.preventDefault();
     const quizTypeInput = document.getElementById("quiz_type");
@@ -21,6 +23,7 @@ export function NewQuizButton() {
       const data = await createQuiz(userData);
       toast.success(data.message);
       console.log(`Quiz id ${data.data.id}`);
+      navigate(`/quiz/${data.data.id}`);
     } catch (error) {
       toast.error(error.message);
     }
@@ -34,7 +37,6 @@ export function NewQuizButton() {
 
   return (
     <>
-      <Toaster richColors position="top-right" />
       <button
         className="btn btn-secondary"
         onClick={() => document.getElementById("new_quiz_modal").showModal()}
@@ -108,7 +110,7 @@ export function NewQuizButton() {
               <button
                 onClick={clearForm}
                 type="reset"
-                className="btn btn-error"
+                className="btn btn-ghost"
               >
                 Cancel
               </button>
