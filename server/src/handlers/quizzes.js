@@ -130,7 +130,7 @@ export const getQuiz = async (req, res) => {
     try {
         const connection = await req.server.mysql.getConnection();
         const [results] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE id = ? AND UserID = ? LIMIT 1",
+            "SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
             [id, req.user.id],
         );
 
@@ -192,7 +192,7 @@ export const updateQuiz = async (req, res) => {
 
         // Does quiz exist?
         const [quizzes] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE id = ? AND UserID = ? LIMIT 1",
+            "SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
             [id, req.user.id],
         );
 
@@ -265,7 +265,7 @@ export const deleteQuiz = async (req, res) => {
 
         // Does quiz exist?
         const [exists] = await connection.query(
-            "SELECT 1 FROM Quizzes WHERE id = ? AND UserID = ? LIMIT 1",
+            "SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
             [id, req.user.id],
         );
 
@@ -277,7 +277,7 @@ export const deleteQuiz = async (req, res) => {
         }
 
         await connection.query(
-            "DELETE FROM Quizzes WHERE id = ? AND UserID = ?",
+            "DELETE FROM Quizzes WHERE ID = ? AND UserID = ?",
             [id, req.user.id],
         );
 
