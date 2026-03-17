@@ -1,138 +1,49 @@
-import { DashWelcomePanel } from "../components/dashboard/DashWelcomePanel.jsx";
-import { QuizDetailCard } from "../components/dashboard/quiz/QuizDetailCard.jsx";
-import { Loading } from "../components/utility/Loading.jsx";
-import { Error } from "../components/utility/Error.jsx";
+import { NewQuizButton } from "../components/dashboard/quiz/buttons/NewQuizButton.jsx";
+import { QuizPanel } from "../components/dashboard/QuizPanel.jsx";
 
-import { getAllQuizzes } from "../api/auth.js";
-import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export function Dashboard() {
-  const [quizzes, setQuizzes] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState("");
-  const [hasMore, setHasMore] = useState(true);
-
-  useEffect(() => {
-    async function fetchQuizzes() {
-      try {
-        const data = await getAllQuizzes(1);
-
-        if (data?.statusCode == 200) {
-          setQuizzes(data.data);
-          setHasMore(data.data.length > 0);
-          setError("");
-        } else {
-          setError(data.message);
-        }
-      } catch (err) {
-        console.log("[Dashboard]", err);
-        setError("Fetching error! Try reloading the page?");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchQuizzes();
-  }, []);
-
-  const loadMore = async () => {
-    const nextPage = page + 1;
-
-    if (loadingMore || !hasMore) return;
-    setLoadingMore(true);
-
-    try {
-      const data = await getAllQuizzes(nextPage);
-
-      if (data?.statusCode == 200) {
-        if (data.data.length === 0) {
-          setHasMore(false);
-        } else {
-          setQuizzes((prev) => {
-            const newQuizzes = data.data.filter(
-              newQuiz => !prev.some(existingQuiz => existingQuiz.id === newQuiz.id)
-            );
-
-            return [...prev, ...newQuizzes];
-          });
-
-          setPage(nextPage);
-        }
-
-        setError("");
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      console.log("[Dashboard]", err);
-      setError("Fetching error! Try reloading the page?");
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
-  const renderContent = () => {
-    if (loading) return (
-      <div className="text-center">
-        <Loading />
-      </div>
-    );
-
-    if (error) return (
-      <div className="text-center text-error">
-        <Error message={error} />
-      </div>
-    );
-
-    return (
-      <>
-        <div className="flex justify-center">
-          <div className="grid grid-cols-3 gap-8 mb-12">
-            {quizzes?.map((quiz) => (
-              <QuizDetailCard
-                key={quiz.id}
-                quizName={quiz.name}
-                description={quiz.description}
-                dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
-                id={quiz.id}
-                setQuizzes={setQuizzes}
-              />
-            ))}
-          </div>
-        </div>
-
-        {quizzes.length > 0 && (
-          <div className="flex justify-center mt-4 pb-8">
-            <button
-              onClick={loadMore}
-              disabled={!hasMore || loadingMore}
-              className={`btn btn-outline ${!hasMore ? "btn-disabled" : "btn-primary"}`}
-            >
-              {loadingMore ? (
-                <>
-                  <span className="loading loading-spinner loading-xs"></span>
-                  Loading...
-                </>
-              ) : hasMore ? "Load More" : "No More Quizzes"}
-            </button>
-          </div>
-        )}
-
-        {quizzes.length === 0 && (
-          <div className="text-center text-primary">
-            <Error message="No quizzes found! Try creating one?" />
-          </div>
-        )}
-      </>
-    );
-  };
+  const { user } = useAuth();
 
   return (
     <div className="w-[90%] mx-auto">
-      <DashWelcomePanel />
-      {renderContent()}
+      <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
+        {/* Left Column */}
+        <div className="flex-1 p-4">
+          <h1 className="text-3xl font-bold mb-2 px-2 p-8 pt-2">
+            Welcome, {user.name}
+          </h1>
+
+          <h2 className="text-lg opacity-70 mb-4 pb-8 pl-0">
+            Manage your quizzes and view results.
+          </h2>
+
+          <div className="tabs tabs-box">
+            <input
+              type="radio"
+              name="my_tabs_1"
+              className="tab  [--tab-bg:theme(colors.primary)]"
+              aria-label="My Quizzes"
+              defaultChecked
+            />
+
+            <input
+              type="radio"
+              name="my_tabs_1"
+              className="tab [--tab-bg:theme(colors.primary)]"
+              aria-label="Quiz Results"
+            />
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="mt-6 md:mt-0 md:ml-6 w-full md:w-auto">
+          <NewQuizButton />
+        </div>
+      </div>
+
+      <QuizPanel />
     </div>
   );
 }

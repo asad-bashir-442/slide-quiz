@@ -1,17 +1,19 @@
-import { Plus } from "lucide-react";
-import { useState } from "react";
-import { createQuiz } from "../../api/auth";
-import { toast } from "sonner";
+import { createQuiz } from "../../../../api/auth";
+
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
 export function NewQuizButton() {
   const [quizName, setQuizName] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+
   async function handleSubmit(e) {
     e.preventDefault();
-    const quizTypeInput = document.getElementById("quiz_type");
 
+    const quizTypeInput = document.getElementById("quiz_type");
     const userData = {
       name: quizName,
       description: quizDescription,
@@ -19,10 +21,9 @@ export function NewQuizButton() {
     };
 
     try {
-      console.dir(userData);
       const data = await createQuiz(userData);
+
       toast.success(data.message);
-      console.log(`Quiz id ${data.data.id}`);
       navigate(`/quiz/${data.data.id}`);
     } catch (error) {
       toast.error(error.message);
@@ -32,6 +33,7 @@ export function NewQuizButton() {
   function clearForm() {
     setQuizName("");
     setQuizDescription("");
+
     document.getElementById("new_quiz_modal").close();
   }
 
@@ -44,12 +46,15 @@ export function NewQuizButton() {
         <Plus />
         Create New Quiz
       </button>
+
       <dialog id="new_quiz_modal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-base-content/70 text-2xl">
             Create New Quiz
           </h3>
-          <p className="mt-2 text-base-content/70">Insert Quiz Metadata</p>
+
+          <p className="mt-2 text-base-content/70">Customize Quiz Metadata</p>
+
           <form onSubmit={handleSubmit} className="modal-action flex-col">
             <button
               type="button"
@@ -58,10 +63,12 @@ export function NewQuizButton() {
             >
               ✕
             </button>
+
             <fieldset className="fieldset">
               <legend className="fieldset-legend text-base-content/70 text-lg">
                 Quiz Name
               </legend>
+
               <input
                 autoFocus
                 required
@@ -73,6 +80,7 @@ export function NewQuizButton() {
                 value={quizName}
                 onChange={(e) => setQuizName(e.target.value)}
               />
+
               <p className="validator-hint">
                 Name must be between 3 and 50 characters
               </p>
@@ -82,6 +90,7 @@ export function NewQuizButton() {
               <legend className="fieldset-legend text-base-content/70 text-lg">
                 Quiz Description
               </legend>
+
               <textarea
                 required
                 minLength="5"
@@ -91,6 +100,7 @@ export function NewQuizButton() {
                 value={quizDescription}
                 onChange={(e) => setQuizDescription(e.target.value)}
               ></textarea>
+
               <p className="validator-hint">
                 Description must be between 5 and 250 characters
               </p>
@@ -98,6 +108,7 @@ export function NewQuizButton() {
 
             <div className="flex gap-2">
               <p>Automatic</p>
+
               <input
                 id="quiz_type"
                 type="checkbox"
@@ -114,8 +125,9 @@ export function NewQuizButton() {
               >
                 Cancel
               </button>
+
               <button type="submit" className="btn btn-primary">
-                Submit
+                Create
               </button>
             </div>
           </form>
@@ -125,6 +137,7 @@ export function NewQuizButton() {
   );
 
   {
+    // TODO: ?
     /* Open the modal using document.getElementById('ID').showModal() method */
   }
 }

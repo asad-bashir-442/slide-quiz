@@ -1,4 +1,10 @@
-export function QuizDetailPopup({modalId = "edit_quiz_modal", quizName, dateCreated, dateModified}) {
+export function QuizDetailPopup({
+    modalId = "edit_quiz_modal",
+    quizName,
+    dateCreated,
+    dateModified
+}) {
+    // TODO: The spacing is inconsistent, prettier (?)
     return (
         <dialog id={modalId} className="modal">
             <div className="modal-box w-11/12 max-w-lg">

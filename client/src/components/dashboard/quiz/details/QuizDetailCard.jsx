@@ -1,12 +1,7 @@
-import { Link, useNavigate } from "react-router";
-import { DeleteQuizButton } from "../../quiz/DeleteQuizButton";
+import { DeleteQuizButton } from "../buttons/DeleteQuizButton";
+import { truncateText } from "../../../../utility/truncate";
 
-export const truncateText = (text, len) => {
-  if (!text) return "";
-  if (text.length <= len) return text;
-
-  return text.substring(0, len) + "...";
-};
+import { useNavigate } from "react-router";
 
 export function QuizDetailCard({
   quizName,
