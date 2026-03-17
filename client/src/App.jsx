@@ -24,7 +24,7 @@ export function App() {
   }
   return (
     <div className="min-h-screen flex flex-col max-w-[95%] mx-auto pt-4">
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="bottom-right" />
       <Navbar />
       <main className="flex-1 flex flex-col">
         <Routes>

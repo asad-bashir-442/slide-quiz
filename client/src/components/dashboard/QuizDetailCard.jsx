@@ -1,10 +1,17 @@
 import { Link, useNavigate } from "react-router";
 import { DeleteQuizButton } from "../quiz/DeleteQuizButton";
+
+export const truncateText = (text, len) => {
+  if (!text) return "";
+  if (text.length <= len) return text;
+
+  return text.substring(0, len) + "...";
+};
+
 export function QuizDetailCard({
   quizName,
   description,
   dateCreated,
-  numQuestions,
   id,
   setQuizzes,
 }) {
@@ -16,13 +23,11 @@ export function QuizDetailCard({
       className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary cursor-pointer"
     >
       <div className="card-body">
-        <h2 className="card-title">{quizName}</h2>
-
-        <p>{description}</p>
+        <h2 className="card-title" title={quizName}>{truncateText(quizName, 25)}</h2>
+        <p className="break-words">{description}</p>
 
         <div className="flex gap-2 mt-2">
           <div className="badge badge-ghost">Created on: {dateCreated}</div>
-          <div className="badge badge-ghost">{numQuestions} questions</div>
         </div>
 
         <div className="card-actions justify-center flex-nowrap gap-3 mt-4">
@@ -35,9 +40,6 @@ export function QuizDetailCard({
             quizName={quizName}
             description={description}
           />
-          {/* <button onClick={handleDelete} className="btn btn-error">
-            Delete
-          </button> */}
         </div>
       </div>
     </div>

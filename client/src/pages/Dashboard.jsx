@@ -20,7 +20,7 @@ export function Dashboard() {
   }, []);
 
   return (
-    <div className="">
+    <div className="w-[90%] mx-auto">
       {/*<button*/}
       {/*    className="btn btn-primary"*/}
       {/*    onClick={() => document.getElementById("edit_quiz_modal").showModal()}*/}
@@ -36,18 +36,19 @@ export function Dashboard() {
       {/*/>*/}
       <DashWelcomePanel />
 
-      <div className="grid grid-cols-3 gap-10 mb-12">
-        {quizzes?.map((quiz) => (
-          <QuizDetailCard
-            key={quiz.id}
-            quizName={quiz.name}
-            description={quiz.description}
-            dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
-            numQuestions="13"
-            id={quiz.id}
-            setQuizzes={setQuizzes}
-          />
-        ))}
+      <div className="flex justify-center">
+        <div className="grid grid-cols-3 gap-8 mb-12">
+          {quizzes?.map((quiz) => (
+            <QuizDetailCard
+              key={quiz.id}
+              quizName={quiz.name}
+              description={quiz.description}
+              dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
+              id={quiz.id}
+              setQuizzes={setQuizzes}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 export function DashWelcomePanel() {
   const { user } = useAuth();
   return (
-    <div className="w-[90%] mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
+    <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
       {/* Left Column */}
       <div className="flex-1 p-4">
         <h1 className="text-3xl font-bold mb-2 px-2 p-8 pt-2">

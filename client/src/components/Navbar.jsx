@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Search } from "lucide-react";
 import { NavLink } from "react-router";
+
 export function Navbar() {
   const { user } = useAuth();
   return (
