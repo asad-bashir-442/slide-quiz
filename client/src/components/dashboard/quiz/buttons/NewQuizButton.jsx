@@ -15,7 +15,7 @@ export function NewQuizButton() {
     /* Open the modal using document.getElementById('ID').showModal() method */
   }
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const quizTypeInput = document.getElementById("quiz_type");
@@ -35,7 +35,7 @@ export function NewQuizButton() {
     }
   }
 
-  function clearForm() {
+  const clearForm = () => {
     setQuizName("");
     setQuizDescription("");
 

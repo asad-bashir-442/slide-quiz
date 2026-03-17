@@ -15,3 +15,7 @@
   transition: background-color 0.2s ease, color 0.2s ease;
   font-family: Arial, sans-serif;
 }
+
+fieldset, fieldset label {
+  width: 100%;
+}

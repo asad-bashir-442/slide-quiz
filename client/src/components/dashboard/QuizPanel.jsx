@@ -14,7 +14,7 @@ export function QuizPanel() {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    async function fetchQuizzes() {
+    const fetchQuizzes = async () => {
       try {
         const data = await getAllQuizzes(1);
 

@@ -8,7 +8,7 @@ export function QuizDetailPage() {
   let { id } = useParams();
 
   useEffect(() => {
-    async function fetchQuiz() {
+    const fetchQuiz = async () => {
       try {
         const data = await getQuizById(id);
         setQuiz(data.data);

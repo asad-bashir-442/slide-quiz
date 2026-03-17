@@ -17,7 +17,7 @@ export function ResultsPanel() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    async function fetchResults() {
+    const fetchResults = async () => {
       try {
         // const data = await getAllResults();
         // TODO: Dummy data, should be replaced with a real API call

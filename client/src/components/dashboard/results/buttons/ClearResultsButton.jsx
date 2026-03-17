@@ -6,7 +6,7 @@ export function ClearResultsButton() {
     document.getElementById("clear_results_modal").close();
   }
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // TODO: Connect this to the API

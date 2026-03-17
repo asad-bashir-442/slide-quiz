@@ -15,7 +15,7 @@ export function RegisterPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const userData = {
@@ -27,10 +27,10 @@ export function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const data = await registerUser(userData);
+      const res = await registerUser(userData);
 
-      toast.success(data.message);
-      login(data.data.token);
+      toast.success(res.message);
+      login(res.data.token);
       navigate("/");
     } catch (error) {
       console.error(error);
