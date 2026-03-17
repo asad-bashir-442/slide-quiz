@@ -1,3 +1,5 @@
+import { Avatar } from "../../components/utility/Avatar";
+
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { updateUser } from "../../api/auth";
@@ -70,8 +72,9 @@ export function SettingsPage() {
         className="min-[400px]:bg-base-100 flex flex-col my-12.5 items-center rounded-lg px-20 py-10 min-[400px]:shadow max-[400px]:px-8"
       >
         <h1 className="text-3xl mb-2 max-[900px]:text-center">Welcome {user.name}</h1>
-
-        {/* TODO: Profile picture component (just the first letter of the user's name) */}
+        <div className="my-4">
+          <Avatar />
+        </div>
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend text-base-content/70 text-lg">
