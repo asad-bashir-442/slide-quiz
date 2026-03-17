@@ -1,17 +1,22 @@
+// TODO: These need to be read in from a config or something
+// Maybe VITE has something?
+// Should also split these
 const BASE_URL = "http://localhost:3000";
+
 let options = {
   headers: {
     "Content-Type": "application/json",
   },
 };
+
 export async function registerUser(userData) {
   const url = `${BASE_URL}/@me/register`;
-
   const res = await fetch(url, {
     ...options,
     method: "POST",
     body: JSON.stringify(userData),
   });
+
   const data = await res.json();
 
   if (!res.ok) {
@@ -49,10 +54,13 @@ export async function updateUser(userData) {
       Authorization: `Bearer ${token}`,
     },
   });
+
   const data = await res.json();
+
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong");
   }
+
   return data;
 }
 
@@ -74,6 +82,7 @@ export async function createQuiz(userData) {
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong");
   }
+
   return data;
 }
 
@@ -94,6 +103,7 @@ export async function getQuizById(id) {
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong");
   }
+
   return data;
 }
 
@@ -113,6 +123,7 @@ export async function deleteQuizById(id) {
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong");
   }
+
   return data;
 }
 
@@ -133,5 +144,6 @@ export async function getAllQuizzes(page = 1) {
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong");
   }
+
   return data;
 }

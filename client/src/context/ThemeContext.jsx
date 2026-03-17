@@ -10,7 +10,7 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  function toggleTheme() {
+  const toggleTheme = () => {
     setTheme((theme) => (theme === "dark" ? "light" : "dark"));
   }
 

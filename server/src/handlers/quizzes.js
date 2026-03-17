@@ -2,7 +2,7 @@ import consola from "consola";
 import Joi from "joi";
 
 // TODO: Should be part of the .env
-const limitamt = 10;
+const limitamt = 9; // To match the UI, should be divisible by 3
 
 const quizzesSchema = Joi.number().min(1).max(500).integer();
 
@@ -36,7 +36,7 @@ export const getQuizzes = async (req, res) => {
         const offset = (parseInt(page) - 1) * limitamt;
 
         const [results] = await connection.query(
-            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt LIMIT ?, ?",
+            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?",
             [uid, offset, limitamt]
         );
 
@@ -130,7 +130,7 @@ export const getQuiz = async (req, res) => {
     try {
         const connection = await req.server.mysql.getConnection();
         const [results] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE id = ? AND UserID = ? LIMIT 1",
+            "SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
             [id, req.user.id],
         );
 
@@ -192,7 +192,7 @@ export const updateQuiz = async (req, res) => {
 
         // Does quiz exist?
         const [quizzes] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE id = ? AND UserID = ? LIMIT 1",
+            "SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
             [id, req.user.id],
         );
 
@@ -265,7 +265,7 @@ export const deleteQuiz = async (req, res) => {
 
         // Does quiz exist?
         const [exists] = await connection.query(
-            "SELECT 1 FROM Quizzes WHERE id = ? AND UserID = ? LIMIT 1",
+            "SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
             [id, req.user.id],
         );
 
@@ -277,7 +277,7 @@ export const deleteQuiz = async (req, res) => {
         }
 
         await connection.query(
-            "DELETE FROM Quizzes WHERE id = ? AND UserID = ?",
+            "DELETE FROM Quizzes WHERE ID = ? AND UserID = ?",
             [id, req.user.id],
         );
 

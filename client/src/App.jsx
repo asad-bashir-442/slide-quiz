@@ -1,17 +1,26 @@
-import { Routes, Route } from "react-router";
-import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import { RegisterPage } from "./pages/RegisterPage";
+import { HomePage } from "./pages/landing/HomePage";
+import { AboutPage } from "./pages/landing/AboutPage";
+
+import { LoginPage } from "./pages/auth/LoginPage";
+import { RegisterPage } from "./pages/auth/RegisterPage";
+
+import { Dashboard } from "./pages/user/Dashboard.jsx";
+import { SettingsPage } from "./pages/user/SettingsPage";
+
+import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
+import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
+
+import { PageNotFound } from "./pages/PageNotFound.jsx";
+
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
-import { Dashboard } from "./pages/Dashboard.jsx";
-import { SettingsPage } from "./pages/SettingsPage";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+
 import { useAuth } from "./context/AuthContext.jsx";
-import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx";
-import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
-import { PageNotFound } from "./pages/PageNotFound.jsx";
+
 import { Toaster } from "sonner";
+import { Routes, Route } from "react-router";
+
 export function App() {
   const { loading } = useAuth();
 
@@ -24,11 +33,13 @@ export function App() {
   }
   return (
     <div className="min-h-screen flex flex-col max-w-[95%] mx-auto pt-4">
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="bottom-right" />
       <Navbar />
       <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
 

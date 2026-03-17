@@ -1,71 +1,58 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router";
-import { registerUser } from "../api/auth";
-import { User, Mail, KeyRound } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { loginUser } from "../../api/auth";
+
+import { Mail, KeyRound } from "lucide-react";
 import { toast } from "sonner";
-export function RegisterPage() {
-  let navigate = useNavigate();
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+
+export function LoginPage() {
+  const navigate = useNavigate();
+
   const { login } = useAuth();
-  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const userData = {
-      name: username,
       email,
       password,
     };
 
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
-      const data = await registerUser(userData);
-      toast.success(data.message);
-      setIsLoading(false);
-      login(data.data.token);
-      navigate("/");
+      const res = await loginUser(userData);
+
+      login(res.data.token);
+      toast.success(res.message);
+      navigate("/dashboard");
     } catch (error) {
-      console.dir(`Error Object is ${error}`);
+      console.error(error);
       toast.error(error.message);
+    } finally {
       setIsLoading(false);
     }
   }
 
   return (
     <div className="flex flex-1 items-center justify-center">
-      <div className="bg-base-200 p-6 rounded-lg">
-        <div className=" flex items-center gap-16">
+      <div className="w-254.5 bg-base-200 p-6 rounded-lg max-[900px]:w-full my-4">
+        <div className="text-center my-8 min-[900px]:hidden">
+          <h1 className="text-3xl font-bold mb-4">SlideQuiz Login</h1>
+          <p className="opacity-60">
+            Sign in to access your quizzes and continue where you left off.
+          </p>
+        </div>
+
+        <div className="flex items-center">
           <form
-            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col rounded-2xl"
+            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col rounded-2xl max-[900px]:w-full"
             onSubmit={handleSubmit}
           >
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend text-base-content/70 text-lg">
-                Username
-              </legend>
-              <label className="input validator">
-                <User className="text-base-content/70" />
-                <input
-                  pattern="[A-Za-z0-9]{3,15}"
-                  autoFocus
-                  required
-                  title="Must be between 3-15 characters, Username can only contain letters and digits"
-                  type="text"
-                  placeholder="Enter Username"
-                  value={username}
-                  onChange={(e) => setUserName(e.target.value)}
-                />
-              </label>
-              <p className="validator-hint">
-                Must be between 3-15 alpha-numeric characters
-              </p>
-            </fieldset>
-
             <fieldset className="fieldset">
               <legend className="fieldset-legend text-base-content/70 text-lg">
                 Email
@@ -76,6 +63,7 @@ export function RegisterPage() {
                   required
                   minLength="5"
                   maxLength="30"
+                  autoFocus
                   title="Enter a valid email address"
                   type="email"
                   placeholder="Enter email"
@@ -107,20 +95,20 @@ export function RegisterPage() {
               <p className="validator-hint">Must be between 5-20 characters</p>
             </fieldset>
 
-            <button className="btn btn-primary w-full btn-lg rounded-lg mt-2">
-              Register
+            <button className="btn btn-primary w-full btn-lg rounded-lg mt-2" disabled={isLoading}>
+              {isLoading && <span className="loading loading-spinner loading-xs"></span>}
+              Login
             </button>
           </form>
 
-          <div className="mx-auto flex flex-col gap-5">
-            <h1 className="text-5xl font-bold">SlideQuiz Register</h1>
-            <p className="max-w-[48ch]">
-              Set up your profile to start building interactive quizzes for your
-              presentations.
+          <div className="mx-auto flex flex-col gap-5 max-[900px]:hidden">
+            <h1 className="text-5xl font-bold">SlideQuiz Login</h1>
+            <p>
+              Sign in to access your quizzes and continue where you left off.
             </p>
-            <Link to="/login">
+            <Link to="/register">
               <button className="btn btn-outline btn-secondary btn-wide btn-lg rounded-lg">
-                Login
+                Register
               </button>
             </Link>
           </div>
