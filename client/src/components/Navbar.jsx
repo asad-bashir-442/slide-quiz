@@ -6,6 +6,7 @@ import { NavLink } from "react-router";
 
 export function Navbar() {
   const { user } = useAuth();
+
   return (
     <div className="navbar justify-between bg-base-100 shadow-sm rounded-lg">
       <div>

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { DeleteQuizButton } from "../quiz/DeleteQuizButton";
+import { DeleteQuizButton } from "../../quiz/DeleteQuizButton";
 
 export const truncateText = (text, len) => {
   if (!text) return "";
@@ -15,7 +15,7 @@ export function QuizDetailCard({
   id,
   setQuizzes,
 }) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div

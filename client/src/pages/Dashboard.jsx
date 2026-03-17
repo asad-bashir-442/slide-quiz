@@ -1,55 +1,138 @@
 import { DashWelcomePanel } from "../components/dashboard/DashWelcomePanel.jsx";
-import { QuizDetailCard } from "../components/dashboard/QuizDetailCard.jsx";
-import { QuizDetailPopup } from "../components/dashboard/QuizDetailPopup.jsx";
+import { QuizDetailCard } from "../components/dashboard/quiz/QuizDetailCard.jsx";
+import { Loading } from "../components/utility/Loading.jsx";
+import { Error } from "../components/utility/Error.jsx";
+
 import { getAllQuizzes } from "../api/auth.js";
 import { useEffect, useState } from "react";
 
 export function Dashboard() {
   const [quizzes, setQuizzes] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState("");
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     async function fetchQuizzes() {
       try {
         const data = await getAllQuizzes(1);
-        console.log(data.data);
-        setQuizzes(data.data);
-      } catch (error) {}
+
+        if (data?.statusCode == 200) {
+          setQuizzes(data.data);
+          setHasMore(data.data.length > 0);
+          setError("");
+        } else {
+          setError(data.message);
+        }
+      } catch (err) {
+        console.log("[Dashboard]", err);
+        setError("Fetching error! Try reloading the page?");
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchQuizzes();
   }, []);
 
+  const loadMore = async () => {
+    const nextPage = page + 1;
+
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+
+    try {
+      const data = await getAllQuizzes(nextPage);
+
+      if (data?.statusCode == 200) {
+        if (data.data.length === 0) {
+          setHasMore(false);
+        } else {
+          setQuizzes((prev) => {
+            const newQuizzes = data.data.filter(
+              newQuiz => !prev.some(existingQuiz => existingQuiz.id === newQuiz.id)
+            );
+
+            return [...prev, ...newQuizzes];
+          });
+
+          setPage(nextPage);
+        }
+
+        setError("");
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      console.log("[Dashboard]", err);
+      setError("Fetching error! Try reloading the page?");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const renderContent = () => {
+    if (loading) return (
+      <div className="text-center">
+        <Loading />
+      </div>
+    );
+
+    if (error) return (
+      <div className="text-center text-error">
+        <Error message={error} />
+      </div>
+    );
+
+    return (
+      <>
+        <div className="flex justify-center">
+          <div className="grid grid-cols-3 gap-8 mb-12">
+            {quizzes?.map((quiz) => (
+              <QuizDetailCard
+                key={quiz.id}
+                quizName={quiz.name}
+                description={quiz.description}
+                dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
+                id={quiz.id}
+                setQuizzes={setQuizzes}
+              />
+            ))}
+          </div>
+        </div>
+
+        {quizzes.length > 0 && (
+          <div className="flex justify-center mt-4 pb-8">
+            <button
+              onClick={loadMore}
+              disabled={!hasMore || loadingMore}
+              className={`btn btn-outline ${!hasMore ? "btn-disabled" : "btn-primary"}`}
+            >
+              {loadingMore ? (
+                <>
+                  <span className="loading loading-spinner loading-xs"></span>
+                  Loading...
+                </>
+              ) : hasMore ? "Load More" : "No More Quizzes"}
+            </button>
+          </div>
+        )}
+
+        {quizzes.length === 0 && (
+          <div className="text-center text-primary">
+            <Error message="No quizzes found! Try creating one?" />
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <div className="w-[90%] mx-auto">
-      {/*<button*/}
-      {/*    className="btn btn-primary"*/}
-      {/*    onClick={() => document.getElementById("edit_quiz_modal").showModal()}*/}
-      {/*>*/}
-      {/*    View Quiz*/}
-      {/*</button>*/}
-
-      {/*<QuizDetailPopup*/}
-      {/*    modalId="edit_quiz_modal"*/}
-      {/*    quizName="History Quiz"*/}
-      {/*    dateCreated="2026-03-01"*/}
-      {/*    dateModified="2026-03-05"*/}
-      {/*/>*/}
       <DashWelcomePanel />
-
-      <div className="flex justify-center">
-        <div className="grid grid-cols-3 gap-8 mb-12">
-          {quizzes?.map((quiz) => (
-            <QuizDetailCard
-              key={quiz.id}
-              quizName={quiz.name}
-              description={quiz.description}
-              dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
-              id={quiz.id}
-              setQuizzes={setQuizzes}
-            />
-          ))}
-        </div>
-      </div>
+      {renderContent()}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export function DashWelcomePanel() {
   const { user } = useAuth();
+
   return (
     <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start">
       {/* Left Column */}
@@ -23,6 +24,7 @@ export function DashWelcomePanel() {
             aria-label="My Quizzes"
             defaultChecked
           />
+
           <input
             type="radio"
             name="my_tabs_1"
@@ -34,11 +36,6 @@ export function DashWelcomePanel() {
 
       {/* Right Column */}
       <div className="mt-6 md:mt-0 md:ml-6 w-full md:w-auto">
-        {/* <button className="btn btn-secondary w-full md:w-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
-                    Create Quiz
-                </button> */}
-
         <NewQuizButton />
       </div>
     </div>
