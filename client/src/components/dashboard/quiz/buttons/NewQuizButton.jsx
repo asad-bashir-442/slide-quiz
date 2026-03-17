@@ -122,16 +122,16 @@ export function NewQuizButton() {
               />
             </div>
 
-            <div className="modal-action">
+            <div className="modal-action max-[900px]:block max-[900px]:w-full">
               <button
                 onClick={clearForm}
                 type="reset"
-                className="btn btn-ghost"
+                className="btn max-[900px]:mb-4 max-[900px]:w-full"
               >
                 Cancel
               </button>
 
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary max-[900px]:w-full">
                 Create
               </button>
             </div>

@@ -40,7 +40,7 @@ export function ClearResultsButton() {
             </h3>
           <p className="text-center pt-4 font-bold">This action is irreversible!</p>
           <div className="modal-action">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="max-[900px]:w-full">
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -49,17 +49,17 @@ export function ClearResultsButton() {
                 ✕
               </button>
 
-              <div className="modal-action">
+              <div className="modal-action max-[900px]:block max-[900px]:w-full">
                 <button
                   onClick={handleClose}
                   type="reset"
-                  className="btn btn-ghost"
+                  className="btn max-[900px]:mb-4 max-[900px]:w-full"
                 >
                   Cancel
                 </button>
 
                 {/* TODO: Maybe an icon here */}
-                <button type="submit" className="btn btn-error">
+                <button type="submit" className="btn btn-error max-[900px]:w-full">
                   Yes I know what I'm doing
                 </button>
               </div>
