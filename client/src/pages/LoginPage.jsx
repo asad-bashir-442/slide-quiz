@@ -31,7 +31,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
+    <div className="flex flex-1 items-center justify-center">
       <div className="w-254.5 bg-base-200 p-6 rounded-lg">
         <div className="flex items-center">
           <form

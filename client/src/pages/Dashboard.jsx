@@ -20,7 +20,7 @@ export function Dashboard() {
   }, []);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="">
       {/*<button*/}
       {/*    className="btn btn-primary"*/}
       {/*    onClick={() => document.getElementById("edit_quiz_modal").showModal()}*/}
@@ -36,7 +36,7 @@ export function Dashboard() {
       {/*/>*/}
       <DashWelcomePanel />
 
-      <div className="flex flex-wrap gap-10">
+      <div className="flex flex-wrap gap-10 justify-center mb-12">
         {quizzes?.map((quiz) => (
           <QuizDetailCard
             key={quiz.id}

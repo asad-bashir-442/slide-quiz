@@ -23,21 +23,23 @@ export function App() {
     );
   }
   return (
-    <div className="max-w-[95%] mx-auto pt-4 flex flex-col h-full">
+    <div className="min-h-screen flex flex-col max-w-[95%] mx-auto pt-4">
       <Toaster richColors position="top-right" />
       <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
+      <main className="flex-1 flex flex-col">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="quiz/:id" element={<QuizDetailPage />} />
-        </Route>
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="quiz/:id" element={<QuizDetailPage />} />
+          </Route>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </main>
 
       <Footer />
     </div>

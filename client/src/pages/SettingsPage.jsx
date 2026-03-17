@@ -62,7 +62,7 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
+    <div className="flex flex-1 items-center justify-center">
       <form
         id="settings-form"
         onSubmit={handleSubmit}
@@ -70,7 +70,7 @@ export function SettingsPage() {
       >
         <h1 className="text-3xl mb-2">Welcome {user.name}</h1>
 
-        <div className="flex">
+        <div className="flex gap-2">
           <fieldset className="fieldset flex-1">
             <legend className="fieldset-legend text-base-content/70 text-lg">
               Username
@@ -112,7 +112,7 @@ export function SettingsPage() {
           </fieldset>
         </div>
 
-        <div className="flex">
+        <div className="flex gap-2">
           <fieldset className="fieldset flex-1">
             <legend className="fieldset-legend text-base-content/70 text-lg">
               Current Password

@@ -37,7 +37,7 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
+    <div className="flex flex-1 items-center justify-center">
       <div className="bg-base-200 p-6 rounded-lg">
         <div className=" flex items-center gap-16">
           <form
