@@ -36,7 +36,7 @@ export function Dashboard() {
       {/*/>*/}
       <DashWelcomePanel />
 
-      <div className="flex flex-wrap gap-10 justify-center mb-12">
+      <div className="grid grid-cols-3 gap-10 mb-12">
         {quizzes?.map((quiz) => (
           <QuizDetailCard
             key={quiz.id}
@@ -45,6 +45,7 @@ export function Dashboard() {
             dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
             numQuestions="13"
             id={quiz.id}
+            setQuizzes={setQuizzes}
           />
         ))}
       </div>

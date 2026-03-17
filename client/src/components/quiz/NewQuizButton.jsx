@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { createQuiz } from "../../api/auth";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
 export function NewQuizButton() {
@@ -110,7 +110,7 @@ export function NewQuizButton() {
               <button
                 onClick={clearForm}
                 type="reset"
-                className="btn btn-error"
+                className="btn btn-ghost"
               >
                 Cancel
               </button>
