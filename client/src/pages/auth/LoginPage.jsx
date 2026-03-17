@@ -40,10 +40,17 @@ export function LoginPage() {
 
   return (
     <div className="flex flex-1 items-center justify-center">
-      <div className="w-254.5 bg-base-200 p-6 rounded-lg">
+      <div className="w-254.5 bg-base-200 p-6 rounded-lg max-[900px]:w-full my-4">
+        <div className="text-center my-8 min-[900px]:hidden">
+          <h1 className="text-3xl font-bold mb-4">SlideQuiz Login</h1>
+          <p className="opacity-60">
+            Sign in to access your quizzes and continue where you left off.
+          </p>
+        </div>
+
         <div className="flex items-center">
           <form
-            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col rounded-2xl"
+            className="w-96 bg-base-100 p-8 shadow-2xl flex flex-col rounded-2xl max-[900px]:w-full"
             onSubmit={handleSubmit}
           >
             <fieldset className="fieldset">
@@ -94,7 +101,7 @@ export function LoginPage() {
             </button>
           </form>
 
-          <div className="mx-auto flex flex-col gap-5">
+          <div className="mx-auto flex flex-col gap-5 max-[900px]:hidden">
             <h1 className="text-5xl font-bold">SlideQuiz Login</h1>
             <p>
               Sign in to access your quizzes and continue where you left off.
