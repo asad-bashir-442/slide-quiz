@@ -19,13 +19,10 @@ const registerSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-    email: Joi.string()
-        .email({
-            minDomainSegments: 2,
-            tlds: { allow: ["com", "net", "ca"] },
-        })
-        .required(),
-
+    email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net", "ca"] },
+    }).required(),
     password: Joi.string().min(5).max(20).required(),
 });
 
@@ -102,7 +99,7 @@ export const register = async (req, res) => {
             message: `User ${name} (${email}) created.`,
         });
     } catch (err) {
-        consola.error(`[auth] Could not create user - ${err}`);
+        consola.error(`[users] Could not create user - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -174,7 +171,7 @@ export const login = async (req, res) => {
             message: `Welcome ${user.Username}.`,
         });
     } catch (err) {
-        consola.error(`[auth] Could not compare password - ${err}`);
+        consola.error(`[users] Could not compare password - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -292,7 +289,7 @@ export const update = async (req, res) => {
             message: `Updated ${details.name}.`,
         });
     } catch (err) {
-        consola.error(`[auth] Could not compare password - ${err}`);
+        consola.error(`[users] Could not compare password - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,

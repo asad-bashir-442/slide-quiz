@@ -12,6 +12,14 @@ import {
     deleteQuiz,
 } from "../handlers/quizzes.js";
 
+import {
+    getAll,
+    createQuestion,
+    deleteQuestion,
+    createAnswer,
+    deleteAnswer,
+} from "../handlers/editor.js";
+
 // Public routes
 router.register(async (r) => {
     r.decorate("allowLogin", allow.login);
@@ -36,5 +44,16 @@ router.register(async (r) => {
     r.get("/@me/quiz/:id", { onRequest: [r.auth] }, getQuiz);
     r.patch("/@me/quiz/:id", { onRequest: [r.auth] }, updateQuiz);
     r.delete("/@me/quiz/:id", { onRequest: [r.auth] }, deleteQuiz);
+
+    // Questions
+    r.get("/@me/quiz/:id/editor", { onRequest: [r.auth] }, getAll);
+    r.post("/@me/quiz/:id/editor", { onRequest: [r.auth] }, createQuestion);
+    r.delete("/@me/quiz/:id/editor", { onRequest: [r.auth] }, deleteQuestion);
+
+    // Answers
+    r.post("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, createAnswer);
+    r.delete("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, deleteAnswer);
+
+    // TODO: Responses
 });
 

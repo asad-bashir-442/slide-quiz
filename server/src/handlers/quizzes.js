@@ -61,7 +61,7 @@ export const getQuizzes = async (req, res) => {
             data: quizzes,
         });
     } catch (err) {
-        consola.info(`[auth] Cannot fetch quizzes - ${err}`);
+        consola.error(`[quizzes] Cannot fetch quizzes - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -115,7 +115,7 @@ export const createQuiz = async (req, res) => {
             },
         });
     } catch (err) {
-        consola.info(`[auth] Cannot create quiz - ${err}`);
+        consola.error(`[quizzes] Cannot create quiz - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -157,7 +157,7 @@ export const getQuiz = async (req, res) => {
             },
         });
     } catch (err) {
-        consola.info(`[auth] Cannot fetch quiz - ${err}`);
+        consola.error(`[quizzes] Cannot fetch quiz - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -248,7 +248,7 @@ export const updateQuiz = async (req, res) => {
             data: details,
         });
     } catch (err) {
-        consola.info(`[auth] Cannot update quiz - ${err}`);
+        consola.error(`[quizzes] Cannot update quiz - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,
@@ -288,7 +288,7 @@ export const deleteQuiz = async (req, res) => {
             message: "Removed quiz.",
         });
     } catch (err) {
-        consola.info(`[auth] Cannot delete quiz - ${err}`);
+        consola.error(`[quizzes] Cannot delete quiz - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,

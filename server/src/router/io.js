@@ -177,6 +177,8 @@ router.io.on("connection", (socket) => {
 
             router.io.to(target).emit("player:kicked", { message: "You were kicked from the game." });
             router.io.to(session.host).emit("host:players", { players: Array.from(players.values()) });
+
+            // TODO: Disconnect the player?
         } else {
             socket.emit("error", { message: "Player not found." });
         }
