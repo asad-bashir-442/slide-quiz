@@ -2,6 +2,7 @@
 
 import "dotenv/config";
 import "./router/routes.js";
+import "./router/io.js";
 
 import consola from "consola";
 import router from "./router/router.js";

@@ -37,3 +37,4 @@ router.register(async (r) => {
     r.patch("/@me/quiz/:id", { onRequest: [r.auth] }, updateQuiz);
     r.delete("/@me/quiz/:id", { onRequest: [r.auth] }, deleteQuiz);
 });
+

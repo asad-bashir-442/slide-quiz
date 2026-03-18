@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import io from "fastify-socket.io";
 
 import jwt from "@fastify/jwt";
 import cors from "@fastify/cors";
@@ -32,5 +33,8 @@ fastify.register(mysql, {
     promise: true,
     connectionString: String(process.env.DSN),
 });
+
+
+await fastify.register(io);
 
 export default fastify;
