@@ -31,7 +31,7 @@ export function QuizPanel() {
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchQuizzes();
   }, []);
@@ -51,7 +51,8 @@ export function QuizPanel() {
         } else {
           setQuizzes((prev) => {
             const newQuizzes = data.data.filter(
-              newQuiz => !prev.some(existingQuiz => existingQuiz.id === newQuiz.id)
+              (newQuiz) =>
+                !prev.some((existingQuiz) => existingQuiz.id === newQuiz.id),
             );
 
             return [...prev, ...newQuizzes];
@@ -72,17 +73,19 @@ export function QuizPanel() {
     }
   };
 
-  if (loading) return (
-    <div className="text-center">
-      <Loading />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="text-center">
+        <Loading />
+      </div>
+    );
 
-  if (error) return (
-    <div className="text-center text-error">
-      <Error message={error} />
-    </div>
-  );
+  if (error)
+    return (
+      <div className="text-center text-error">
+        <Error message={error} />
+      </div>
+    );
 
   return (
     <>
@@ -96,6 +99,7 @@ export function QuizPanel() {
               dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
               id={quiz.id}
               setQuizzes={setQuizzes}
+              isAutomatic={quiz.automaticDefault}
             />
           ))}
         </div>
@@ -113,7 +117,11 @@ export function QuizPanel() {
                 <span className="loading loading-spinner loading-xs"></span>
                 Loading...
               </>
-            ) : hasMore ? "Load More" : "No More Quizzes"}
+            ) : hasMore ? (
+              "Load More"
+            ) : (
+              "No More Quizzes"
+            )}
           </button>
         </div>
       )}
@@ -125,5 +133,4 @@ export function QuizPanel() {
       )}
     </>
   );
-};
-
+}

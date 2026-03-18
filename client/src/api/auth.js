@@ -107,6 +107,28 @@ export async function getQuizById(id) {
   return data;
 }
 
+export async function editQuizById(id, quizData) {
+  const url = `${BASE_URL}/@me/quiz/${id}`;
+  const token = localStorage.getItem("token");
+  const res = await fetch(url, {
+    ...options,
+    method: "PATCH",
+    body: JSON.stringify(quizData),
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+
+  return data;
+}
+
 export async function deleteQuizById(id) {
   const url = `${BASE_URL}/@me/quiz/${id}`;
   const token = localStorage.getItem("token");

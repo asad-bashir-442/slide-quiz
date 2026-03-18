@@ -2,6 +2,7 @@ import { DeleteQuizButton } from "../buttons/DeleteQuizButton";
 import { truncateText } from "../../../../utility/truncate";
 
 import { useNavigate } from "react-router";
+import { EditQuizButton } from "../buttons/EditQuizButton";
 
 export function QuizDetailCard({
   quizName,
@@ -9,6 +10,7 @@ export function QuizDetailCard({
   dateCreated,
   id,
   setQuizzes,
+  isAutomatic,
 }) {
   const navigate = useNavigate();
 
@@ -18,7 +20,9 @@ export function QuizDetailCard({
       className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary cursor-pointer max-[900px]:w-full"
     >
       <div className="card-body">
-        <h2 className="card-title overflow-hidden" title={quizName}>{truncateText(quizName, 25)}</h2>
+        <h2 className="card-title overflow-hidden" title={quizName}>
+          {truncateText(quizName, 25)}
+        </h2>
         <p className="break-words">{description}</p>
 
         <div className="flex gap-2 mt-2">
@@ -26,9 +30,20 @@ export function QuizDetailCard({
         </div>
 
         <div className="card-actions justify-center flex-nowrap gap-3 mt-4 max-[900px]:flex-wrap max-[900px]:gap-2">
-          <button className="btn btn-primary max-[900px]:w-full max-[900px]:btn-outline">Edit</button>
-          <button className="btn btn-secondary max-[900px]:w-full max-[900px]:btn-outline">Download</button>
-          <button className="btn btn-accent max-[900px]:w-full max-[900px]:btn-outline">Host</button>
+          {/* <button className="btn btn-primary max-[900px]:w-full max-[900px]:btn-outline">Edit</button> */}
+          <EditQuizButton
+            isAutomatic={isAutomatic}
+            id={id}
+            name={quizName}
+            descrption={description}
+            setQuizzes={setQuizzes}
+          />
+          <button className="btn btn-secondary max-[900px]:w-full max-[900px]:btn-outline">
+            Download
+          </button>
+          <button className="btn btn-accent max-[900px]:w-full max-[900px]:btn-outline">
+            Host
+          </button>
           <DeleteQuizButton
             setQuizzes={setQuizzes}
             id={id}
