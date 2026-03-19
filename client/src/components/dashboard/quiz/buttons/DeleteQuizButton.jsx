@@ -1,5 +1,5 @@
 import { truncateText } from "../../../../utility/truncate";
-import { deleteQuizById, getAllQuizzes } from "../../../../api/auth";
+import { getAllQuizzes, deleteQuizById } from "../../../../api/quiz";
 
 import { toast } from "sonner";
 

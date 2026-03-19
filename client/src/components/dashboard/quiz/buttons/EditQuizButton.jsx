@@ -1,4 +1,4 @@
-import { editQuizById, getAllQuizzes } from "../../../../api/auth";
+import { editQuizById, getAllQuizzes } from "../../../../api/quiz";
 import { useState } from "react";
 import { toast } from "sonner";
 export function EditQuizButton({
