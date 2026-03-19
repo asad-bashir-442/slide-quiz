@@ -1,4 +1,4 @@
-import { createQuiz } from "../../../../api/auth";
+import { createQuiz } from "../../../../api/quiz";
 
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
@@ -33,14 +33,14 @@ export function NewQuizButton() {
     } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
 
   const clearForm = () => {
     setQuizName("");
     setQuizDescription("");
 
     document.getElementById("new_quiz_modal").close();
-  }
+  };
 
   return (
     <>
@@ -131,7 +131,10 @@ export function NewQuizButton() {
                 Cancel
               </button>
 
-              <button type="submit" className="btn btn-primary max-[900px]:w-full">
+              <button
+                type="submit"
+                className="btn btn-primary max-[900px]:w-full"
+              >
                 Create
               </button>
             </div>

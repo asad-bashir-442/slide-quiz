@@ -1,8 +1,7 @@
 import { QuizDetailCard } from "../dashboard/quiz/details/QuizDetailCard.jsx";
 import { Loading } from "../utility/Loading.jsx";
 import { Error } from "../utility/Error.jsx";
-
-import { getAllQuizzes } from "../../api/auth.js";
+import { getAllQuizzes } from "../../api/quiz.js";
 import { useEffect, useState } from "react";
 
 export function QuizPanel() {

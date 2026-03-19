@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { getQuizById } from "../api/auth";
+import { getQuizById } from "../api/quiz";
 import { useEffect, useState } from "react";
 import { QuizCreatorPage } from "./QuizCreatorPage";
 export function QuizDetailPage() {
@@ -15,7 +15,7 @@ export function QuizDetailPage() {
       } catch (error) {
         setServerError(error.message);
       }
-    }
+    };
 
     fetchQuiz();
   }, [id]);
