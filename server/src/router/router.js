@@ -5,6 +5,7 @@ import jwt from "@fastify/jwt";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import mysql from "@fastify/mysql";
+import redis from "@fastify/redis";
 
 const fastify = Fastify();
 const secret = process.env.JWT_SECRET;
@@ -34,6 +35,9 @@ fastify.register(mysql, {
     connectionString: String(process.env.DSN),
 });
 
+fastify.register(redis, {
+    host: "127.0.0.1",
+});
 
 await fastify.register(io);
 

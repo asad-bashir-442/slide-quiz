@@ -4,21 +4,8 @@ import auth from "../middleware/auth.js";
 import allow from "../middleware/allow.js";
 
 import { register, login, whoami, update } from "../handlers/users.js";
-import {
-    getQuizzes,
-    createQuiz,
-    getQuiz,
-    updateQuiz,
-    deleteQuiz,
-} from "../handlers/quizzes.js";
-
-import {
-    getAll,
-    createQuestion,
-    deleteQuestion,
-    createAnswer,
-    deleteAnswer,
-} from "../handlers/editor.js";
+import { getQuizzes, createQuiz, getQuiz, updateQuiz, deleteQuiz } from "../handlers/quizzes.js";
+import { getAll, createQuestion, deleteQuestion, createAnswer, deleteAnswer } from "../handlers/editor.js";
 
 // Public routes
 router.register(async (r) => {
@@ -56,4 +43,3 @@ router.register(async (r) => {
 
     // TODO: Responses
 });
-
