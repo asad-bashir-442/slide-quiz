@@ -1,9 +1,7 @@
 import consola from "consola";
 import Joi from "joi";
 
-// TODO: Should be part of the .env
-const limitamt = 9; // To match the UI, should be divisible by 3
-
+const limitamt = parseInt(process.env.PAGINATION) || 9;
 const quizzesSchema = Joi.number().min(1).max(500).integer();
 
 const quizSchema = Joi.object({
@@ -31,16 +29,17 @@ export const getQuizzes = async (req, res) => {
         });
     }
 
+    const connection = await req.server.mysql.getConnection();
+
     try {
-        const connection = await req.server.mysql.getConnection();
         const offset = (parseInt(page) - 1) * limitamt;
-
-        const [results] = await connection.query(
-            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?",
-            [uid, offset, limitamt]
-        );
-
         const quizzes = [];
+
+        const [results] = await req.server.mysql.query("SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?", [
+            uid,
+            offset,
+            limitamt,
+        ]);
 
         for (const quiz of results) {
             quizzes.push({
@@ -50,7 +49,7 @@ export const getQuizzes = async (req, res) => {
                 automaticDefault: quiz.AutomaticDefault,
                 createdAt: quiz.CreatedAt,
                 updatedAt: quiz.UpdatedAt,
-            })
+            });
         }
 
         connection.release();
@@ -61,14 +60,15 @@ export const getQuizzes = async (req, res) => {
             data: quizzes,
         });
     } catch (err) {
-        consola.info(`[auth] Cannot fetch quizzes - ${err}`);
+        consola.error(`[quizzes] Cannot fetch quizzes - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
             message: "Internal server error.",
         });
     }
-}
+};
 
 export const createQuiz = async (req, res) => {
     // Empty body?
@@ -89,18 +89,21 @@ export const createQuiz = async (req, res) => {
         });
     }
 
+    const connection = await req.server.mysql.getConnection();
+
     try {
-        const connection = await req.server.mysql.getConnection();
         const details = {
             name: req.body.name.trim(),
             description: req.body.description.trim(),
             automatic: String(req.body.automatic) == "true",
         };
 
-        const [result] = await connection.query(
-            "INSERT INTO Quizzes (UserID, Name, Description, AutomaticDefault) VALUES (?, ?, ?, ?)",
-            [req.user.id, details.name, details.description, details.automatic],
-        );
+        const [result] = await connection.query("INSERT INTO Quizzes (UserID, Name, Description, AutomaticDefault) VALUES (?, ?, ?, ?)", [
+            req.user.id,
+            details.name,
+            details.description,
+            details.automatic,
+        ]);
 
         connection.release();
 
@@ -115,7 +118,8 @@ export const createQuiz = async (req, res) => {
             },
         });
     } catch (err) {
-        consola.info(`[auth] Cannot create quiz - ${err}`);
+        consola.error(`[quizzes] Cannot create quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -127,21 +131,19 @@ export const createQuiz = async (req, res) => {
 export const getQuiz = async (req, res) => {
     const { id } = req.params;
 
+    const connection = await req.server.mysql.getConnection();
+
     try {
-        const connection = await req.server.mysql.getConnection();
-        const [results] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, req.user.id],
-        );
+        const [results] = await connection.query("SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (results.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
             });
         }
-
-        const quiz = results[0];
 
         connection.release();
 
@@ -149,15 +151,16 @@ export const getQuiz = async (req, res) => {
             statusCode: 200,
             message: "Found quiz.",
             data: {
-                name: quiz.Name,
-                description: quiz.Description,
-                automaticDefault: quiz.AutomaticDefault,
-                createdAt: quiz.CreatedAt,
-                updatedAt: quiz.UpdatedAt,
+                name: results[0].Name,
+                description: results[0].Description,
+                automaticDefault: results[0].AutomaticDefault,
+                createdAt: results[0].CreatedAt,
+                updatedAt: results[0].UpdatedAt,
             },
         });
     } catch (err) {
-        consola.info(`[auth] Cannot fetch quiz - ${err}`);
+        consola.error(`[quizzes] Cannot fetch quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -187,16 +190,15 @@ export const updateQuiz = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // Does quiz exist?
-        const [quizzes] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, req.user.id],
-        );
+        const [quizzes] = await connection.query("SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (quizzes.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
@@ -229,16 +231,13 @@ export const updateQuiz = async (req, res) => {
         }
 
         // Update
-        await connection.query(
-            "UPDATE Quizzes SET Name = ?, Description = ?, AutomaticDefault = ? WHERE ID = ? AND UserID = ?",
-            [
-                details.name,
-                details.description,
-                details.automatic,
-                id,
-                req.user.id,
-            ],
-        );
+        await connection.query("UPDATE Quizzes SET Name = ?, Description = ?, AutomaticDefault = ? WHERE ID = ? AND UserID = ?", [
+            details.name,
+            details.description,
+            details.automatic,
+            id,
+            req.user.id,
+        ]);
 
         connection.release();
 
@@ -248,7 +247,8 @@ export const updateQuiz = async (req, res) => {
             data: details,
         });
     } catch (err) {
-        consola.info(`[auth] Cannot update quiz - ${err}`);
+        consola.error(`[quizzes] Cannot update quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -259,27 +259,22 @@ export const updateQuiz = async (req, res) => {
 
 export const deleteQuiz = async (req, res) => {
     const { id } = req.params;
+    const connection = await req.server.mysql.getConnection();
 
     try {
-        const connection = await req.server.mysql.getConnection();
-
         // Does quiz exist?
-        const [exists] = await connection.query(
-            "SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, req.user.id],
-        );
+        const [exists] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (exists.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
             });
         }
 
-        await connection.query(
-            "DELETE FROM Quizzes WHERE ID = ? AND UserID = ?",
-            [id, req.user.id],
-        );
+        await connection.query("DELETE FROM Quizzes WHERE ID = ? AND UserID = ?", [id, req.user.id]);
 
         connection.release();
 
@@ -288,7 +283,8 @@ export const deleteQuiz = async (req, res) => {
             message: "Removed quiz.",
         });
     } catch (err) {
-        consola.info(`[auth] Cannot delete quiz - ${err}`);
+        consola.error(`[quizzes] Cannot delete quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,

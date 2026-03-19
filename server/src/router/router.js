@@ -1,9 +1,11 @@
 import Fastify from "fastify";
+import io from "fastify-socket.io";
 
 import jwt from "@fastify/jwt";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import mysql from "@fastify/mysql";
+import redis from "@fastify/redis";
 
 const fastify = Fastify();
 const secret = process.env.JWT_SECRET;
@@ -32,5 +34,11 @@ fastify.register(mysql, {
     promise: true,
     connectionString: String(process.env.DSN),
 });
+
+fastify.register(redis, {
+    host: String(process.env.CACHE),
+});
+
+await fastify.register(io);
 
 export default fastify;

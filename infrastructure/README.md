@@ -37,7 +37,10 @@ make dev-up
 # Stop the services
 make dev-down
 
-# Use an SQL shell
+# Use the SQL shell
 make database
+
+# Use the Redis CLI
+make cache
 ```
 
