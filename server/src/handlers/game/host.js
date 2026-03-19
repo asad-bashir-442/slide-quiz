@@ -1,7 +1,7 @@
 import Joi from "joi";
 import consola from "consola";
 
-import { createGame, getGame, updateGame, getPlayers, updatePlayers } from "../../helpers/cache.js";
+import { createGame, getGame, updateGame, getPlayers, removePlayer } from "../../helpers/cache.js";
 import { queryQuestions } from "../../helpers/database.js";
 
 const jumpSchema = Joi.number().min(0).max(999).integer().required();
@@ -97,31 +97,35 @@ export default (socket, cache, db, jwt, io) => ({
 
         const players = await getPlayers(cache, code);
 
-        // No players, don't do anything
-        if (!players) return;
-
+        // Find player socket ID by player ID
         let target = null;
-        let kick = null;
+        let kicked = null;
 
-        // Find player
-        for (const [socketID, player] of Object.entries(players)) {
+        for (const [sid, player] of Object.entries(players)) {
             if (player.id === playerID) {
-                target = socketID;
-                kick = player;
-
+                target = sid;
+                kicked = player;
                 break;
             }
         }
 
         // Player was found, kick
-        if (target && kick) {
-            delete players[target];
-            await updatePlayers(cache, code, players);
+        if (target && kicked) {
+            await removePlayer(cache, code, target);
 
-            io.to(target).emit("player:kicked", { message: "You were kicked from the game." });
-            io.to(session.host).emit("host:players", { players: Object.values(players) });
+            io.to(target).emit("player:kicked", {
+                message: "You were kicked from the game.",
+            });
 
-            // TODO: Disconnect the player?
+            const kickedSocket = io.sockets.sockets.get(target);
+            if (kickedSocket) kickedSocket.leave(code);
+
+            // Update player list
+            const updatedPlayers = await getPlayers(cache, code);
+
+            io.to(session.host).emit("host:players", {
+                players: Object.values(updatedPlayers),
+            });
         } else {
             socket.emit("error", { message: "Player not found." });
         }

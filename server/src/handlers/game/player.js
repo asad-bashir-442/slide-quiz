@@ -1,6 +1,16 @@
-import { GAME_PREFIX, PLAYER_PREFIX, getGame, getPlayers, updatePlayers, deleteGame, createPlayer } from "../../helpers/cache.js";
-
 import consola from "consola";
+
+// prettier-ignore
+import {
+    getGame,
+    addPlayer,
+    removePlayer,
+    getPlayers,
+    getPlayer,
+    deleteGame,
+    createPlayer,
+    getAllGameCodes
+} from "../../helpers/cache.js";
 
 export default (socket, cache, io) => ({
     async join({ code, username }) {
@@ -11,20 +21,19 @@ export default (socket, cache, io) => ({
             return;
         }
 
-        const players = await getPlayers(cache, code);
         const id = createPlayer(username);
 
         if (id == -1) {
-            socket.emit("error", { message: "Invalid user." });
+            socket.emit("error", { message: "Invalid username." });
             return;
         }
 
-        players[socket.id] = { id, username };
-        await updatePlayers(cache, code, players);
+        await addPlayer(cache, code, socket.id, { id, username });
 
-        // Emit to host
         socket.join(code);
         socket.emit("player:joined", { code, id, username });
+
+        const players = await getPlayers(cache, code);
 
         io.to(session.host).emit("host:players", {
             players: Object.values(players),
@@ -33,10 +42,16 @@ export default (socket, cache, io) => ({
 
     async answer({ code, response }) {
         const session = await getGame(cache, code);
-        const players = await getPlayers(cache, code);
 
-        // Validate answer state
-        if (!players[socket.id]) {
+        if (!session) {
+            socket.emit("error", { message: "Game not found." });
+            return;
+        }
+
+        // Check if player is in the game
+        const player = await getPlayer(cache, code, socket.id);
+
+        if (!player) {
             socket.emit("error", { message: "You have not joined that lobby." });
             return;
         }
@@ -48,24 +63,21 @@ export default (socket, cache, io) => ({
 
         // Validate answer
         const question = session.questions[session.index];
-
         if (!question) {
             socket.emit("error", { message: "Invalid question." });
             return;
         }
 
-        // TODO: Has the user already entered a response?
+        // TODO: Track if user already answered
 
         // Short answer
         if (question.shortAnswer) {
-            socket.emit("error", { message: "NOT AN ERROR! WE GOOD! " + response });
-
+            socket.emit("message", { text: "NOT AN ERROR! WE GOOD! " + response });
             return;
         }
 
         // Multiple choice answer
         const picked = question.answers.filter((n) => n.id == (parseInt(response) || -1));
-
         if (picked.length == 0) {
             socket.emit("error", { message: "Invalid choice" });
             return;
@@ -75,41 +87,36 @@ export default (socket, cache, io) => ({
     },
 
     async disconnect() {
-        // Host disconnect
-        const gameKeys = await cache.keys(`${GAME_PREFIX}*`);
+        const gameCodes = await getAllGameCodes(cache);
 
-        for (const key of gameKeys) {
-            const code = key.replace(GAME_PREFIX, "");
+        // Check if socket is a host
+        for (const code of gameCodes) {
             const session = await getGame(cache, code);
 
-            if (session && session.host === socket.id) {
+            if (session?.host === socket.id) {
                 io.to(code).emit("game:ended");
                 await deleteGame(cache, code);
-
-                break;
+                return;
             }
         }
 
-        // Player disconnect
-        const allPlayers = await cache.keys(`${PLAYER_PREFIX}*`);
+        // Check if socket is a player
+        for (const code of gameCodes) {
+            const player = await getPlayer(cache, code, socket.id);
 
-        for (const key of allPlayers) {
-            const code = key.replace(PLAYER_PREFIX, "");
-            const players = await getPlayers(cache, code);
-
-            if (players[socket.id]) {
-                delete players[socket.id];
-                await updatePlayers(cache, code, players);
+            if (player) {
+                await removePlayer(cache, code, socket.id);
 
                 const session = await getGame(cache, code);
 
                 if (session) {
+                    const players = await getPlayers(cache, code);
                     io.to(session.host).emit("host:players", {
                         players: Object.values(players),
                     });
                 }
 
-                break;
+                return;
             }
         }
     },
