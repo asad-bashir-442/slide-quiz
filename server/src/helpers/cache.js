@@ -1,3 +1,8 @@
+import Joi from "joi";
+import { v4 as uuidv4 } from "uuid";
+
+const usernameSchema = Joi.string().trim().min(3).max(50).required();
+
 export const GAME_PREFIX = "game:";
 export const PLAYER_PREFIX = "players:";
 export const EXPIRE = 86400;
@@ -88,12 +93,8 @@ export const deleteGame = async (cache, code) => {
 };
 
 export const createPlayer = (username) => {
-    // TODO: Validate username
-    // JOI
-    if (username == "") {
-        return -1;
-    }
+    const { error } = usernameSchema.validate(username);
 
-    // TODO: UUID?
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    if (error) return -1;
+    return uuidv4();
 };

@@ -1,4 +1,7 @@
+import Joi from "joi";
 import { createGame, getGame, updateGame, getPlayers, updatePlayers } from "../../helpers/cache.js";
+
+const jumpSchema = Joi.number().min(0).max(999).integer().required();
 
 export default (socket, cache, io) => ({
     async manual({ quizID }) {
@@ -51,8 +54,9 @@ export default (socket, cache, io) => ({
             return;
         }
 
-        // TODO: JOI number validate
-        if (index < 0 || index > session.questions.length) {
+        const { error } = jumpSchema.validate(index);
+
+        if (error || index < 0 || index > session.questions.length) {
             socket.emit("error", { message: "Invalid index." });
             return;
         }
