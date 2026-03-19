@@ -62,13 +62,15 @@ export const createQuestion = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // Does user own the quiz?
         const [owned] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, uid]);
 
         if (owned.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
@@ -92,6 +94,7 @@ export const createQuestion = async (req, res) => {
         });
     } catch (err) {
         consola.info(`[editor] Cannot create question - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -114,9 +117,9 @@ export const deleteQuestion = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // Does the question exist? Does user own the quiz?
         const [exists] = await connection.query(
             `
@@ -130,6 +133,8 @@ export const deleteQuestion = async (req, res) => {
         );
 
         if (exists.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Question not found!",
@@ -147,6 +152,7 @@ export const deleteQuestion = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[editor] Cannot delete question - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -177,9 +183,9 @@ export const createAnswer = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // Does the question exist and is it from the specified quiz? Is it multiple choice?
         const [exists] = await connection.query(
             `
@@ -193,6 +199,8 @@ export const createAnswer = async (req, res) => {
         );
 
         if (exists.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 400,
                 message: "Invalid question!",
@@ -211,6 +219,7 @@ export const createAnswer = async (req, res) => {
         });
     } catch (err) {
         consola.info(`[editor] Cannot create answer - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -233,9 +242,9 @@ export const deleteAnswer = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // Does the answer exist? Does user own the quiz?
         const [exists] = await connection.query(
             `
@@ -249,6 +258,8 @@ export const deleteAnswer = async (req, res) => {
         );
 
         if (exists.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Answer not found!",
@@ -266,6 +277,7 @@ export const deleteAnswer = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[editor] Cannot delete answer - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,

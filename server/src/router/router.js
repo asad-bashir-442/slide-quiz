@@ -36,7 +36,7 @@ fastify.register(mysql, {
 });
 
 fastify.register(redis, {
-    host: "127.0.0.1",
+    host: String(process.env.CACHE),
 });
 
 await fastify.register(io);

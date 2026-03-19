@@ -29,17 +29,17 @@ export const getQuizzes = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
-        const offset = (parseInt(page) - 1) * limitamt;
+    const connection = await req.server.mysql.getConnection();
 
-        const [results] = await connection.query("SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?", [
+    try {
+        const offset = (parseInt(page) - 1) * limitamt;
+        const quizzes = [];
+
+        const [results] = await req.server.mysql.query("SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?", [
             uid,
             offset,
             limitamt,
         ]);
-
-        const quizzes = [];
 
         for (const quiz of results) {
             quizzes.push({
@@ -61,6 +61,7 @@ export const getQuizzes = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[quizzes] Cannot fetch quizzes - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -88,8 +89,9 @@ export const createQuiz = async (req, res) => {
         });
     }
 
+    const connection = await req.server.mysql.getConnection();
+
     try {
-        const connection = await req.server.mysql.getConnection();
         const details = {
             name: req.body.name.trim(),
             description: req.body.description.trim(),
@@ -117,6 +119,7 @@ export const createQuiz = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[quizzes] Cannot create quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -128,18 +131,19 @@ export const createQuiz = async (req, res) => {
 export const getQuiz = async (req, res) => {
     const { id } = req.params;
 
+    const connection = await req.server.mysql.getConnection();
+
     try {
-        const connection = await req.server.mysql.getConnection();
         const [results] = await connection.query("SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (results.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
             });
         }
-
-        const quiz = results[0];
 
         connection.release();
 
@@ -147,15 +151,16 @@ export const getQuiz = async (req, res) => {
             statusCode: 200,
             message: "Found quiz.",
             data: {
-                name: quiz.Name,
-                description: quiz.Description,
-                automaticDefault: quiz.AutomaticDefault,
-                createdAt: quiz.CreatedAt,
-                updatedAt: quiz.UpdatedAt,
+                name: results[0].Name,
+                description: results[0].Description,
+                automaticDefault: results[0].AutomaticDefault,
+                createdAt: results[0].CreatedAt,
+                updatedAt: results[0].UpdatedAt,
             },
         });
     } catch (err) {
         consola.error(`[quizzes] Cannot fetch quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -185,13 +190,15 @@ export const updateQuiz = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // Does quiz exist?
         const [quizzes] = await connection.query("SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (quizzes.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
@@ -241,6 +248,7 @@ export const updateQuiz = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[quizzes] Cannot update quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -251,14 +259,15 @@ export const updateQuiz = async (req, res) => {
 
 export const deleteQuiz = async (req, res) => {
     const { id } = req.params;
+    const connection = await req.server.mysql.getConnection();
 
     try {
-        const connection = await req.server.mysql.getConnection();
-
         // Does quiz exist?
         const [exists] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (exists.length == 0) {
+            connection.release();
+
             return res.code(404).send({
                 statusCode: 404,
                 message: "Quiz not found!",
@@ -275,6 +284,7 @@ export const deleteQuiz = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[quizzes] Cannot delete quiz - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,

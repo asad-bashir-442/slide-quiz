@@ -18,10 +18,12 @@ const registerSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-    email: Joi.string().email({
-        minDomainSegments: 2,
-        tlds: { allow: ["com", "net", "ca"] },
-    }).required(),
+    email: Joi.string()
+        .email({
+            minDomainSegments: 2,
+            tlds: { allow: ["com", "net", "ca"] },
+        })
+        .required(),
 
     password: Joi.string().min(5).max(20).required(),
 });
@@ -56,17 +58,17 @@ export const register = async (req, res) => {
         });
     }
 
+    const connection = await req.server.mysql.getConnection();
+
     try {
-        const connection = await req.server.mysql.getConnection();
         const { name, email } = req.body;
 
         // User exists?
-        const [existing] = await connection.query(
-            "SELECT ID FROM Users WHERE Email = ? LIMIT 1",
-            [email],
-        );
+        const [existing] = await connection.query("SELECT ID FROM Users WHERE Email = ? LIMIT 1", [email]);
 
         if (existing.length > 0) {
+            connection.release();
+
             return res.code(409).send({
                 statusCode: 409,
                 message: "Email in use.",
@@ -76,10 +78,7 @@ export const register = async (req, res) => {
         // Hash and insert
         const hash = await bcrypt.hash(req.body.password, hashamt);
 
-        const [result] = await connection.query(
-            `INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)`,
-            [name, email, hash],
-        );
+        const [result] = await connection.query(`INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)`, [name, email, hash]);
 
         const token = router.jwt.sign(
             {
@@ -100,6 +99,7 @@ export const register = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[users] Could not create user - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -127,16 +127,15 @@ export const login = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // User exists?
-        const [users] = await connection.query(
-            "SELECT ID, Username, Email, Password FROM Users WHERE Email = ? LIMIT 1",
-            [req.body.email],
-        );
+        const [users] = await connection.query("SELECT ID, Username, Email, Password FROM Users WHERE Email = ? LIMIT 1", [req.body.email]);
 
         if (users.length == 0) {
+            connection.release();
+
             return res.code(401).send({
                 statusCode: 401,
                 message: "Invalid username/password.",
@@ -147,6 +146,8 @@ export const login = async (req, res) => {
         const match = await bcrypt.compare(req.body.password, user.Password);
 
         if (!match) {
+            connection.release();
+
             return res.code(401).send({
                 statusCode: 401,
                 message: "Invalid username/password.",
@@ -172,6 +173,7 @@ export const login = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[users] Could not compare password - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,
@@ -201,17 +203,16 @@ export const update = async (req, res) => {
         });
     }
 
-    try {
-        const connection = await req.server.mysql.getConnection();
+    const connection = await req.server.mysql.getConnection();
 
+    try {
         // User exists?
-        const [users] = await connection.query(
-            "SELECT ID, Password FROM Users WHERE ID = ? LIMIT 1",
-            [id],
-        );
+        const [users] = await connection.query("SELECT ID, Password FROM Users WHERE ID = ? LIMIT 1", [id]);
 
         // Should never be possible. We should still check
         if (users.length == 0) {
+            connection.release();
+
             return res.code(401).send({
                 statusCode: 401,
                 message: "Invalid user.",
@@ -223,6 +224,8 @@ export const update = async (req, res) => {
 
         // Check for password
         if (!match) {
+            connection.release();
+
             return res.code(401).send({
                 statusCode: 401,
                 message: "Invalid password.",
@@ -243,12 +246,11 @@ export const update = async (req, res) => {
 
         // Is the new email in use?
         if (req.body.email) {
-            const [emails] = await connection.query(
-                "SELECT 1 FROM Users WHERE Email = ? LIMIT 1",
-                [req.body.email],
-            );
+            const [emails] = await connection.query("SELECT 1 FROM Users WHERE Email = ? LIMIT 1", [req.body.email]);
 
             if (emails.length > 0) {
+                connection.release();
+
                 return res.code(409).send({
                     statusCode: 409,
                     message: "Email in use.",
@@ -266,10 +268,7 @@ export const update = async (req, res) => {
         }
 
         // Update content
-        await connection.query(
-            "UPDATE Users SET Username = ?, Email = ?, Password = ? WHERE ID = ?",
-            [details.name, details.email, details.password, id],
-        );
+        await connection.query("UPDATE Users SET Username = ?, Email = ?, Password = ? WHERE ID = ?", [details.name, details.email, details.password, id]);
 
         const token = router.jwt.sign(
             {
@@ -290,6 +289,7 @@ export const update = async (req, res) => {
         });
     } catch (err) {
         consola.error(`[users] Could not compare password - ${err}`);
+        connection.release();
 
         return res.code(500).send({
             statusCode: 500,

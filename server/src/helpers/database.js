@@ -1,8 +1,9 @@
 import consola from "consola";
 
 export const queryQuestions = async (database, userID, quizID) => {
+    const connection = await database.getConnection();
+
     try {
-        const connection = await database.getConnection();
         const data = {
             id: -1,
             name: "",
@@ -14,6 +15,7 @@ export const queryQuestions = async (database, userID, quizID) => {
         const [details] = await connection.query("SELECT ID, Name, Description FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [quizID, userID]);
 
         if (details.length == 0) {
+            connection.release();
             return 404;
         }
 
@@ -57,6 +59,8 @@ export const queryQuestions = async (database, userID, quizID) => {
         return data;
     } catch (err) {
         consola.info(`[database] Cannot fetch all details - ${err}`);
+        connection.release();
+
         return -1;
     }
 };
