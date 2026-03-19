@@ -1,6 +1,8 @@
 import consola from "consola";
 import Joi from "joi";
 
+import { queryQuestions } from "../../helpers/database.js";
+
 const idSchema = Joi.number().min(0).integer().required();
 
 const questionSchema = Joi.object({
@@ -15,79 +17,27 @@ const answerSchema = Joi.object({
 });
 
 export const getAll = async (req, res) => {
-    const uid = req.user.id;
-    const { id } = req.params;
+    const data = await queryQuestions(req.server.mysql, req.user.id, req.params.id);
 
-    try {
-        const connection = await req.server.mysql.getConnection();
-        const data = {
-            id: -1,
-            name: "",
-            description: "",
-            questions: [],
-        };
-
-        // Fetch details
-        const [details] = await connection.query("SELECT ID, Name, Description FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, uid]);
-
-        if (details.length == 0) {
-            return res.code(404).send({
-                statusCode: 404,
-                message: "Quiz not found!",
-            });
-        }
-
-        data.id = details.id;
-        data.name = details.Name;
-        data.description = details.Description;
-
-        // Fetch questions
-        const [questions] = await connection.query("SELECT ID, Description, ShortAnswer, Points, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?", [id]);
-
-        for (const question of questions) {
-            const q = {
-                id: question.ID,
-                description: question.Description,
-                shortAnswer: question.ShortAnswer,
-                points: question.Points,
-                createdAt: question.CreatedAt,
-                updatedAt: question.UpdatedAt,
-            };
-
-            if (!q.shortAnswer) {
-                const [answers] = await connection.query("SELECT ID, Description, Correct, CreatedAt, UpdatedAt FROM Answers WHERE QuestionID = ?", [q.id]);
-
-                q.answers = [];
-
-                for (const answer of answers) {
-                    q.answers.push({
-                        id: answer.ID,
-                        description: answer.Description,
-                        correct: answer.Correct,
-                        createdAt: answer.CreatedAt,
-                        updatedAt: answer.UpdatedAt,
-                    });
-                }
-            }
-
-            data.questions.push(q);
-        }
-
-        connection.release();
-
-        return res.code(200).send({
-            statusCode: 200,
-            message: "Quiz details fetched successfully.",
-            data,
+    if (data === 404) {
+        return res.code(404).send({
+            statusCode: 404,
+            message: "Quiz not found.",
         });
-    } catch (err) {
-        consola.info(`[editor] Cannot fetch all details - ${err}`);
+    }
 
+    if (data === -1) {
         return res.code(500).send({
             statusCode: 500,
             message: "Internal server error.",
         });
     }
+
+    return res.code(200).send({
+        statusCode: 200,
+        message: "Quiz details fetched successfully.",
+        data,
+    });
 };
 
 export const createQuestion = async (req, res) => {
@@ -230,20 +180,19 @@ export const createAnswer = async (req, res) => {
     try {
         const connection = await req.server.mysql.getConnection();
 
-        // Does user own the quiz?
-        const [owned] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, uid]);
+        // Does the question exist and is it from the specified quiz? Is it multiple choice?
+        const [exists] = await connection.query(
+            `
+                SELECT 1 FROM Questions q JOIN Quizzes z
+                ON q.QuizID = z.ID
+                WHERE q.QuizID = ? AND z.UserID = ? AND q.ID = ? AND q.ShortAnswer = false
+                LIMIT 1
+            `,
 
-        if (owned.length == 0) {
-            return res.code(404).send({
-                statusCode: 404,
-                message: "Quiz not found!",
-            });
-        }
+            [id, uid, qid],
+        );
 
-        // Does the question exist? Is it multiple choice?
-        const [mp] = await connection.query("SELECT 1 FROM Questions WHERE ID = ? AND ShortAnswer = false LIMIT 1", [qid]);
-
-        if (mp.length == 0) {
+        if (exists.length == 0) {
             return res.code(404).send({
                 statusCode: 400,
                 message: "Invalid question!",
@@ -302,7 +251,7 @@ export const deleteAnswer = async (req, res) => {
         if (exists.length == 0) {
             return res.code(404).send({
                 statusCode: 404,
-                message: "Question not found!",
+                message: "Answer not found!",
             });
         }
 
@@ -316,7 +265,7 @@ export const deleteAnswer = async (req, res) => {
             message: "Removed question.",
         });
     } catch (err) {
-        consola.error(`[editor] Cannot delete question - ${err}`);
+        consola.error(`[editor] Cannot delete answer - ${err}`);
 
         return res.code(500).send({
             statusCode: 500,

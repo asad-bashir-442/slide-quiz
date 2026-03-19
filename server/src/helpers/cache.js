@@ -2,10 +2,11 @@ import Joi from "joi";
 import { v4 as uuidv4 } from "uuid";
 
 const usernameSchema = Joi.string().trim().min(3).max(50).required();
+const codelen = parseInt(process.env.CODE_LENGTH) || 4;
 
 export const GAME_PREFIX = "game:";
 export const PLAYER_PREFIX = "players:";
-export const EXPIRE = 86400;
+export const EXPIRE = 86400; // 24 hours
 
 // TODO: KILL
 const quizDB = [
@@ -32,7 +33,7 @@ export const createGame = async (cache, hostID, quizID) => {
 
     // Generate unique code
     do {
-        id = Math.floor(100000 + Math.random() * 900000).toString();
+        id = uuidv4().replace(/-/g, "").slice(0, codelen);
         exists = await cache.exists(`${GAME_PREFIX}${id}`);
     } while (exists);
 
