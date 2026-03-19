@@ -6,12 +6,12 @@ const idSchema = Joi.number().min(0).integer().required();
 const questionSchema = Joi.object({
     description: Joi.string().trim().min(3).max(1500).required(),
     shortAnswer: Joi.boolean().required(),
-    points: Joi.number().min(1).max(100).integer().required()
+    points: Joi.number().min(1).max(100).integer().required(),
 });
 
 const answerSchema = Joi.object({
     description: Joi.string().trim().min(3).max(500).required(),
-    correct: Joi.boolean().required()
+    correct: Joi.boolean().required(),
 });
 
 export const getAll = async (req, res) => {
@@ -24,14 +24,11 @@ export const getAll = async (req, res) => {
             id: -1,
             name: "",
             description: "",
-            questions: []
+            questions: [],
         };
 
         // Fetch details
-        const [details] = await connection.query(
-            "SELECT ID, Name, Description FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, uid],
-        );
+        const [details] = await connection.query("SELECT ID, Name, Description FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, uid]);
 
         if (details.length == 0) {
             return res.code(404).send({
@@ -45,10 +42,7 @@ export const getAll = async (req, res) => {
         data.description = details.Description;
 
         // Fetch questions
-        const [questions] = await connection.query(
-            "SELECT ID, Description, ShortAnswer, Points, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?",
-            [id],
-        );
+        const [questions] = await connection.query("SELECT ID, Description, ShortAnswer, Points, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?", [id]);
 
         for (const question of questions) {
             const q = {
@@ -61,10 +55,7 @@ export const getAll = async (req, res) => {
             };
 
             if (!q.shortAnswer) {
-                const [answers] = await connection.query(
-                    "SELECT ID, Description, Correct, CreatedAt, UpdatedAt FROM Answers WHERE QuestionID = ?",
-                    [q.id]
-                );
+                const [answers] = await connection.query("SELECT ID, Description, Correct, CreatedAt, UpdatedAt FROM Answers WHERE QuestionID = ?", [q.id]);
 
                 q.answers = [];
 
@@ -125,10 +116,7 @@ export const createQuestion = async (req, res) => {
         const connection = await req.server.mysql.getConnection();
 
         // Does user own the quiz?
-        const [owned] = await connection.query(
-            "SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, uid],
-        );
+        const [owned] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, uid]);
 
         if (owned.length == 0) {
             return res.code(404).send({
@@ -138,10 +126,12 @@ export const createQuestion = async (req, res) => {
         }
 
         // Quiz exists and user owns it, safe to insert
-        const [result] = await connection.query(
-            "INSERT INTO Questions (QuizID, Description, ShortAnswer, Points) VALUES (?, ?, ?, ?)",
-            [id, req.body.description, req.body.shortAnswer, req.body.points],
-        );
+        const [result] = await connection.query("INSERT INTO Questions (QuizID, Description, ShortAnswer, Points) VALUES (?, ?, ?, ?)", [
+            id,
+            req.body.description,
+            req.body.shortAnswer,
+            req.body.points,
+        ]);
 
         connection.release();
 
@@ -197,10 +187,7 @@ export const deleteQuestion = async (req, res) => {
         }
 
         // It exists, we can delete
-        await connection.query(
-            "DELETE FROM Questions WHERE ID = ?",
-            [question],
-        );
+        await connection.query("DELETE FROM Questions WHERE ID = ?", [question]);
 
         connection.release();
 
@@ -244,10 +231,7 @@ export const createAnswer = async (req, res) => {
         const connection = await req.server.mysql.getConnection();
 
         // Does user own the quiz?
-        const [owned] = await connection.query(
-            "SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, uid],
-        );
+        const [owned] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, uid]);
 
         if (owned.length == 0) {
             return res.code(404).send({
@@ -257,10 +241,7 @@ export const createAnswer = async (req, res) => {
         }
 
         // Does the question exist? Is it multiple choice?
-        const [mp] = await connection.query(
-            "SELECT 1 FROM Questions WHERE ID = ? AND ShortAnswer = false LIMIT 1",
-            [qid]
-        );
+        const [mp] = await connection.query("SELECT 1 FROM Questions WHERE ID = ? AND ShortAnswer = false LIMIT 1", [qid]);
 
         if (mp.length == 0) {
             return res.code(404).send({
@@ -270,10 +251,7 @@ export const createAnswer = async (req, res) => {
         }
 
         // Quiz exists and user owns it, question is multiple choice, we can insert
-        const [result] = await connection.query(
-            "INSERT INTO Answers (QuestionID, Description, Correct) VALUES (?, ?, ?)",
-            [qid, req.body.description, req.body.correct],
-        );
+        const [result] = await connection.query("INSERT INTO Answers (QuestionID, Description, Correct) VALUES (?, ?, ?)", [qid, req.body.description, req.body.correct]);
 
         connection.release();
 
@@ -329,10 +307,7 @@ export const deleteAnswer = async (req, res) => {
         }
 
         // It exists, we can delete
-        await connection.query(
-            "DELETE FROM Answers WHERE ID = ?",
-            [answer],
-        );
+        await connection.query("DELETE FROM Answers WHERE ID = ?", [answer]);
 
         connection.release();
 

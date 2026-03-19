@@ -35,10 +35,11 @@ export const getQuizzes = async (req, res) => {
         const connection = await req.server.mysql.getConnection();
         const offset = (parseInt(page) - 1) * limitamt;
 
-        const [results] = await connection.query(
-            "SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?",
-            [uid, offset, limitamt]
-        );
+        const [results] = await connection.query("SELECT ID, Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE UserID = ? ORDER BY UpdatedAt DESC LIMIT ?, ?", [
+            uid,
+            offset,
+            limitamt,
+        ]);
 
         const quizzes = [];
 
@@ -50,7 +51,7 @@ export const getQuizzes = async (req, res) => {
                 automaticDefault: quiz.AutomaticDefault,
                 createdAt: quiz.CreatedAt,
                 updatedAt: quiz.UpdatedAt,
-            })
+            });
         }
 
         connection.release();
@@ -68,7 +69,7 @@ export const getQuizzes = async (req, res) => {
             message: "Internal server error.",
         });
     }
-}
+};
 
 export const createQuiz = async (req, res) => {
     // Empty body?
@@ -97,10 +98,12 @@ export const createQuiz = async (req, res) => {
             automatic: String(req.body.automatic) == "true",
         };
 
-        const [result] = await connection.query(
-            "INSERT INTO Quizzes (UserID, Name, Description, AutomaticDefault) VALUES (?, ?, ?, ?)",
-            [req.user.id, details.name, details.description, details.automatic],
-        );
+        const [result] = await connection.query("INSERT INTO Quizzes (UserID, Name, Description, AutomaticDefault) VALUES (?, ?, ?, ?)", [
+            req.user.id,
+            details.name,
+            details.description,
+            details.automatic,
+        ]);
 
         connection.release();
 
@@ -129,10 +132,7 @@ export const getQuiz = async (req, res) => {
 
     try {
         const connection = await req.server.mysql.getConnection();
-        const [results] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, req.user.id],
-        );
+        const [results] = await connection.query("SELECT Name, Description, AutomaticDefault, CreatedAt, UpdatedAt FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (results.length == 0) {
             return res.code(404).send({
@@ -191,10 +191,7 @@ export const updateQuiz = async (req, res) => {
         const connection = await req.server.mysql.getConnection();
 
         // Does quiz exist?
-        const [quizzes] = await connection.query(
-            "SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, req.user.id],
-        );
+        const [quizzes] = await connection.query("SELECT Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (quizzes.length == 0) {
             return res.code(404).send({
@@ -229,16 +226,13 @@ export const updateQuiz = async (req, res) => {
         }
 
         // Update
-        await connection.query(
-            "UPDATE Quizzes SET Name = ?, Description = ?, AutomaticDefault = ? WHERE ID = ? AND UserID = ?",
-            [
-                details.name,
-                details.description,
-                details.automatic,
-                id,
-                req.user.id,
-            ],
-        );
+        await connection.query("UPDATE Quizzes SET Name = ?, Description = ?, AutomaticDefault = ? WHERE ID = ? AND UserID = ?", [
+            details.name,
+            details.description,
+            details.automatic,
+            id,
+            req.user.id,
+        ]);
 
         connection.release();
 
@@ -264,10 +258,7 @@ export const deleteQuiz = async (req, res) => {
         const connection = await req.server.mysql.getConnection();
 
         // Does quiz exist?
-        const [exists] = await connection.query(
-            "SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1",
-            [id, req.user.id],
-        );
+        const [exists] = await connection.query("SELECT 1 FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [id, req.user.id]);
 
         if (exists.length == 0) {
             return res.code(404).send({
@@ -276,10 +267,7 @@ export const deleteQuiz = async (req, res) => {
             });
         }
 
-        await connection.query(
-            "DELETE FROM Quizzes WHERE ID = ? AND UserID = ?",
-            [id, req.user.id],
-        );
+        await connection.query("DELETE FROM Quizzes WHERE ID = ? AND UserID = ?", [id, req.user.id]);
 
         connection.release();
 
