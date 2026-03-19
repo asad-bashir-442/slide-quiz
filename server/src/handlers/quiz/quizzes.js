@@ -1,9 +1,7 @@
 import consola from "consola";
 import Joi from "joi";
 
-// TODO: Should be part of the .env
-const limitamt = 9; // To match the UI, should be divisible by 3
-
+const limitamt = parseInt(process.env.PAGINATION) || 9;
 const quizzesSchema = Joi.number().min(1).max(500).integer();
 
 const quizSchema = Joi.object({

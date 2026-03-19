@@ -4,9 +4,8 @@ import consola from "consola";
 import bcrypt from "bcrypt";
 import Joi from "joi";
 
-// TODO: Should be part of the .env
-const hashamt = 10;
-const expires = "10h";
+const hashamt = parseInt(process.env.HASH_AMOUNT) || 10;
+const expires = process.env.JWT_EXPIRES || "10h";
 
 const registerSchema = Joi.object({
     name: Joi.string().alphanum().min(3).max(15).required(),
@@ -23,6 +22,7 @@ const loginSchema = Joi.object({
         minDomainSegments: 2,
         tlds: { allow: ["com", "net", "ca"] },
     }).required(),
+
     password: Joi.string().min(5).max(20).required(),
 });
 
