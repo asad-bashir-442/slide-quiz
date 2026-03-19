@@ -53,6 +53,11 @@ export const updateGame = async (cache, code, gameData) => {
     await cache.set(`${GAME_PREFIX}${code}`, JSON.stringify(gameData), "EX", EXPIRE);
 };
 
+export const deleteGame = async (cache, code) => {
+    await cache.del(`${GAME_PREFIX}${code}`);
+    await cache.del(`${PLAYER_PREFIX}${code}`);
+};
+
 export const getPlayers = async (cache, code) => {
     const data = await cache.get(`${PLAYER_PREFIX}${code}`);
     return data ? JSON.parse(data) : {};
@@ -60,11 +65,6 @@ export const getPlayers = async (cache, code) => {
 
 export const updatePlayers = async (cache, code, players) => {
     await cache.set(`${PLAYER_PREFIX}${code}`, JSON.stringify(players), "EX", EXPIRE);
-};
-
-export const deleteGame = async (cache, code) => {
-    await cache.del(`${GAME_PREFIX}${code}`);
-    await cache.del(`${PLAYER_PREFIX}${code}`);
 };
 
 export const createPlayer = (username) => {

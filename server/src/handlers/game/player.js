@@ -1,5 +1,7 @@
 import { GAME_PREFIX, PLAYER_PREFIX, getGame, getPlayers, updatePlayers, deleteGame, createPlayer } from "../../helpers/cache.js";
 
+import consola from "consola";
+
 export default (socket, cache, io) => ({
     async join({ code, username }) {
         const session = await getGame(cache, code);
@@ -17,12 +19,7 @@ export default (socket, cache, io) => ({
             return;
         }
 
-        players[socket.id] = {
-            id,
-            username,
-            score: 0, // TODO:
-        };
-
+        players[socket.id] = { id, username };
         await updatePlayers(cache, code, players);
 
         // Emit to host
@@ -34,8 +31,47 @@ export default (socket, cache, io) => ({
         });
     },
 
-    async answer() {
-        // TODO:
+    async answer({ code, response }) {
+        const session = await getGame(cache, code);
+        const players = await getPlayers(cache, code);
+
+        // Validate answer state
+        if (!players[socket.id]) {
+            socket.emit("error", { message: "You have not joined that lobby." });
+            return;
+        }
+
+        if (session.index == -1) {
+            socket.emit("error", { message: "Game has not started." });
+            return;
+        }
+
+        // Validate answer
+        const question = session.questions[session.index];
+
+        if (!question) {
+            socket.emit("error", { message: "Invalid question." });
+            return;
+        }
+
+        // TODO: Has the user already entered a response?
+
+        // Short answer
+        if (question.shortAnswer) {
+            socket.emit("error", { message: "NOT AN ERROR! WE GOOD! " + response });
+
+            return;
+        }
+
+        // Multiple choice answer
+        const picked = question.answers.filter((n) => n.id == (parseInt(response) || -1));
+
+        if (picked.length == 0) {
+            socket.emit("error", { message: "Invalid choice" });
+            return;
+        }
+
+        consola.log(`${picked} for ${picked[0]?.correct}, ${picked[0]?.description}`);
     },
 
     async disconnect() {
