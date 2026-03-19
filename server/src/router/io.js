@@ -44,7 +44,7 @@ const createGame = (hostID, quizID) => {
 
     // TODO: Likely unneeded for redis
     playersDB.set(id, new Map());
-    consola.log(`[io] Creating game (${id}) with quiz #${quizID}`);
+    consola.info(`[io] Creating game (${id}) with quiz #${quizID}`);
 
     return id;
 };

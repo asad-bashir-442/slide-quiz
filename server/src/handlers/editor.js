@@ -1,6 +1,8 @@
 import consola from "consola";
 import Joi from "joi";
 
+const idSchema = Joi.number().min(0).integer().required();
+
 const questionSchema = Joi.object({
     description: Joi.string().trim().min(3).max(1500).required(),
     shortAnswer: Joi.boolean().required()
@@ -156,7 +158,63 @@ export const createQuestion = async (req, res) => {
     }
 };
 
-export const deleteQuestion = async (req, res) => {};
+export const deleteQuestion = async (req, res) => {
+    const uid = req.user.id;
+
+    const { id } = req.params;
+    const { question } = req.query;
+    const { error } = idSchema.validate(question);
+
+    if (error) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Invalid question ID.",
+        });
+    }
+
+    try {
+        const connection = await req.server.mysql.getConnection();
+
+        // Does the question exist? Does user own the quiz?
+        const [exists] = await connection.query(
+            `
+                SELECT 1 FROM Questions q JOIN Quizzes z
+                ON q.QuizID = z.ID
+                WHERE q.QuizID = ? AND z.UserID = ? AND q.ID = ?
+                LIMIT 1
+            `,
+
+            [id, uid, question],
+        );
+
+        if (exists.length == 0) {
+            return res.code(404).send({
+                statusCode: 404,
+                message: "Question not found!",
+            });
+        }
+
+        // It exists, we can delete
+        await connection.query(
+            "DELETE FROM Questions WHERE ID = ?",
+            [question],
+        );
+
+        connection.release();
+
+        return res.code(200).send({
+            statusCode: 200,
+            message: "Removed question.",
+        });
+    } catch (err) {
+        consola.error(`[editor] Cannot delete question - ${err}`);
+
+        return res.code(500).send({
+            statusCode: 500,
+            message: "Internal server error.",
+        });
+    }
+};
 
 export const createAnswer = async (req, res) => {
     // Empty body?
@@ -232,6 +290,60 @@ export const createAnswer = async (req, res) => {
     }
 };
 
-export const deleteAnswer = async (req, res) => {};
+export const deleteAnswer = async (req, res) => {
+    const uid = req.user.id;
 
-export const swapQuestion = async (req, res) => {};
+    const { id, qid } = req.params;
+    const { answer } = req.query;
+    const { error } = idSchema.validate(answer);
+
+    if (error) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Invalid answer ID.",
+        });
+    }
+
+    try {
+        const connection = await req.server.mysql.getConnection();
+
+        // Does the answer exist? Does user own the quiz?
+        const [exists] = await connection.query(
+            `
+                SELECT q.Description AS d, a.Description, a.Correct FROM Answers a
+                INNER JOIN Questions q ON a.QuestionID = q.ID
+                INNER JOIN Quizzes z ON q.QuizID = z.ID
+                WHERE q.QuizID = ? AND z.UserID = ? AND q.ID = ? AND a.ID = ?
+            `,
+
+            [id, uid, qid, answer],
+        );
+
+        if (exists.length == 0) {
+            return res.code(404).send({
+                statusCode: 404,
+                message: "Question not found!",
+            });
+        }
+
+        // It exists, we can delete
+        await connection.query(
+            "DELETE FROM Answers WHERE ID = ?",
+            [answer],
+        );
+
+        connection.release();
+
+        return res.code(200).send({
+            statusCode: 200,
+            message: "Removed question.",
+        });
+    } catch (err) {
+        consola.error(`[editor] Cannot delete question - ${err}`);
+
+        return res.code(500).send({
+            statusCode: 500,
+            message: "Internal server error.",
+        });
+    }
+};
