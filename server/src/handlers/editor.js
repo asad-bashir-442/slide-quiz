@@ -5,7 +5,8 @@ const idSchema = Joi.number().min(0).integer().required();
 
 const questionSchema = Joi.object({
     description: Joi.string().trim().min(3).max(1500).required(),
-    shortAnswer: Joi.boolean().required()
+    shortAnswer: Joi.boolean().required(),
+    points: Joi.number().min(1).max(100).integer().required()
 });
 
 const answerSchema = Joi.object({
@@ -45,7 +46,7 @@ export const getAll = async (req, res) => {
 
         // Fetch questions
         const [questions] = await connection.query(
-            "SELECT ID, Description, ShortAnswer, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?",
+            "SELECT ID, Description, ShortAnswer, Points, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?",
             [id],
         );
 
@@ -54,6 +55,7 @@ export const getAll = async (req, res) => {
                 id: question.ID,
                 description: question.Description,
                 shortAnswer: question.ShortAnswer,
+                points: question.Points,
                 createdAt: question.CreatedAt,
                 updatedAt: question.UpdatedAt,
             };
@@ -137,8 +139,8 @@ export const createQuestion = async (req, res) => {
 
         // Quiz exists and user owns it, safe to insert
         const [result] = await connection.query(
-            "INSERT INTO Questions (QuizID, Description, ShortAnswer) VALUES (?, ?, ?)",
-            [id, req.body.description, req.body.shortAnswer],
+            "INSERT INTO Questions (QuizID, Description, ShortAnswer, Points) VALUES (?, ?, ?, ?)",
+            [id, req.body.description, req.body.shortAnswer, req.body.points],
         );
 
         connection.release();
@@ -310,7 +312,7 @@ export const deleteAnswer = async (req, res) => {
         // Does the answer exist? Does user own the quiz?
         const [exists] = await connection.query(
             `
-                SELECT q.Description AS d, a.Description, a.Correct FROM Answers a
+                SELECT 1 FROM Answers a
                 INNER JOIN Questions q ON a.QuestionID = q.ID
                 INNER JOIN Quizzes z ON q.QuizID = z.ID
                 WHERE q.QuizID = ? AND z.UserID = ? AND q.ID = ? AND a.ID = ?
