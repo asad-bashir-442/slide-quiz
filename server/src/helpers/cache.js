@@ -8,26 +8,7 @@ export const GAME_PREFIX = "game:";
 export const PLAYER_PREFIX = "players:";
 export const EXPIRE = 86400; // 24 hours
 
-// TODO: KILL
-const quizDB = [
-    {
-        name: "Countries of the world",
-        description: "A quiz",
-        questions: [
-            {
-                q: "What is the capital of Canada",
-                a: ["Ottawa", "Toronto", "New York"],
-            },
-
-            {
-                // No a = short answer
-                q: "How old is Canada?",
-            },
-        ],
-    },
-];
-
-export const createGame = async (cache, hostID, quizID) => {
+export const createGame = async (cache, hostID, game) => {
     let id;
     let exists;
 
@@ -37,19 +18,12 @@ export const createGame = async (cache, hostID, quizID) => {
         exists = await cache.exists(`${GAME_PREFIX}${id}`);
     } while (exists);
 
-    // TODO: Fetch from the database
-    const game = quizDB[quizID];
-
-    if (!game) {
-        return -1;
-    }
-
     // Set game
     await cache.set(
         `${GAME_PREFIX}${id}`,
         JSON.stringify({
             host: hostID,
-            quiz: quizID,
+            quiz: game.id,
             name: game.name,
             questions: game.questions,
             index: -1,

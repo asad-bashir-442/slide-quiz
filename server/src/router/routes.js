@@ -47,7 +47,7 @@ router.register(async (r) => {
 
 // Games & Lobbies
 router.io.on("connection", (socket) => {
-    const host = HostClient(socket, router.redis, router.io);
+    const host = HostClient(socket, router.redis, router.mysql, router.jwt, router.io);
     const player = PlayerClient(socket, router.redis, router.io);
 
     // Host

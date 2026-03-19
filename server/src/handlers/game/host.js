@@ -1,20 +1,31 @@
 import Joi from "joi";
+import consola from "consola";
+
 import { createGame, getGame, updateGame, getPlayers, updatePlayers } from "../../helpers/cache.js";
+import { queryQuestions } from "../../helpers/database.js";
 
 const jumpSchema = Joi.number().min(0).max(999).integer().required();
 
-export default (socket, cache, io) => ({
-    async manual({ quizID }) {
-        const id = await createGame(cache, socket.id, quizID);
+export default (socket, cache, db, jwt, io) => ({
+    async manual({ quizID, token }) {
+        try {
+            const verify = await jwt.verify(token);
+            const game = await queryQuestions(db, verify.id, quizID);
 
-        if (id == -1) {
-            socket.emit("error", { message: "Invalid quiz ID." });
-            return;
+            if (game == -1 || game == 404) {
+                socket.emit("error", { message: "Invalid quiz ID." });
+                return;
+            }
+
+            const id = await createGame(cache, socket.id, game);
+
+            // Join the created game
+            socket.join(id);
+            socket.emit("host:created", { code: id });
+        } catch (err) {
+            consola.error(`[host] Failed to create host lobby - ${err}`);
+            socket.emit("error", { message: "Invalid token." });
         }
-
-        // Join the created game
-        socket.join(id);
-        socket.emit("host:created", { code: id });
     },
 
     async start({ code }) {
