@@ -1,7 +1,7 @@
 import Joi from "joi";
 import consola from "consola";
 
-import { createGame, getGame, updateGame, getPlayers, removePlayer } from "../../helpers/cache.js";
+import { createGame, getGame, updateGame, getPlayers, removePlayer, createResponseSession } from "../../helpers/cache.js";
 import { queryQuestions } from "../../helpers/database.js";
 
 const jumpSchema = Joi.number().min(0).max(999).integer().required();
@@ -22,7 +22,7 @@ export default (socket, cache, db, jwt, io) => ({
                 return;
             }
 
-            const code = await createGame(cache, socket.id, game, mode);
+            const code = await createGame(cache, socket.id, game, mode, verify.id);
 
             // Join the created game
             socket.join(code);
@@ -48,7 +48,17 @@ export default (socket, cache, db, jwt, io) => ({
 
         // Update game state
         session.index = 0;
+
         await updateGame(cache, code, session);
+        await createResponseSession(
+            cache,
+            session.owner,
+            session.longCode,
+
+            session.name,
+            session.questions,
+            session.mode,
+        );
 
         // Set question to start
         const question = session.questions[session.index];

@@ -1,4 +1,4 @@
-import consola from "consola";
+import Joi from "joi";
 
 // prettier-ignore
 import {
@@ -10,8 +10,12 @@ import {
     deleteGame,
     createPlayer,
     getAllGameCodes,
-    updatePlayer
+    updatePlayer,
+    createResponse,
+    hasResponse
 } from "../../helpers/cache.js";
+
+const shortAnswerSchema = Joi.string().trim().min(3).max(1000).required();
 
 export default (socket, cache, io) => ({
     async join({ code, username }) {
@@ -76,8 +80,6 @@ export default (socket, cache, io) => ({
             return;
         }
 
-        // TODO: May be done the quiz
-
         // Validate index
         const index = session.mode == "manual" ? session.index : player.index;
 
@@ -94,13 +96,22 @@ export default (socket, cache, io) => ({
             return;
         }
 
+        // Has the user already responded (impossible in automatic mode)
+        if (await hasResponse(cache, session.owner, session.longCode, socket.id, index)) {
+            socket.emit("error", { message: "You have already responded to that question" });
+            return;
+        }
+
         // Parse answer
         let answer;
-        // TODO: Track if user already answered
 
         if (question.shortAnswer) {
-            // TODO: Validate short answer
-            // JOI
+            const { error } = shortAnswerSchema.validate(response);
+
+            if (error) {
+                socket.emit("error", { message: "Invalid response." });
+                return;
+            }
 
             answer = response;
         } else {
@@ -119,8 +130,20 @@ export default (socket, cache, io) => ({
             }
         }
 
-        // TODO: Submit
-        consola.log(`${player.username} picked ${answer} (${index})`);
+        // Save and emit to host
+        await createResponse(
+            cache,
+            session.owner,
+            session.longCode,
+            socket.id,
+
+            player,
+            answer,
+
+            index,
+        );
+
+        io.to(session.host).emit("host:response", { player, question, response });
 
         // No need to update any indexes if we're on manual
         if (session.mode == "manual") return;
@@ -129,7 +152,6 @@ export default (socket, cache, io) => ({
         if (player.index + 1 < session.questions.length) {
             player.index++;
 
-            // Update and emit
             await updatePlayer(cache, code, socket.id, player);
             socket.emit("game:question", session.questions[player.index]);
 

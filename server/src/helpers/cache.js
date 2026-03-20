@@ -6,9 +6,13 @@ const codelen = parseInt(process.env.CODE_LENGTH) || 4;
 
 export const GAME_PREFIX = "game:";
 export const PLAYER_PREFIX = "game:players:";
-export const EXPIRE = 86400; // 24 hours
+export const RESPONSES_PREFIX = "game:responses:";
 
-export const createGame = async (cache, hostID, game, mode) => {
+export const EXPIRE = 86400; // 24 hours
+export const EXPIRE_LONG = 86400 * 7; // 1 week
+
+// Games
+export const createGame = async (cache, hostID, game, mode, ownerID) => {
     let id;
     let exists;
 
@@ -28,6 +32,12 @@ export const createGame = async (cache, hostID, game, mode) => {
             questions: game.questions,
             index: -1,
             mode,
+
+            // Reduce the likelyhood of collisions, as results will be stored longer
+            longCode: uuidv4(),
+
+            // For lookups
+            owner: ownerID,
         }),
 
         "EX",
@@ -52,6 +62,14 @@ export const deleteGame = async (cache, code) => {
     await cache.del(`${PLAYER_PREFIX}${code}`);
 };
 
+export const getAllGameCodes = async (cache) => {
+    // prettier-ignore
+    return (await cache.keys(`${GAME_PREFIX}*`))
+        .map((key) => key.replace(GAME_PREFIX, ""))
+        .filter((code) => !code.includes(":"));
+};
+
+// Players
 export const addPlayer = async (cache, code, socketID, playerData) => {
     const key = `${PLAYER_PREFIX}${code}`;
 
@@ -100,13 +118,28 @@ export const updatePlayer = async (cache, code, socketID, playerData) => {
     await cache.expire(key, EXPIRE);
 };
 
-export const getAllGameCodes = async (cache) => {
-    return (await cache.keys(`${GAME_PREFIX}*`)).map((key) => key.replace(GAME_PREFIX, "")).filter((code) => !code.includes(":"));
-};
-
 export const createPlayer = (username) => {
     const { error } = usernameSchema.validate(username);
     if (error) return -1;
 
     return uuidv4();
+};
+
+// Responses
+export const createResponse = async (cache, owner, longCode, socketID, playerDetails, response, questionIndex) => {
+    const key = `${RESPONSES_PREFIX}${owner}:${longCode}:${questionIndex}`;
+
+    await cache.hset(key, socketID, JSON.stringify({ player: playerDetails, response }));
+    await cache.expire(key, EXPIRE_LONG);
+};
+
+export const createResponseSession = async (cache, owner, longCode, name, questions, mode) => {
+    const key = `${RESPONSES_PREFIX}${owner}:${longCode}`;
+
+    await cache.set(key, JSON.stringify({ name, questions, mode }));
+    await cache.expire(key, EXPIRE_LONG);
+};
+
+export const hasResponse = async (cache, owner, longCode, socketID, questionIndex) => {
+    return await cache.hexists(`${RESPONSES_PREFIX}${owner}:${longCode}:${questionIndex}`, socketID);
 };
