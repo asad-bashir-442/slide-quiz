@@ -3,14 +3,12 @@ import router from "./router.js";
 import auth from "../middleware/auth.js";
 import allow from "../middleware/allow.js";
 
+import HostClient from "../handlers/game/host.js";
+import PlayerClient from "../handlers/game/player.js";
+
 import { register, login, whoami, update } from "../handlers/users.js";
-import {
-    getQuizzes,
-    createQuiz,
-    getQuiz,
-    updateQuiz,
-    deleteQuiz,
-} from "../handlers/quizzes.js";
+import { getQuizzes, createQuiz, getQuiz, updateQuiz, deleteQuiz } from "../handlers/quiz/quizzes.js";
+import { getAll, createQuestion, deleteQuestion, createAnswer, deleteAnswer } from "../handlers/quiz/editor.js";
 
 // Public routes
 router.register(async (r) => {
@@ -36,4 +34,30 @@ router.register(async (r) => {
     r.get("/@me/quiz/:id", { onRequest: [r.auth] }, getQuiz);
     r.patch("/@me/quiz/:id", { onRequest: [r.auth] }, updateQuiz);
     r.delete("/@me/quiz/:id", { onRequest: [r.auth] }, deleteQuiz);
+
+    // Questions
+    r.get("/@me/quiz/:id/editor", { onRequest: [r.auth] }, getAll);
+    r.post("/@me/quiz/:id/editor", { onRequest: [r.auth] }, createQuestion);
+    r.delete("/@me/quiz/:id/editor", { onRequest: [r.auth] }, deleteQuestion);
+
+    // Answers
+    r.post("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, createAnswer);
+    r.delete("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, deleteAnswer);
+});
+
+// Games & Lobbies
+router.io.on("connection", (socket) => {
+    const host = HostClient(socket, router.redis, router.mysql, router.jwt, router.io);
+    const player = PlayerClient(socket, router.redis, router.io);
+
+    // Host
+    socket.on("host:manual", host.manual);
+    socket.on("host:start", host.start);
+    socket.on("host:jump", host.jump);
+    socket.on("host:kick", host.kick);
+
+    // Player
+    socket.on("player:join", player.join);
+    socket.on("player:answer", player.answer);
+    socket.on("disconnect", player.disconnect);
 });
