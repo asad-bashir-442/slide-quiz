@@ -7,7 +7,12 @@ import { queryQuestions } from "../../helpers/database.js";
 const jumpSchema = Joi.number().min(0).max(999).integer().required();
 
 export default (socket, cache, db, jwt, io) => ({
-    async manual({ quizID, token }) {
+    async create({ mode, token, quizID }) {
+        if (!["automatic", "manual"].includes(mode)) {
+            socket.emit("error", { message: "Invalid mode." });
+            return;
+        }
+
         try {
             const verify = await jwt.verify(token);
             const game = await queryQuestions(db, verify.id, quizID);
@@ -17,11 +22,11 @@ export default (socket, cache, db, jwt, io) => ({
                 return;
             }
 
-            const id = await createGame(cache, socket.id, game);
+            const code = await createGame(cache, socket.id, game, mode);
 
             // Join the created game
-            socket.join(id);
-            socket.emit("host:created", { code: id });
+            socket.join(code);
+            socket.emit("host:created", { code, mode });
         } catch (err) {
             consola.error(`[host] Failed to create host lobby - ${err}`);
             socket.emit("error", { message: "Invalid token." });
@@ -33,6 +38,11 @@ export default (socket, cache, db, jwt, io) => ({
 
         if (!session || session.host != socket.id) {
             socket.emit("error", { message: "Invalid game." });
+            return;
+        }
+
+        if (session.index != -1) {
+            socket.emit("error", { message: "Game has already started." });
             return;
         }
 
@@ -62,6 +72,11 @@ export default (socket, cache, db, jwt, io) => ({
 
         if (session.index == -1) {
             socket.emit("error", { message: "Game has not started yet." });
+            return;
+        }
+
+        if (session.mode != "manual") {
+            socket.emit("error", { message: "Cannot jump in an automatic game." });
             return;
         }
 

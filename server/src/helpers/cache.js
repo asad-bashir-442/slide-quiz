@@ -8,7 +8,7 @@ export const GAME_PREFIX = "game:";
 export const PLAYER_PREFIX = "game:players:";
 export const EXPIRE = 86400; // 24 hours
 
-export const createGame = async (cache, hostID, game) => {
+export const createGame = async (cache, hostID, game, mode) => {
     let id;
     let exists;
 
@@ -20,12 +20,14 @@ export const createGame = async (cache, hostID, game) => {
 
     await cache.set(
         `${GAME_PREFIX}${id}`,
+
         JSON.stringify({
             host: hostID,
             quiz: game.id,
             name: game.name,
             questions: game.questions,
             index: -1,
+            mode,
         }),
 
         "EX",
@@ -50,16 +52,16 @@ export const deleteGame = async (cache, code) => {
     await cache.del(`${PLAYER_PREFIX}${code}`);
 };
 
-export const addPlayer = async (cache, code, socketId, playerData) => {
+export const addPlayer = async (cache, code, socketID, playerData) => {
     const key = `${PLAYER_PREFIX}${code}`;
 
-    await cache.hset(key, socketId, JSON.stringify(playerData));
+    await cache.hset(key, socketID, JSON.stringify(playerData));
     await cache.expire(key, EXPIRE);
 };
 
-export const removePlayer = async (cache, code, socketId) => {
+export const removePlayer = async (cache, code, socketID) => {
     const key = `${PLAYER_PREFIX}${code}`;
-    await cache.hdel(key, socketId);
+    await cache.hdel(key, socketID);
 
     const remaining = await cache.hlen(key);
 
@@ -77,24 +79,24 @@ export const getPlayers = async (cache, code) => {
     }
 
     // Parse each player's data
-    Object.keys(players).forEach((socketId) => {
-        players[socketId] = JSON.parse(players[socketId]);
+    Object.keys(players).forEach((socketID) => {
+        players[socketID] = JSON.parse(players[socketID]);
     });
 
     return players;
 };
 
-export const getPlayer = async (cache, code, socketId) => {
+export const getPlayer = async (cache, code, socketID) => {
     const key = `${PLAYER_PREFIX}${code}`;
-    const data = await cache.hget(key, socketId);
+    const data = await cache.hget(key, socketID);
 
     return data ? JSON.parse(data) : null;
 };
 
-export const updatePlayer = async (cache, code, socketId, playerData) => {
+export const updatePlayer = async (cache, code, socketID, playerData) => {
     const key = `${PLAYER_PREFIX}${code}`;
 
-    await cache.hset(key, socketId, JSON.stringify(playerData));
+    await cache.hset(key, socketID, JSON.stringify(playerData));
     await cache.expire(key, EXPIRE);
 };
 

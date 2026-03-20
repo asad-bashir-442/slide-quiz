@@ -51,7 +51,7 @@ router.io.on("connection", (socket) => {
     const player = PlayerClient(socket, router.redis, router.io);
 
     // Host
-    socket.on("host:manual", host.manual);
+    socket.on("host:create", host.create);
     socket.on("host:start", host.start);
     socket.on("host:jump", host.jump);
     socket.on("host:kick", host.kick);
