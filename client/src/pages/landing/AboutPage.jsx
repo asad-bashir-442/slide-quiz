@@ -2,22 +2,21 @@ export function AboutPage() {
     return (
         <div className="w-[90%] md:w-[80%] mx-auto mt-10 space-y-8">
 
-            {/* TOP BAR */}
+
             <div className="flex items-center justify-between">
-                <h1 className="text-4xl md:text-5xl font-bold">
+                <h1 className="text-3xl md:text-4xl font-bold">
                     About SlideQuiz
                 </h1>
 
-                <button className="btn btn-outline btn-primary">
+                <button className="btn btn-outline btn-primary btn-lg">
                     Go Back
                 </button>
             </div>
 
-            {/* CARD */}
+
             <div className="card bg-base-200 shadow-md w-full">
                 <div className="card-body grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
 
-                    {/* TEXT (75%) */}
                     <div className="md:col-span-3 space-y-4">
                         <p className="text-base md:text-lg lg:text-xl leading-relaxed text-base-content/80">
                             SlideQuiz is a web application designed to simplify the process of
@@ -41,7 +40,6 @@ export function AboutPage() {
                         </p>
                     </div>
 
-                    {/* IMAGE (25%) */}
                     <div className="flex justify-center">
                         <img
                             src="/images/about.png"
