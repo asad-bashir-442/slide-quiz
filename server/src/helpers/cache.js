@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { v4 as uuidv4 } from "uuid";
 
-const usernameSchema = Joi.string().trim().min(3).max(50).required();
+const usernameSchema = Joi.string().trim().min(3).max(15).required();
 const codelen = parseInt(process.env.CODE_LENGTH) || 4;
 
 export const GAME_PREFIX = "game:";
@@ -29,9 +29,11 @@ export const createGame = async (cache, hostID, game, mode, ownerID) => {
             host: hostID,
             quiz: game.id,
             name: game.name,
-            questions: game.questions,
             index: -1,
             mode,
+
+            // TODO: Order may be lost when starting a quiz
+            questions: game.questions,
 
             // Reduce the likelyhood of collisions, as results will be stored longer
             longCode: uuidv4(),
@@ -133,13 +135,111 @@ export const createResponse = async (cache, owner, longCode, socketID, playerDet
     await cache.expire(key, EXPIRE_LONG);
 };
 
-export const createResponseSession = async (cache, owner, longCode, name, questions, mode) => {
-    const key = `${RESPONSES_PREFIX}${owner}:${longCode}`;
-
-    await cache.set(key, JSON.stringify({ name, questions, mode }));
-    await cache.expire(key, EXPIRE_LONG);
-};
-
 export const hasResponse = async (cache, owner, longCode, socketID, questionIndex) => {
     return await cache.hexists(`${RESPONSES_PREFIX}${owner}:${longCode}:${questionIndex}`, socketID);
+};
+
+export const getResponses = async (cache, owner, longCode) => {
+    const pattern = `${RESPONSES_PREFIX}${owner}:${longCode}:*`;
+    const responseKeys = await cache.keys(pattern);
+
+    const responses = {};
+
+    for (const key of responseKeys) {
+        const questionIndex = parseInt(key.split(":").pop());
+        const answers = await cache.hgetall(key);
+
+        if (answers && Object.keys(answers).length > 0) {
+            responses[questionIndex] = {};
+
+            for (const [socketID, answerData] of Object.entries(answers)) {
+                responses[questionIndex][socketID] = JSON.parse(answerData);
+            }
+        }
+    }
+
+    return responses;
+};
+
+// Sessions
+export const createResponseSession = async (cache, owner, longCode, name, questions, mode) => {
+    const sessionKey = `${RESPONSES_PREFIX}${owner}:${longCode}`;
+    const userSessionsKey = `${RESPONSES_PREFIX}user:${owner}`;
+
+    await cache.set(
+        sessionKey,
+        JSON.stringify({
+            name,
+            questions,
+            mode,
+            createdAt: Date.now(),
+            longCode,
+        }),
+
+        "EX",
+        EXPIRE_LONG,
+    );
+
+    await cache.zadd(userSessionsKey, Date.now(), longCode);
+    await cache.expire(userSessionsKey, EXPIRE_LONG);
+};
+
+export const getSession = async (cache, owner, longCode) => {
+    const key = `${RESPONSES_PREFIX}${owner}:${longCode}`;
+    const data = await cache.get(key);
+
+    return data ? JSON.parse(data) : null;
+};
+
+export const getAllSessions = async (cache, owner) => {
+    const key = `${RESPONSES_PREFIX}user:${owner}`;
+    const codes = await cache.zrevrange(key, 0, -1);
+    const sessions = [];
+
+    for (const longCode of codes) {
+        const sessionKey = `${RESPONSES_PREFIX}${owner}:${longCode}`;
+        const data = await cache.get(sessionKey);
+
+        if (data) {
+            sessions.push(JSON.parse(data));
+        } else {
+            await cache.zrem(key, longCode);
+        }
+    }
+
+    return sessions;
+};
+
+export const deleteResponseSession = async (cache, owner, longCode) => {
+    const sessionKey = `${RESPONSES_PREFIX}${owner}:${longCode}`;
+    const userSessionsKey = `${RESPONSES_PREFIX}user:${owner}`;
+    const exists = await cache.exists(sessionKey);
+
+    if (!exists) {
+        return false;
+    }
+
+    const pattern = `${RESPONSES_PREFIX}${owner}:${longCode}:*`;
+    const responseKeys = await cache.keys(pattern);
+
+    if (responseKeys.length > 0) {
+        await cache.del(...responseKeys);
+    }
+
+    await cache.del(sessionKey);
+    await cache.zrem(userSessionsKey, longCode);
+
+    return true;
+};
+
+export const deleteAllResponseSessions = async (cache, owner) => {
+    const pattern = `${RESPONSES_PREFIX}${owner}:*`;
+    const keys = await cache.keys(pattern);
+
+    if (keys.length > 0) {
+        await cache.del(...keys);
+    }
+
+    await cache.del(`${RESPONSES_PREFIX}user:${owner}`);
+    return keys.length;
 };
