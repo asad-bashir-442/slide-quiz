@@ -1,7 +1,11 @@
 import { useParams } from "react-router";
 import { getQuizById } from "../api/quiz";
+import { getAllQuestionsById } from "../api/editor";
 import { useEffect, useState } from "react";
-import { QuizCreatorPage } from "./QuizCreatorPage";
+import { Error } from "../components/utility/Error";
+import { MCQEditor } from "../components/quiz-creation/MCQEditor";
+import { QuestionNoButton } from "../components/quiz-creation/QuestionNoButton";
+import { NewQuestionButton } from "../components/editor/NewQuestionButton";
 export function QuizDetailPage() {
   const [quiz, setQuiz] = useState(null);
   const [severError, setServerError] = useState(null);
@@ -10,8 +14,16 @@ export function QuizDetailPage() {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const data = await getQuizById(id);
-        setQuiz(data.data);
+        const quizData = await getQuizById(id);
+        const questions = await getAllQuestionsById(id);
+        const fullQuizData = {
+          ...quizData.data,
+          ...questions.data,
+        };
+
+        setQuiz(fullQuizData);
+
+        console.dir(fullQuizData);
       } catch (error) {
         setServerError(error.message);
       }
@@ -30,29 +42,34 @@ export function QuizDetailPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
-      {/* <h1>{quiz?.name}</h1>
-      <p>{quiz?.description}</p>
-      <p>{quiz?.automaticDefault}</p>
-      <p>{quiz?.createdAt}</p>
-      <p>{quiz?.updatedAt}</p> */}
+    <div className="flex-1">
+      {/* Top header */}
+      <div className="p-6">
+        <h1 className="text-3xl font-bold">{quiz?.name}</h1>
+        <h2 className="opacity-70">Saved - {quiz?.updatedAt}</h2>
+      </div>
 
-      <QuizCreatorPage
-        quizName={quiz?.name}
-        description={quiz?.description}
-        createdAt={new Date(quiz?.createdAt).toLocaleDateString("en-US")}
-        updatedAt={new Date(quiz?.updatedAt).toLocaleDateString("en-US")}
-        numQuestions="13"
-        id={quiz?.id}
-      />
+      {/* Two column layout */}
+      <div className="flex ">
+        {/* Left column (25%) */}
+        <div className="w-1/4 p-6 bg-base-200">
+          <QuestionNoButton num={1} />
+        </div>
+
+        {/* Right column (75%) */}
+        <div className="w-3/4 p-6 flex flex-col">
+          {quiz?.questions?.map((question, index) => (
+            <MCQEditor
+              key={question.id}
+              description={question.description}
+              questionNum={index + 1}
+            />
+          ))}
+
+          {/* <MCQEditor questionName="Example Question" questionNum={13} /> */}
+          <NewQuestionButton id={id} setQuiz={setQuiz} />
+        </div>
+      </div>
     </div>
   );
 }
-
-//   data: {
-//                 name: quiz.Name,
-//                 description: quiz.Description,
-//                 automaticDefault: quiz.AutomaticDefault,
-//                 createdAt: quiz.CreatedAt,
-//                 updatedAt: quiz.UpdatedAt,
-//             },
