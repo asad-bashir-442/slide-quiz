@@ -1,3 +1,5 @@
+import {Link} from "react-router";
+
 export function AboutPage() {
     return (
         <div className="w-[90%] md:w-[80%] mx-auto mt-10 space-y-8">
@@ -8,9 +10,10 @@ export function AboutPage() {
                     About SlideQuiz
                 </h1>
 
-                <button className="btn btn-outline btn-primary btn-lg">
+
+                <Link to="/" className="btn btn-outline btn-primary btn-lg">
                     Go Back
-                </button>
+                </Link>
             </div>
 
 

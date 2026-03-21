@@ -1,3 +1,5 @@
+import {Link} from "react-router";
+
 export function HomePage() {
     return (
         <div className="w-[80%] mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
@@ -36,13 +38,13 @@ export function HomePage() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <button className="btn btn-outline btn-primary btn-lg flex-1">
+                        <Link to="/register" className="btn btn-outline btn-primary btn-lg flex-1">
                             Get Started
-                        </button>
+                        </Link>
 
-                        <button className="btn btn-outline btn-secondary btn-lg flex-1">
+                        <Link to="/about" className="btn btn-outline btn-secondary btn-lg flex-1">
                             How to use SlideQuiz?
-                        </button>
+                        </Link>
                     </div>
 
                 </div>
