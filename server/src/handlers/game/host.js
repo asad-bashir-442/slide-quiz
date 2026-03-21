@@ -22,11 +22,11 @@ export default (socket, cache, db, jwt, io) => ({
                 return;
             }
 
-            const code = await createGame(cache, socket.id, game, mode, verify.id);
+            const { code, longCode } = await createGame(cache, socket.id, game, mode, verify.id);
 
             // Join the created game
             socket.join(code);
-            socket.emit("host:created", { code, mode });
+            socket.emit("host:created", { code, mode, results: longCode });
         } catch (err) {
             consola.error(`[host] Failed to create host lobby - ${err}`);
             socket.emit("error", { message: "Invalid token." });

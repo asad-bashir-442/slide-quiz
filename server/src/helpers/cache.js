@@ -23,15 +23,17 @@ const formatQuestion = (question) => {
         result.answers = question.answers.map((a) => ({
             id: uuidv4(),
             description: a.description,
-            correct: a.correct
+            correct: a.correct,
         }));
     }
 
     return result;
-}
+};
 
 // Games
 export const createGame = async (cache, hostID, game, mode, ownerID) => {
+    const longID = uuidv4();
+
     let id;
     let exists;
 
@@ -55,7 +57,7 @@ export const createGame = async (cache, hostID, game, mode, ownerID) => {
             questions: game.questions.map(formatQuestion),
 
             // Reduce the likelyhood of collisions
-            longCode: uuidv4(),
+            longCode: longID,
 
             // For lookups
             owner: ownerID,
@@ -66,7 +68,7 @@ export const createGame = async (cache, hostID, game, mode, ownerID) => {
     );
 
     await cache.expire(`${PLAYER_PREFIX}${id}`, EXPIRE);
-    return id;
+    return { code: id, longCode: longID };
 };
 
 export const getGame = async (cache, code) => {
