@@ -17,8 +17,8 @@ export const getAllResponses = async (req, res) => {
 
         return res.code(200).send({
             statusCode: 200,
-            data: sorted,
             message: "Fetched responses.",
+            data: sorted,
         });
     } catch (err) {
         consola.error(`[answer] Cannot fetch all answers - ${err}`);
@@ -36,8 +36,8 @@ export const deleteResponses = async (req, res) => {
 
         return res.code(200).send({
             statusCode: 200,
-            code: { deleted },
             message: "Removed all responses.",
+            code: { deleted },
         });
     } catch (err) {
         consola.error(`[answer] Failed to delete all responses - ${err}`);
@@ -71,10 +71,24 @@ export const getResponse = async (req, res) => {
             });
         }
 
+        // Strip socket connection IDs
+        for (const question in responses) {
+            for (const id in responses[question]) {
+                const answer = responses[question][id];
+
+                responses[question][answer.player.id] = {
+                    username: answer.player.username,
+                    response: answer.response
+                };
+
+                delete responses[question][id];
+            }
+        }
+
         return res.code(200).send({
             statusCode: 200,
-            data: { questions, responses },
             message: `Fetched responses for ${id}.`,
+            data: { questions, responses },
         });
     } catch (err) {
         consola.error(`[answer] Cannot fetch response - ${err}`);

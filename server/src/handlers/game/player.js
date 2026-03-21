@@ -103,7 +103,7 @@ export default (socket, cache, io) => ({
         }
 
         // Parse answer
-        let answer;
+        let answer, correct;
 
         if (question.shortAnswer) {
             const { error } = shortAnswerSchema.validate(response);
@@ -126,9 +126,20 @@ export default (socket, cache, io) => ({
                     return;
                 }
 
-                answer = picked[0];
+                answer = picked[0].description;
+                correct = picked[0].correct;
             }
         }
+
+        const playerDetails = {
+            id: player.id,
+            username: player.username
+        };
+
+        const responseDetails = {
+            answer, correct,
+            timestamp: Date.now(),
+        };
 
         // Save and emit to host
         await createResponse(
@@ -136,14 +147,16 @@ export default (socket, cache, io) => ({
             session.owner,
             session.longCode,
             socket.id,
-
-            player,
-            answer,
-
+            playerDetails,
+            responseDetails,
             index,
         );
 
-        io.to(session.host).emit("host:response", { player, question, response });
+        io.to(session.host).emit("host:response", {
+            player: playerDetails,
+            response: responseDetails,
+            question,
+        });
 
         // No need to update any indexes if we're on manual
         if (session.mode == "manual") return;
