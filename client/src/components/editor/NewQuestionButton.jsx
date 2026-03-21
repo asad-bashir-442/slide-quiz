@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { createQuizQuestion, getAllQuestionsById } from "../../api/editor";
+import { createQuestionById, getAllQuestionsById } from "../../api/editor";
 
 import { toast } from "sonner";
 
@@ -48,13 +48,14 @@ export function NewQuestionButton({ id, setQuiz }) {
     console.log(questionData);
 
     try {
-      const res = await createQuizQuestion(id, questionData);
+      const res = await createQuestionById(id, questionData);
       const questions = await getAllQuestionsById(id);
 
       setQuiz((prev) => ({
         ...prev,
         questions: questions.data.questions,
       }));
+      document.getElementById("new_question_modal").close();
       toast.success(res.message);
     } catch (error) {
       toast.error(error.message);
@@ -69,7 +70,7 @@ export function NewQuestionButton({ id, setQuiz }) {
   return (
     <>
       <button
-        className="btn btn-primary btn-lg w-[90%] mx-auto"
+        className="btn btn-primary btn-lg w-[90%] mx-auto mt-2"
         onClick={() =>
           document.getElementById("new_question_modal").showModal()
         }

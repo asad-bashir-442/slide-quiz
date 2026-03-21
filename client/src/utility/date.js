@@ -1,5 +1,6 @@
 export const ago = (date) => {
-    // TODO: Read and parse date
-    return "5 days ago";
+  if (!date) {
+    return "";
+  }
+  return new Date(date).toLocaleDateString("en-US");
 };
-

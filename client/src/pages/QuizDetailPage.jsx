@@ -6,6 +6,7 @@ import { Error } from "../components/utility/Error";
 import { MCQEditor } from "../components/quiz-creation/MCQEditor";
 import { QuestionNoButton } from "../components/quiz-creation/QuestionNoButton";
 import { NewQuestionButton } from "../components/editor/NewQuestionButton";
+import { ago } from "../utility/date";
 export function QuizDetailPage() {
   const [quiz, setQuiz] = useState(null);
   const [severError, setServerError] = useState(null);
@@ -46,7 +47,7 @@ export function QuizDetailPage() {
       {/* Top header */}
       <div className="p-6">
         <h1 className="text-3xl font-bold">{quiz?.name}</h1>
-        <h2 className="opacity-70">Saved - {quiz?.updatedAt}</h2>
+        <h2 className="opacity-70">Saved - {ago(quiz?.updatedAt)}</h2>
       </div>
 
       {/* Two column layout */}
@@ -58,13 +59,24 @@ export function QuizDetailPage() {
 
         {/* Right column (75%) */}
         <div className="w-3/4 p-6 flex flex-col">
-          {quiz?.questions?.map((question, index) => (
-            <MCQEditor
-              key={question.id}
-              description={question.description}
-              questionNum={index + 1}
-            />
-          ))}
+          <div>
+            {quiz?.questions?.length ? (
+              quiz?.questions?.map((question, index) => (
+                <MCQEditor
+                  questionId={question.id}
+                  quizId={id}
+                  key={question.id}
+                  description={question.description}
+                  questionNum={index + 1}
+                  setQuiz={setQuiz}
+                />
+              ))
+            ) : (
+              <div className="text-center text-primary">
+                <Error message="No questions found! Try creating one?" />
+              </div>
+            )}
+          </div>
 
           {/* <MCQEditor questionName="Example Question" questionNum={13} /> */}
           <NewQuestionButton id={id} setQuiz={setQuiz} />

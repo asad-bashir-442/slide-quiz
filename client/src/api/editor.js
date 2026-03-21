@@ -18,7 +18,7 @@ export async function getAllQuestionsById(id) {
   return data;
 }
 
-export async function createQuizQuestion(id, questionData) {
+export async function createQuestionById(id, questionData) {
   const url = `${BASE_URL}/@me/quiz/${id}/editor`;
   const token = localStorage.getItem("token");
   const res = await fetch(url, {
@@ -26,6 +26,24 @@ export async function createQuizQuestion(id, questionData) {
     body: JSON.stringify(questionData),
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    return Error(data.message || "Something went wrong");
+  }
+  return data;
+}
+
+export async function deleteQuestionById(quizId, questionId) {
+  const url = `${BASE_URL}/@me/quiz/${quizId}/editor?question=${questionId}`;
+  const token = localStorage.getItem("token");
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: {
       Authorization: `Bearer ${token}`,
     },
   });
