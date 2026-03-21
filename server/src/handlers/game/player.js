@@ -16,6 +16,7 @@ import {
 } from "../../helpers/cache.js";
 
 const shortAnswerSchema = Joi.string().trim().min(3).max(1000).required();
+const choiceAnswerSchema = Joi.string().uuid().required();
 
 export default (socket, cache, io) => ({
     async join({ code, username }) {
@@ -102,24 +103,26 @@ export default (socket, cache, io) => ({
             return;
         }
 
+        const { error } = (
+            question.shortAnswer ? shortAnswerSchema : choiceAnswerSchema
+        ).validate(response);
+
+        if (error) {
+            socket.emit("error", { message: "Invalid response." });
+            return;
+        }
+
         // Parse answer
         let answer, correct;
 
         if (question.shortAnswer) {
-            const { error } = shortAnswerSchema.validate(response);
-
-            if (error) {
-                socket.emit("error", { message: "Invalid response." });
-                return;
-            }
-
             answer = response;
         } else {
             // No valid answers
             if (question.answers.length == 0) {
                 answer = "No valid choices! Please check the quiz editor!";
             } else {
-                const picked = question.answers.filter((n) => n.id == (parseInt(response) || -1));
+                const picked = question.answers.filter((n) => n.id == response);
 
                 if (picked.length == 0) {
                     socket.emit("error", { message: "Invalid choice" });

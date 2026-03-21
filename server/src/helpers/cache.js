@@ -11,6 +11,25 @@ export const RESPONSES_PREFIX = "game:responses:";
 export const EXPIRE = 86400; // 24 hours
 export const EXPIRE_LONG = 86400 * 7; // 1 week
 
+const formatQuestion = (question) => {
+    const result = {
+        id: uuidv4(),
+        description: question.description,
+        shortAnswer: question.shortAnswer,
+        points: question.points,
+    };
+
+    if (!result.shortAnswer) {
+        result.answers = question.answers.map((a) => ({
+            id: uuidv4(),
+            description: a.description,
+            correct: a.correct
+        }));
+    }
+
+    return result;
+}
+
 // Games
 export const createGame = async (cache, hostID, game, mode, ownerID) => {
     let id;
@@ -32,10 +51,10 @@ export const createGame = async (cache, hostID, game, mode, ownerID) => {
             index: -1,
             mode,
 
-            // TODO: Order may be lost when starting a quiz
-            questions: game.questions,
+            // Disconnect data from the database
+            questions: game.questions.map(formatQuestion),
 
-            // Reduce the likelyhood of collisions, as results will be stored longer
+            // Reduce the likelyhood of collisions
             longCode: uuidv4(),
 
             // For lookups
