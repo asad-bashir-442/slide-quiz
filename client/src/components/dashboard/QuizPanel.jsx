@@ -3,6 +3,7 @@ import { Loading } from "../utility/Loading.jsx";
 import { Error } from "../utility/Error.jsx";
 import { getAllQuizzes } from "../../api/quiz.js";
 import { useEffect, useState } from "react";
+import { ago } from "../../utility/date.js";
 
 export function QuizPanel() {
   const [quizzes, setQuizzes] = useState([]);
@@ -95,7 +96,7 @@ export function QuizPanel() {
               key={quiz.id}
               quizName={quiz.name}
               description={quiz.description}
-              dateCreated={new Date(quiz.createdAt).toLocaleDateString("en-US")}
+              dateCreated={ago(quiz.createdAt)}
               id={quiz.id}
               setQuizzes={setQuizzes}
               isAutomatic={quiz.automaticDefault}
