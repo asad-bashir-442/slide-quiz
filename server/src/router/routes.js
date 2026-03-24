@@ -9,6 +9,7 @@ import PlayerClient from "../handlers/game/player.js";
 import { register, login, whoami, update } from "../handlers/users.js";
 import { getQuizzes, createQuiz, getQuiz, updateQuiz, deleteQuiz } from "../handlers/quiz/quizzes.js";
 import { getAll, createQuestion, deleteQuestion, createAnswer, deleteAnswer } from "../handlers/quiz/editor.js";
+import { deleteResponse, deleteResponses, getAllResponses, getResponse } from "../handlers/answers.js";
 
 // Public routes
 router.register(async (r) => {
@@ -43,6 +44,13 @@ router.register(async (r) => {
     // Answers
     r.post("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, createAnswer);
     r.delete("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, deleteAnswer);
+
+    // Responses
+    r.get("/@me/response", { onRequest: [r.auth] }, getAllResponses);
+    r.delete("/@me/response", { onRequest: [r.auth] }, deleteResponses);
+
+    r.get("/@me/response/:id", { onRequest: [r.auth] }, getResponse);
+    r.delete("/@me/response/:id", { onRequest: [r.auth] }, deleteResponse);
 });
 
 // Games & Lobbies
@@ -51,7 +59,7 @@ router.io.on("connection", (socket) => {
     const player = PlayerClient(socket, router.redis, router.io);
 
     // Host
-    socket.on("host:manual", host.manual);
+    socket.on("host:create", host.create);
     socket.on("host:start", host.start);
     socket.on("host:jump", host.jump);
     socket.on("host:kick", host.kick);
