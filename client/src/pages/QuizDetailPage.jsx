@@ -69,6 +69,7 @@ export function QuizDetailPage() {
                   description={question.description}
                   questionNum={index + 1}
                   setQuiz={setQuiz}
+                  isShortAnswer={question?.shortAnswer === 0 ? true : false}
                 />
               ))
             ) : (
