@@ -21,6 +21,7 @@ import { useAuth } from "./context/AuthContext.jsx";
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router";
 import { JoinPage } from "./pages/JoinPage.jsx";
+import {LeaderboardResults} from "./components/dashboard/results/leaderboard/LeaderboardResults.jsx";
 
 export function App() {
   const { loading } = useAuth();
@@ -45,6 +46,7 @@ export function App() {
           <Route path="register" element={<RegisterPage />} />
 
           <Route path="join" element={<JoinPage />} />
+          <Route path="leaderboardTest" element={<LeaderboardResults />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
