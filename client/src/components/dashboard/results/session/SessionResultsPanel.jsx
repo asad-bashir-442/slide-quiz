@@ -37,7 +37,7 @@ export function SessionResultsPanel() {
     //     );
     // }
 
-    {/* This is just dummy data for now*/}
+    // dummy data
     const players = [
         { id: 1, name: "Bob", score: "13/14", responses: 14 },
         { id: 2, name: "Stuart", score: "12/14", responses: 14 },
@@ -47,7 +47,7 @@ export function SessionResultsPanel() {
     ];
 
         return (
-            <dialog className="modal">
+            <dialog className="modal" open>
                 <div className="modal-box w-11/12 max-w-5xl">
 
                     {/* Title Bar */}
@@ -72,6 +72,11 @@ export function SessionResultsPanel() {
                             <div className="stat place-items-center">
                                 <div className="stat-title">Total Answers</div>
                                 <div className="stat-value">XXX</div>
+                            </div>
+
+                            <div className="stat place-items-center">
+                                <div className="stat-title">Total Players</div>
+                                <div className="stat-value">XX</div>
                             </div>
 
                             <div className="stat place-items-center">
