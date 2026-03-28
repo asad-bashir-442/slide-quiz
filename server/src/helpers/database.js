@@ -8,11 +8,12 @@ export const queryQuestions = async (database, userID, quizID) => {
             id: -1,
             name: "",
             description: "",
+            automatic: false,
             questions: [],
         };
 
         // Fetch details
-        const [details] = await connection.query("SELECT ID, Name, Description FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [quizID, userID]);
+        const [details] = await connection.query("SELECT ID, Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [quizID, userID]);
 
         if (details.length == 0) {
             connection.release();
@@ -22,6 +23,7 @@ export const queryQuestions = async (database, userID, quizID) => {
         data.id = details[0].ID;
         data.name = details[0].Name;
         data.description = details[0].Description;
+        data.automatic = details[0].AutomaticDefault;
 
         // Fetch questions
         const [questions] = await connection.query("SELECT ID, Description, ShortAnswer, Points, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?", [quizID]);

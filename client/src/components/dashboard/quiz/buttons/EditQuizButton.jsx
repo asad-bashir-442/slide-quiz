@@ -141,7 +141,7 @@ export function EditQuizButton({
                 type="submit"
                 className="btn btn-primary max-[900px]:w-full"
               >
-                Edit
+                Save
               </button>
             </div>
           </form>
