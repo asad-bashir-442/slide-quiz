@@ -5,11 +5,11 @@ import { ago } from "../../../../utility/date";
 import { comma } from "../../../../utility/numbers";
 
 export function ResultDetailCard({
-    id,
-    name,
-    lastPlayed,
-    totalResponses,
-    averageScore
+  id,
+  name,
+  lastPlayed,
+  totalResponses,
+  averageScore
 }) {
   return (
     <div
@@ -20,19 +20,19 @@ export function ResultDetailCard({
         <h2 className="font-bold mb-4" title={name}>Last Played: <span className="font-normal">{ago(lastPlayed)}</span></h2>
 
         <div className="status-all min-[900px]:flex justify-between w-full">
-            <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
-              <div className="stat">
-                <div className="stat-title">Total Respondents</div>
-                <div className="stat-value">{comma(totalResponses)}</div>
-              </div>
+          <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
+            <div className="stat">
+              <div className="stat-title">Total Respondents</div>
+              <div className="stat-value">{comma(totalResponses)}</div>
             </div>
+          </div>
 
-            <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
-              <div className="stat">
-                <div className="stat-title">Average</div>
-                <div className="stat-value">{(averageScore * 100).toFixed(0)}%</div>
-              </div>
+          <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
+            <div className="stat">
+              <div className="stat-title">Average</div>
+              <div className="stat-value">{(averageScore * 100).toFixed(0)}%</div>
             </div>
+          </div>
         </div>
 
         {/* TODO: Should implement these too */}

@@ -144,13 +144,13 @@ export function HostPage() {
             <h2 className="text-3xl font-bold">{truncateText(quiz?.name || "Unknown Quiz", 25)}</h2>
             <p className="text-lg my-8">{truncateText(quiz?.description || "Unknown description...", 150)}</p>
 
-            <div className="stats min-[900px]:flex gap-5 w-full">
-              <div className="stat shadow bg-base-300 max-w-[200px]">
+            <div className="stats min-[900px]:flex gap-4 w-full">
+              <div className="stat shadow bg-base-300 max-w-[125px]">
                 <div className="stat-title font-bold opacity-60">Total Players</div>
                 <div className="stat-value">{comma(players.length)}</div>
               </div>
 
-              <div className="stat shadow bg-base-300 max-w-[200px]">
+              <div className="stat shadow bg-base-300 max-w-[125px]">
                 <div className="stat-title font-bold opacity-60">Total Questions</div>
                 <div className="stat-value">{comma(quiz?.questions?.length || 0)}</div>
               </div>
@@ -215,7 +215,7 @@ export function HostPage() {
 
           <div className="text-center bg-base-300 inline-block p-4 rounded-xl w-[130px] h-[130px]">
             <User className="m-auto" />
-            <h4 className="text-md font-bold my-2">{truncateText("Bdsdsadsadasobby", 8)}</h4>
+            <h4 className="text-md font-bold my-2" title="Name">{truncateText("Bdsdsadsadasobby", 8)}</h4>
             <button className="btn btn-outline btn-error text-xs">Kick</button>
           </div>
         </div>
