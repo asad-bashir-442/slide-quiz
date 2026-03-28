@@ -1,6 +1,9 @@
 import { editQuizById, getAllQuizzes } from "../../../../api/quiz";
+
 import { useState } from "react";
 import { toast } from "sonner";
+import { Pencil } from "lucide-react";
+
 export function EditQuizButton({
   id,
   name,
@@ -23,7 +26,6 @@ export function EditQuizButton({
     e.preventDefault();
 
     const quizTypeInput = document.getElementById(`edit_quiz_type/${id}`);
-
     const quizData = {
       name: quizName,
       description: quizDescription,
@@ -46,12 +48,7 @@ export function EditQuizButton({
 
   return (
     <>
-      <button
-        className="btn btn-primary max-[900px]:w-full max-[900px]:btn-outline"
-        onClick={handleClick}
-      >
-        Edit
-      </button>
+      <Pencil onClick={handleClick} className="h-[0.8em] hover:opacity-40" />
       <dialog
         onClick={(e) => e.stopPropagation()}
         id={`edit_quiz_modal/${id}`}

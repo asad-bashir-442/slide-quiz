@@ -1,4 +1,4 @@
-import { BASE_URL } from "./auth";
+import { BASE_URL } from "../utility/env";
 
 export async function createQuiz(userData) {
   const url = `${BASE_URL}/@me/quiz`;

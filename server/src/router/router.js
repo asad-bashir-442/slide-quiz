@@ -39,6 +39,7 @@ fastify.register(redis, {
     host: String(process.env.CACHE),
 });
 
+// TODO: CORS
 await fastify.register(io);
 
 export default fastify;
