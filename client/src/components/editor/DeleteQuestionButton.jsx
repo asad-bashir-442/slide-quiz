@@ -1,26 +1,28 @@
 import { truncateText } from "../../utility/truncate";
 import { deleteQuestionById } from "../../api/editor";
 import { getAllQuestionsById } from "../../api/editor";
+import { useParams } from "react-router";
 import { toast } from "sonner";
+
 export function DeleteQuestionButton({
-  questionId,
-  description,
-  quizId,
-  setQuiz,
+  question,
+
+  setQuestions,
 }) {
+  let { id } = useParams();
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-      console.log(`Quiz Id: ${quizId}`);
-      console.log(`Question Id: ${questionId}`);
-      const res = await deleteQuestionById(quizId, questionId);
-      const questions = await getAllQuestionsById(quizId);
-      setQuiz((prev) => ({
-        ...prev,
-        questions: questions.data.questions,
-      }));
-      document.getElementById(`delete_question_modal/${questionId}`).close();
+      console.log(`Quiz Id: ${id}`);
+      console.log(`Question Id: ${question?.id}`);
+      const res = await deleteQuestionById(id, question?.id);
+      const questions = await getAllQuestionsById(id);
+
+      setQuestions(questions.data.questions);
+
+      console.dir(questions);
+      document.getElementById(`delete_question_modal/${question?.id}`).close();
       toast.success(res.message);
     } catch (error) {
       toast.error(error.message);
@@ -29,19 +31,20 @@ export function DeleteQuestionButton({
   return (
     <>
       <button
-        className="btn btn-error max-[900px]:w-full max-[900px]:btn-outline"
+        className="btn btn-error max-lg:w-full max-[900px]:w-full max-lg:btn-outline"
         onClick={() =>
           document
-            .getElementById(`delete_question_modal/${questionId}`)
+            .getElementById(`delete_question_modal/${question?.id}`)
             .showModal()
         }
       >
         Delete Question
       </button>
-      <dialog id={`delete_question_modal/${questionId}`} className="modal">
+      <dialog id={`delete_question_modal/${question?.id}`} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg" title={description}>
-            Are you sure you want to delete "{truncateText(description, 15)}"
+          <h3 className="font-bold text-lg" title={question?.description}>
+            Are you sure you want to delete "
+            {truncateText(question?.description, 15)}"
           </h3>
           <p className="text-center pt-4 font-bold">
             This action is irreversible!
@@ -53,7 +56,7 @@ export function DeleteQuestionButton({
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                 onClick={() =>
                   document
-                    .getElementById(`delete_question_modal/${questionId}`)
+                    .getElementById(`delete_question_modal/${question?.id}`)
                     .close()
                 }
               >
@@ -64,7 +67,7 @@ export function DeleteQuestionButton({
                 <button
                   onClick={() =>
                     document
-                      .getElementById(`delete_question_modal/${questionId}`)
+                      .getElementById(`delete_question_modal/${question?.id}`)
                       .close()
                   }
                   type="reset"
