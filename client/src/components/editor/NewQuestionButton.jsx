@@ -3,41 +3,17 @@ import { useState } from "react";
 import { createQuestionById, getAllQuestionsById } from "../../api/editor";
 
 import { toast } from "sonner";
+import { useParams } from "react-router";
 
-export function NewQuestionButton({ id, setQuiz }) {
+export function NewQuestionButton({ setQuestions }) {
   const [description, setDescription] = useState("");
   const [points, setPoints] = useState(1);
+  let { id } = useParams();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     const isShortAnswerInput = document.getElementById("is_short_answer");
-    // const questionSchema = Joi.object({
-    //     description: Joi.string().trim().min(3).max(1500).required(),
-    //     shortAnswer: Joi.boolean().required(),
-    //     points: Joi.number().min(1).max(100).integer().required(),
-    // });
-
-    //     {
-    //     "name": "test quiz",
-    //     "description": "test quiz description",
-    //     "automaticDefault": 1,
-    //     "createdAt": "2026-03-20T11:04:45.000Z",
-    //     "updatedAt": "2026-03-20T11:04:45.000Z",
-    //     "id": 2,
-    //     "questions": []
-    // }
-
-    // {
-    //     "statusCode": 200,
-    //     "message": "Quiz details fetched successfully.",
-    //     "data": {
-    //         "id": 2,
-    //         "name": "test quiz",
-    //         "description": "test quiz description",
-    //         "questions": []
-    //     }
-    // }
 
     const questionData = {
       description,
@@ -45,16 +21,12 @@ export function NewQuestionButton({ id, setQuiz }) {
       shortAnswer: isShortAnswerInput.checked,
     };
 
-    console.log(questionData);
-
     try {
       const res = await createQuestionById(id, questionData);
       const questions = await getAllQuestionsById(id);
 
-      setQuiz((prev) => ({
-        ...prev,
-        questions: questions.data.questions,
-      }));
+      setQuestions(questions.data.questions);
+
       document.getElementById("new_question_modal").close();
       toast.success(res.message);
     } catch (error) {
