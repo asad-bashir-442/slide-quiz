@@ -49,7 +49,11 @@ export function SessionResultsPanel() {
         return (
             <dialog className="modal" open>
                 <div className="modal-box w-11/12 max-w-5xl">
-
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost hover:bg-base-200 absolute right-2 top-2">
+                            ✕
+                        </button>
+                    </form>
                     {/* Title Bar */}
                     <div className="mb-6 text-left">
                         <h1 className="text-3xl font-bold">Quiz Title</h1>
@@ -63,7 +67,7 @@ export function SessionResultsPanel() {
                             <h3 className="text-sm opacity-70">Details Below</h3>
                         </div>
 
-                        <div className="stats stats-vertical md:stats-horizontal shadow w-full">
+                        <div className="stats stats-vertical md:stats-horizontal shadow w-full bg-base-300">
                             <div className="stat place-items-center">
                                 <div className="stat-title">Total Questions</div>
                                 <div className="stat-value">XX</div>
@@ -117,12 +121,7 @@ export function SessionResultsPanel() {
                         </div>
                     </div>
 
-                    {/* Close Button */}
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn">Close</button>
-                        </form>
-                    </div>
+
 
                 </div>
             </dialog>
