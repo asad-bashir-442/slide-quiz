@@ -9,6 +9,7 @@ import { NewQuestionButton } from "../components/editor/NewQuestionButton";
 import { ago } from "../utility/date";
 export function QuizDetailPage() {
   const [quiz, setQuiz] = useState(null);
+  const [questions, setQuestions] = useState();
   const [severError, setServerError] = useState(null);
   let { id } = useParams();
 
@@ -16,15 +17,12 @@ export function QuizDetailPage() {
     const fetchQuiz = async () => {
       try {
         const quizData = await getQuizById(id);
-        const questions = await getAllQuestionsById(id);
-        const fullQuizData = {
-          ...quizData.data,
-          ...questions.data,
-        };
 
-        setQuiz(fullQuizData);
+        setQuiz(quizData.data);
 
-        console.dir(fullQuizData);
+        const questionData = await getAllQuestionsById(id);
+
+        setQuestions(questionData.data.questions);
       } catch (error) {
         setServerError(error.message);
       }
@@ -53,22 +51,22 @@ export function QuizDetailPage() {
       {/* Two column layout */}
       <div className="flex ">
         {/* Left column (25%) */}
-        <div className="w-1/4 p-6 bg-base-200">
-          <QuestionNoButton num={1} />
+        <div className="w-1/4 p-6 bg-base-200 flex flex-col gap-4 max-lg:hidden">
+          {questions?.map((question, index) => (
+            <QuestionNoButton num={index + 1} />
+          ))}
         </div>
 
         {/* Right column (75%) */}
-        <div className="w-3/4 p-6 flex flex-col">
+        <div className="w-3/4 p-6 flex flex-col mx-auto">
           <div>
-            {quiz?.questions?.length ? (
-              quiz?.questions?.map((question, index) => (
+            {questions?.length > 0 ? (
+              questions.map((question, index) => (
                 <MCQEditor
-                  questionId={question.id}
-                  quizId={id}
-                  key={question.id}
-                  description={question.description}
+                  key={index}
                   questionNum={index + 1}
-                  setQuiz={setQuiz}
+                  question={question}
+                  setQuestions={setQuestions}
                 />
               ))
             ) : (
@@ -79,7 +77,7 @@ export function QuizDetailPage() {
           </div>
 
           {/* <MCQEditor questionName="Example Question" questionNum={13} /> */}
-          <NewQuestionButton id={id} setQuiz={setQuiz} />
+          <NewQuestionButton setQuestions={setQuestions} />
         </div>
       </div>
     </div>
