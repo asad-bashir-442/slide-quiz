@@ -1,18 +1,20 @@
 import { getAllQuestionsById } from "../api/editor";
 import { socket } from "../api/socket";
 
-import { truncateText } from "../utility/truncate";
-import { comma } from "../utility/numbers";
-
+import { LobbyState } from "../components/host/states/LobbyState";
+import { ManualState } from "../components/host/states/ManualState";
 import { Loading } from "../components/utility/Loading";
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
-import { Copy, User } from "lucide-react";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+
+import { SquareArrowRightExit } from "lucide-react";
 
 export function HostPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
 
   const [state, setState] = useState("DISCONNECTED");
@@ -22,6 +24,29 @@ export function HostPage() {
   const [quiz, setQuiz] = useState({ automatic: false });
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState("");
+
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState({
+    id: "0123",
+    description: "Loading question...",
+    shortAnswer: 1,
+    points: 1
+  });
+
+  const updateResults = () => {
+    setShowResults(!showResults);
+  };
+
+  const getQuestionIndex = (id) => {
+    for (let i = 0; i < allQuestions.length; i++) {
+      if (allQuestions[i].id == id) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
 
   const createGame = () => {
     setPlayers([]);
@@ -46,9 +71,51 @@ export function HostPage() {
     toast.success(`Kicked ${username}`)
   };
 
-  const copy = () => {
-    navigator.clipboard.writeText(game.code);
-    toast.success(`Copied "${game.code}"`);
+  const start = () => {
+    // TODO: Uncomment this
+    // if (state != "CONNECTED" || players.length == 0) return;
+
+    socket.emit("host:start", { code: game.code });
+    setState("PLAYING");
+  };
+
+  const jump = (id) => {
+    if (quiz.automatic || id == currentQuestion.id) return;
+
+    const index = getQuestionIndex(id);
+
+    if (index == -1) {
+      toast.error("Invalid position!");
+      return;
+    }
+
+    socket.emit("host:jump", { code: game.code, index });
+  };
+
+  const jumpNext = () => {
+    if (quiz.automatic) return;
+
+    const index = getQuestionIndex(currentQuestion.id);
+
+    if (index == -1) {
+      toast.error("Invalid position!");
+      return;
+    }
+
+    socket.emit("host:jump", { code: game.code, index: index + 1 });
+  };
+
+  // TODO: Maybe confirm alert?
+  // NOTE: This needs to be confirmed
+  const end = () => {
+    if (showResults) {
+      socket.disconnect();
+      navigate(`/results/${game.results}`);
+
+      return;
+    }
+
+    navigate("/results");
   };
 
   useEffect(() => {
@@ -100,10 +167,9 @@ export function HostPage() {
 
     const onHostCreated = (msg) => setGame(msg);
     const onHostPlayers = (msg) => setPlayers(msg.players);
-
-    const onHostQuestions = (msg) => console.log("all questions -> ", msg);
+    const onHostQuestions = (msg) => setAllQuestions(msg.questions);
     const onHostResponse = (msg) => console.log("got response -> ", msg);
-    const onGameQuestion = (msg) => console.log("current question -> ", msg);
+    const onGameQuestion = (msg) => setCurrentQuestion(msg);
 
     socket.on("connect", onConnect);
     socket.on("error", onError);
@@ -125,9 +191,7 @@ export function HostPage() {
       socket.off("host:response", onHostResponse);
       socket.off("game:question", onGameQuestion);
 
-      if (socket.connected) {
-        socket.disconnect();
-      }
+      if (socket.connected) socket.disconnect();
     };
   }, []);
 
@@ -150,112 +214,79 @@ export function HostPage() {
     )
   }
 
+  // TODO: This should be last
+  if (state == "CONNECTED") {
+    return (
+      <LobbyState
+        quiz={quiz}
+        game={game}
+        players={players}
+        softError={softError}
+        showResults={showResults}
+        updateMode={updateMode}
+        updateResults={updateResults}
+        kick={kick}
+        start={start}
+      />
+    )
+  }
+
+  // return game.automatic ? <h1>hi</h1> : <ManualState />;
+
   return (
-    <>
-      <div className="w-[90%] mx-auto">
-        <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start max-[900px]:text-center max-[900px]:block max-[900px]:p-4">
-          {/* Left Column */}
-          <div className="flex-1 p-4">
-            <h2 className="text-3xl font-bold break-words">{truncateText(quiz?.name || "Unknown Quiz", 25)}</h2>
-            <p className="text-lg my-8 break-words">{truncateText(quiz?.description || "Unknown description...", 150)}</p>
+    <div className="mt-10 mb-10 flex gap-4">
+      <div className="w-[20%] p-6 rounded-xl bg-base-200 flex flex-col justify-between min-h-[400px]">
+        <div>
+          {allQuestions.map((question) => (
+            <label className="label" key={question.id}>
+              <input
+                className="radio radio-xl radio-primary"
+                type="radio"
+                name="radio-questions"
+                checked={currentQuestion.id == question.id}
+                onClick={() => jump(question.id)}
+              />
+              <span className="label-text">Question #{getQuestionIndex(question.id) + 1}</span>
+            </label>
+          ))}
+        </div>
 
-            <div className="stats min-[900px]:flex gap-4 w-full">
-              <div className="stat rounded-xl shadow bg-base-300 max-w-[125px] max-[900px]:hidden">
-                <div className="stat-title font-bold opacity-60">Total Players</div>
-                <div className="stat-value">{comma(players.length)}</div>
-              </div>
+        <button className="btn btn-error mt-4" onClick={end}>
+          <SquareArrowRightExit />
+          <span>End</span>
+        </button>
+      </div>
 
-              <div className="stat rounded-xl shadow bg-base-300 max-w-[125px] max-[900px]:hidden">
-                <div className="stat-title font-bold opacity-60">Total Questions</div>
-                <div className="stat-value">{comma(quiz?.questions?.length || 0)}</div>
-              </div>
+      <div className="w-full p-6 rounded-xl bg-base-200">
+        <button
+          className="btn btn-primary float-right"
+          onClick={jumpNext}
+          disabled={currentQuestion.id == allQuestions[allQuestions.length - 1]?.id}
+        >
+          Next Question
+        </button>
 
-              <div className="max-w-[60%] max-[900px]:max-w-full max-[900px]:flex-row text-left">
-                <div className="my-4">
-                  <input
-                    type="checkbox"
-                    value="light"
-                    className="toggle toggle-primary"
-                    checked={quiz?.automatic}
-                    onChange={updateMode}
-                  />
+        <h4>Question {getQuestionIndex(currentQuestion.id) + 1}</h4>
+        <h2 className="text-2xl font-bold my-4">{currentQuestion.description}</h2>
 
-                  <span className="ml-4">Automatic Mode?</span>
-                </div>
-
-                <div className="my-4">
-                  <input
-                    type="checkbox"
-                    value="light"
-                    className="toggle toggle-primary"
-                  />
-
-                  <span className="ml-4">Show Results?</span>
-                </div>
-
-                <div className="min-[900px]:hidden">
-                  <h2 className="text-center mt-8">
-                    <span className="font-bold">Player Count: </span>
-                    {comma(players.length)}
-                  </h2>
-                </div>
-              </div>
+        <ol className="list-[upper-alpha] list-inside font-bold">
+          {currentQuestion.shortAnswer ? (
+            <div className="text-center py-4 bg-base-300 rounded-xl select-none">
+              <p className="italic opacity-60 my-4 text-2xl">Short Answer</p>
+              <p className="opacity-60 my-4 text-lg">Please type a response.</p>
             </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="max-[900px]:mt-6 md:mt-0 md:ml-6 flex-row justify-between">
-            <div className="card bg-primary w-[250px] max-[500px]:w-full max-[900px]:mx-auto min-[900px]:mt-[50px]">
-              <div className="card-body">
-                <p className="max-[900px]:text-left">Room Code</p>
-                <h2 className="card-title text-3xl">
-                  <span className="w-full">{game.code || "..."}</span>
-                  <Copy onClick={copy} className="hover:opacity-40" />
-                </h2>
-              </div>
-            </div>
-
-            <div className="my-[25px]">
-              <h4 className="text-sm opacity-60">{softError}</h4>
-            </div>
-
-            <div className="flex justify-between">
-              <div className="max-[500px]:hidden"></div>
-
-              <button
-                className="btn btn-outline btn-success max-[500px]:w-full"
-                disabled={softError != "" || players.length == 0}
+          ) : (
+            currentQuestion.answers.map((answer) => (
+              <li
+                key={answer.id}
+                className="p-6 my-6 text-xl bg-base-300 rounded-xl"
               >
-                Start Game
-              </button>
-            </div>
-          </div>
-        </div>
+                <span className="font-normal">{answer.description}</span>
+              </li>
+            ))
+          )}
+        </ol>
       </div>
-
-      <div className="w-[90%] mx-auto">
-        <div className="mx-auto mt-2 mb-10 p-6 bg-base-200 rounded-xl text-center shadow-md max-[900px]:block max-[900px]:p-4">
-
-          {players.length == 0 ?
-            (
-              <h1 className="opacity-60 font-bold text-2xl my-8 select-none">No players yet...</h1>
-            ) : (
-              players.map((player) => (
-                <div className="text-center bg-base-300 inline-block p-4 m-4 rounded-xl w-[130px] h-[130px]" key={player.id}>
-                  <User className="m-auto" />
-                  <h4 className="text-md font-bold my-2" title={player.username}>{truncateText(player.username, 8)}</h4>
-                  <button
-                    className="btn btn-outline btn-error text-xs"
-                    onClick={() => kick(player.id, player.username)}
-                  >
-                    Kick
-                  </button>
-                </div>
-              ))
-            )
-          }
-        </div>
-      </div>
-    </>
+    </div>
   );
 }
