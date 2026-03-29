@@ -112,6 +112,60 @@ export default (socket, cache, db, jwt, io) => ({
         io.to(code).emit("game:question", question);
     },
 
+    async jumper({ code, token, index }) {
+        try {
+            const verify = await jwt.verify(token);
+            const session = await getGame(cache, code);
+
+            if (!session || session.owner != verify.id) {
+                socket.emit("error", { message: "Invalid game." });
+                return;
+            }
+
+            if (session.index == -1) {
+                socket.emit("error", { message: "Game has not started yet." });
+                return;
+            }
+
+            if (session.mode != "manual") {
+                socket.emit("error", { message: "Cannot jump in an automatic game." });
+                return;
+            }
+
+            // Find index of question
+            let qIndex = -1;
+
+            for (let i = 0; i < session.questions.length; i++) {
+                if (session.questions[i].jumper == index) {
+                    qIndex = i;
+                    break;
+                }
+            }
+
+            if (qIndex == -1) {
+                socket.emit("error", { message: "Invalid jump location" });
+                return;
+            }
+
+            // Update index and emit
+            session.index = qIndex;
+            await updateGame(cache, code, session);
+
+            // Emit to players
+            const question = session.questions[session.index];
+
+            if (!question) {
+                socket.emit("error", { message: "Invalid question." });
+                return;
+            }
+
+            io.to(code).emit("game:question", question);
+        } catch (err) {
+            consola.error(`[host] Failed to jump to an index - ${err}`);
+            socket.emit("error", { message: "Invalid jump." });
+        }
+    },
+
     async kick({ code, playerID }) {
         const session = await getGame(cache, code);
 

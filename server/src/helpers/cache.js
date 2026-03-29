@@ -14,6 +14,7 @@ export const EXPIRE_LONG = 86400 * 7; // 1 week
 const formatQuestion = (question) => {
     const result = {
         id: uuidv4(),
+        jumper: question.id,
         description: question.description,
         shortAnswer: question.shortAnswer,
         points: question.points,
