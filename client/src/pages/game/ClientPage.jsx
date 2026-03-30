@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { User, Hash } from "lucide-react";
 
-export function JoinPage() {
+export function ClientPage() {
   const [code, setCode] = useState("");
   const [username, setUserName] = useState("");
 
@@ -18,10 +18,11 @@ export function JoinPage() {
 
     console.log(userData);
   }
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
-      <div className="max-w-159.5 w-full">
-        <h1 className="font-bold text-3xl">Join Game</h1>
+      <div className="max-w-159.5 w-full my-8">
+        <h1 className="font-bold text-3xl mb-2">Join Game</h1>
         <form onSubmit={handleSubmit} className=" bg-base-100 p-6 rounded-2xl">
           <fieldset className="fieldset">
             <legend className="fieldset-legend text-base-content/70 text-lg">

@@ -38,6 +38,12 @@ export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, e
                 <h2 className="text-2xl font-bold my-4">{currentQuestion.description}</h2>
 
                 <ol className="list-[upper-alpha] list-inside font-bold">
+                    {!currentQuestion.shortAnswer && currentQuestion.answers.length == 0 ?
+                        <div className="text-center py-4 bg-base-300 rounded-xl select-none">
+                            <p className="italic text-error opacity-60 my-4 text-2xl">This question has no answers!</p>
+                        </div> : <></>
+                    }
+
                     {currentQuestion.shortAnswer ? (
                         <div className="text-center py-4 bg-base-300 rounded-xl select-none">
                             <p className="italic opacity-60 my-4 text-2xl">Short Answer</p>

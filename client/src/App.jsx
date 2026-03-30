@@ -10,8 +10,8 @@ import { SettingsPage } from "./pages/user/SettingsPage";
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
 import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
 
-import { JoinPage } from "./pages/JoinPage.jsx";
-import { HostPage } from "./pages/HostPage.jsx";
+import { ClientPage } from "./pages/game/ClientPage.jsx";
+import { HostPage } from "./pages/game/HostPage.jsx";
 
 import { PageNotFound } from "./pages/PageNotFound.jsx";
 
@@ -50,7 +50,7 @@ export function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
 
-          <Route path="game/join" element={<JoinPage />} />
+          <Route path="join" element={<ClientPage />} />
 
           <Route path="leaderboardTest" element={<LeaderboardResults />} />
 

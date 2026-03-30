@@ -1,9 +1,9 @@
-import { getAllQuestionsById } from "../api/editor";
-import { socket } from "../api/socket";
+import { getAllQuestionsById } from "../../api/editor";
+import { socket } from "../../api/socket";
 
-import { LobbyState } from "../components/host/states/LobbyState";
-import { ManualState } from "../components/host/states/ManualState";
-import { Loading } from "../components/utility/Loading";
+import { LobbyState } from "../../components/game/host/states/LobbyState";
+import { ManualState } from "../../components/game/host/states/ManualState";
+import { Loading } from "../../components/utility/Loading";
 
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";

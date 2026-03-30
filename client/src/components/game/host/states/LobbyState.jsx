@@ -1,5 +1,5 @@
-import { truncateText } from "../../../utility/truncate";
-import { comma } from "../../../utility/numbers";
+import { truncateText } from "../../../../utility/truncate";
+import { comma } from "../../../../utility/numbers";
 
 import { Copy, User } from "lucide-react";
 import { toast } from "sonner";
