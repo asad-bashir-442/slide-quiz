@@ -1,3 +1,4 @@
+import { generateUsername } from "unique-username-generator";
 import { User, Hash } from "lucide-react";
 import { useState } from "react";
 
@@ -6,17 +7,22 @@ export function JoinState({ joinGame }) {
     const [code, setCode] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const random = () => {
-        setUsername("Bobby");
-    };
+    // TODO: Profanity filter?
+    // TODO: Length is not synced
+    const random = () => setUsername(generateUsername("", 3));
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
 
+        if (username.trim().length == 0 || code.length == 0) {
+            setUsername("");
+            setCode("");
+
+            return;
+        }
+
         setLoading(true);
-
-        console.log(username, code);
-
+        await joinGame(username, code);
         setLoading(false);
     };
 
@@ -35,8 +41,9 @@ export function JoinState({ joinGame }) {
 
                             <input
                                 required
-                                minLength="5"
+                                minLength="3"
                                 maxLength="30"
+                                pattern="[A-Za-z0-9]+"
                                 autoFocus
                                 title="Enter a valid game code"
                                 type="text"
@@ -58,8 +65,9 @@ export function JoinState({ joinGame }) {
 
                             <input
                                 required
-                                minLength="5"
-                                maxLength="30"
+                                minLength="3"
+                                maxLength="10"
+                                pattern="[A-Za-z0-9]+"
                                 title="Enter a valid username"
                                 type="text"
                                 placeholder="Enter Username"

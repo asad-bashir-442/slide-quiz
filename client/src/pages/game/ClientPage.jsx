@@ -4,6 +4,7 @@ import { JoinState } from "../../components/game/client/JoinState";
 import { Loading } from "../../components/utility/Loading";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export function ClientPage() {
   const [state, setState] = useState("DISCONNECTED");
@@ -20,8 +21,7 @@ export function ClientPage() {
   });
 
   const joinGame = (username, code) => {
-    console.log("joining game");
-    console.log(username, code);
+    socket.emit("player:join", { code, username });
   };
 
   useEffect(() => {
@@ -32,6 +32,12 @@ export function ClientPage() {
     };
 
     const onError = (msg) => {
+      console.log(msg);
+      if (msg?.soft) {
+        toast.error(msg?.message || "Unknown error");
+        return;
+      }
+
       setError(msg?.message || "Unknown error");
       setState("ERROR");
 
