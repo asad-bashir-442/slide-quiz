@@ -1,4 +1,60 @@
+import { SquareArrowRightExit } from "lucide-react";
 
-export function ManualState() {
-    return <h1>hi im manual</h1>;
+export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, end, jump, jumpNext }) {
+    return (
+        <div className="mt-10 mb-10 flex gap-4">
+            <div className="w-[20%] p-6 rounded-xl bg-base-200 flex flex-col justify-between min-h-[400px]">
+                <div>
+                    {allQuestions.map((question) => (
+                        <label className="label" key={question.id}>
+                            <input
+                                className="radio radio-xl radio-primary"
+                                type="radio"
+                                name="radio-questions"
+                                checked={currentQuestion.id == question.id}
+                                onClick={() => jump(question.id)}
+                            />
+                            <span className="label-text">Question #{getQuestionIndex(question.id) + 1}</span>
+                        </label>
+                    ))}
+                </div>
+
+                <button className="btn btn-error mt-4" onClick={end}>
+                    <SquareArrowRightExit />
+                    <span>End</span>
+                </button>
+            </div>
+
+            <div className="w-full p-6 rounded-xl bg-base-200">
+                <button
+                    className="btn btn-primary float-right"
+                    onClick={jumpNext}
+                    disabled={currentQuestion.id == allQuestions[allQuestions.length - 1]?.id}
+                >
+                    Next Question
+                </button>
+
+                <h4>Question {getQuestionIndex(currentQuestion.id) + 1}</h4>
+                <h2 className="text-2xl font-bold my-4">{currentQuestion.description}</h2>
+
+                <ol className="list-[upper-alpha] list-inside font-bold">
+                    {currentQuestion.shortAnswer ? (
+                        <div className="text-center py-4 bg-base-300 rounded-xl select-none">
+                            <p className="italic opacity-60 my-4 text-2xl">Short Answer</p>
+                            <p className="opacity-60 my-4 text-lg">Please type a response.</p>
+                        </div>
+                    ) : (
+                        currentQuestion.answers.map((answer) => (
+                            <li
+                                key={answer.id}
+                                className="p-6 my-6 text-xl bg-base-300 rounded-xl"
+                            >
+                                <span className="font-normal">{answer.description}</span>
+                            </li>
+                        ))
+                    )}
+                </ol>
+            </div>
+        </div>
+    );
 }
