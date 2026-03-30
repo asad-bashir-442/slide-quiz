@@ -4,17 +4,7 @@ import { comma } from "../../../../utility/numbers";
 import { Copy, User } from "lucide-react";
 import { toast } from "sonner";
 
-export function LobbyState({
-    quiz,
-    game,
-    players,
-    softError,
-    showResults,
-    updateMode,
-    updateResults,
-    kick,
-    start
-}) {
+export function LobbyState({ quiz, game, players, softError, showResults, updateMode, updateResults, kick, start }) {
     const copy = () => {
         if (!game.code) return;
 

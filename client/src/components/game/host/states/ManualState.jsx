@@ -14,6 +14,7 @@ export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, e
                                 checked={currentQuestion.id == question.id}
                                 onClick={() => jump(question.id)}
                             />
+
                             <span className="label-text">Question #{getQuestionIndex(question.id) + 1}</span>
                         </label>
                     ))}

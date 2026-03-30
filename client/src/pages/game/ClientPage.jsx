@@ -1,86 +1,90 @@
-import { useState } from "react";
-import { User, Hash } from "lucide-react";
+import { socket } from "../../api/socket";
+
+import { JoinState } from "../../components/game/client/JoinState";
+import { Loading } from "../../components/utility/Loading";
+
+import { useState, useEffect } from "react";
 
 export function ClientPage() {
+  const [state, setState] = useState("DISCONNECTED");
+  const [error, setError] = useState("");
+
   const [code, setCode] = useState("");
   const [username, setUserName] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  const [currentQuestion, setCurrentQuestion] = useState({
+    id: "0123",
+    description: "Loading question...",
+    shortAnswer: 1,
+    points: 1
+  });
 
-    const randomUserInput = document.getElementById("random_username");
+  const joinGame = (username, code) => {
+    console.log("joining game");
+    console.log(username, code);
+  };
 
-    const userData = {
-      code,
-      username,
-      isRandom: randomUserInput.checked,
+  useEffect(() => {
+    socket.connect();
+
+    const onConnect = () => {
+      setState("CONNECTED");
     };
 
-    console.log(userData);
+    const onError = (msg) => {
+      setError(msg?.message || "Unknown error");
+      setState("ERROR");
+
+      socket.disconnect();
+    };
+
+    const onPlayerJoined = (msg) => console.log("joined", msg);
+    const onPlayerKicked = (msg) => console.log("kicked", msg);
+    const onGameQuestion = (msg) => setCurrentQuestion(msg);
+    const onGameEnded = () => console.log("game ended");
+
+    socket.on("connect", onConnect);
+    socket.on("error", onError);
+
+    socket.on("player:joined", onPlayerJoined);
+    socket.on("player:kicked", onPlayerKicked);
+    socket.on("game:question", onGameQuestion);
+    socket.on("game:ended", onGameEnded);
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("error", onError);
+
+      socket.off("player:joined", onPlayerJoined);
+      socket.off("player:kicked", onPlayerKicked);
+      socket.off("game:question", onGameQuestion);
+      socket.off("game:ended", onGameEnded);
+
+      if (socket.connected) socket.disconnect();
+    };
+  }, []);
+
+  // State processing
+  if (state == "DISCONNECTED") {
+    return (
+      <div className="text-center my-8">
+        <h2 className="text-xl opacity-40 my-8 font-bold italic">Disconnected, reconnecting...</h2>
+        <Loading />
+      </div>
+    )
+  }
+
+  if (state == "ERROR") {
+    return (
+      <div className="text-center my-8">
+        <h2 className="text-xl text-error opacity-40 my-8 font-bold italic">Error, try reloading the page.</h2>
+        <h4 className="text-lg opacity-40 font-bold">Error: {error}</h4>
+      </div>
+    )
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
-      <div className="max-w-159.5 w-full my-8">
-        <h1 className="font-bold text-3xl mb-2">Join Game</h1>
-        <form onSubmit={handleSubmit} className=" bg-base-100 p-6 rounded-2xl">
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-base-content/70 text-lg">
-              Game Code
-            </legend>
-            <label className="input validator">
-              <Hash className="text-base-content/70" />
-
-              <input
-                required
-                minLength="5"
-                maxLength="30"
-                autoFocus
-                title="Enter a valid game code"
-                type="text"
-                placeholder="Enter Game Code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-            </label>
-
-            <p className="validator-hint">Enter valid game code</p>
-          </fieldset>
-
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend text-base-content/70 text-lg">
-              Username
-            </legend>
-            <label className="input validator">
-              <User className="text-base-content/70" />
-
-              <input
-                required
-                minLength="5"
-                maxLength="30"
-                title="Enter a valid username"
-                type="text"
-                placeholder="Enter Username"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-              />
-            </label>
-
-            <p className="validator-hint">Enter valid username</p>
-          </fieldset>
-
-          <div className="flex gap-2">
-            <input
-              id="random_username"
-              type="checkbox"
-              className="toggle mb-6"
-            />
-            <p className="text-base-content/70">Random Username</p>
-          </div>
-
-          <button className="btn btn-primary w-full">Join</button>
-        </form>
-      </div>
-    </div>
+    <JoinState joinGame={joinGame} />
   );
 }
