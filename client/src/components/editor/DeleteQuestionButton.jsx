@@ -31,7 +31,7 @@ export function DeleteQuestionButton({
   return (
     <>
       <button
-        className="btn btn-error max-lg:w-full max-[900px]:w-full max-lg:btn-outline"
+        className="btn btn-error max-lg:w-full max-[900px]:w-full max-lg:btn-outline rounded-md"
         onClick={() =>
           document
             .getElementById(`delete_question_modal/${question?.id}`)
