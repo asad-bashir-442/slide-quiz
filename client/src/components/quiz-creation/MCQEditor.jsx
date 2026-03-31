@@ -71,7 +71,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
   }
 
   return (
-    <div className="w-[90%] mx-auto mt-10 mb-10 p-6 bg-base-100 rounded-xl shadow-md flex flex-col gap-6">
+    <div className="w-[90%] mx-auto mb-10 p-6 bg-base-100 rounded-xl shadow-md flex flex-col gap-6">
       {/* Top row */}
       <div>
         <h3 className="text-md">Question {questionNum}</h3>
