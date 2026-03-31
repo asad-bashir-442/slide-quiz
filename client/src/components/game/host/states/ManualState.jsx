@@ -36,7 +36,7 @@ export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, e
                 </button>
 
                 <h4>Question {getQuestionIndex(currentQuestion.id) + 1}</h4>
-                <h2 className="text-2xl font-bold my-4">{currentQuestion.description}</h2>
+                <h2 className="text-2xl font-bold my-4 break-words">{currentQuestion.description}</h2>
 
                 <ol className="list-[upper-alpha] list-inside font-bold">
                     {!currentQuestion.shortAnswer && currentQuestion.answers.length == 0 ?

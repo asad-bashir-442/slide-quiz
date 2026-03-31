@@ -1,27 +1,49 @@
 import { socket } from "../../api/socket";
 
 import { JoinState } from "../../components/game/client/JoinState";
+import { IdleState } from "../../components/game/client/IdleState";
+import { RespondState } from "../../components/game/client/RespondState";
 import { Loading } from "../../components/utility/Loading";
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
+const placeholder = {
+  id: "0123",
+  description: "Loading question...",
+  shortAnswer: 1,
+  points: 1
+}
+
 export function ClientPage() {
   const [state, setState] = useState("DISCONNECTED");
-  const [error, setError] = useState("");
 
   const [code, setCode] = useState("");
-  const [username, setUserName] = useState("");
+  const [username, setUsername] = useState("");
 
-  const [currentQuestion, setCurrentQuestion] = useState({
-    id: "0123",
-    description: "Loading question...",
-    shortAnswer: 1,
-    points: 1
-  });
+  const [currentQuestion, setCurrentQuestion] = useState(placeholder);
+  const [responses, setResponses] = useState([]);
 
   const joinGame = (username, code) => {
     socket.emit("player:join", { code, username });
+  };
+
+  const leaveGame = () => {
+    socket.disconnect();
+
+    setCode("");
+    setUsername("");
+    setCurrentQuestion(placeholder);
+    setState("DISCONNECTED");
+
+    socket.connect();
+  }
+
+  const respond = (response) => {
+    if (state != "RESPONDING") return;
+
+    socket.emit("player:answer", { code, response });
+    setResponses([...responses, currentQuestion.id]);
   };
 
   useEffect(() => {
@@ -32,21 +54,27 @@ export function ClientPage() {
     };
 
     const onError = (msg) => {
-      console.log(msg);
-      if (msg?.soft) {
-        toast.error(msg?.message || "Unknown error");
-        return;
-      }
-
-      setError(msg?.message || "Unknown error");
-      setState("ERROR");
-
-      socket.disconnect();
+      toast.error(msg?.message || "Unknown error");
     };
 
-    const onPlayerJoined = (msg) => console.log("joined", msg);
-    const onPlayerKicked = (msg) => console.log("kicked", msg);
-    const onGameQuestion = (msg) => setCurrentQuestion(msg);
+    const onPlayerJoined = (msg) => {
+      if (msg?.code && msg?.player) {
+        setCode(msg.code);
+        setUsername(msg.player.username);
+        setState("IDLE");
+      }
+    };
+
+    const onPlayerKicked = (msg) => {
+      toast.error(msg?.message || "You've been kicked!");
+      leaveGame();
+    }
+
+    const onGameQuestion = (msg) => {
+      setCurrentQuestion(msg);
+      setState("RESPONDING");
+    }
+
     const onGameEnded = () => console.log("game ended");
 
     socket.on("connect", onConnect);
@@ -75,19 +103,31 @@ export function ClientPage() {
   if (state == "DISCONNECTED") {
     return (
       <div className="text-center my-8">
-        <h2 className="text-xl opacity-40 my-8 font-bold italic">Disconnected, reconnecting...</h2>
+        <h2 className="text-xl opacity-40 my-8 font-bold italic">Disconnected, connecting...</h2>
         <Loading />
       </div>
-    )
+    );
   }
 
-  if (state == "ERROR") {
+  if (state == "IDLE") {
     return (
-      <div className="text-center my-8">
-        <h2 className="text-xl text-error opacity-40 my-8 font-bold italic">Error, try reloading the page.</h2>
-        <h4 className="text-lg opacity-40 font-bold">Error: {error}</h4>
-      </div>
-    )
+      <IdleState
+        username={username}
+        code={code}
+        leaveGame={leaveGame}
+      />
+    );
+  }
+
+  if (state == "RESPONDING") {
+    return (
+      <RespondState
+        currentQuestion={currentQuestion}
+        responses={responses}
+        code={code}
+        respond={respond}
+      />
+    );
   }
 
   return (

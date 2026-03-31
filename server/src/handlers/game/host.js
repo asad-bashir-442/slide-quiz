@@ -112,6 +112,7 @@ export default (socket, cache, db, jwt, io) => ({
         io.to(code).emit("game:question", question);
     },
 
+    // TODO: POST?
     async jumper({ code, token, index }) {
         try {
             const verify = await jwt.verify(token);

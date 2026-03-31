@@ -8,8 +8,7 @@ export function JoinState({ joinGame }) {
     const [loading, setLoading] = useState(false);
 
     // TODO: Profanity filter?
-    // TODO: Length is not synced
-    const random = () => setUsername(generateUsername("", 3));
+    const random = () => setUsername(generateUsername("", 3, 15));
 
     const submit = async (e) => {
         e.preventDefault();

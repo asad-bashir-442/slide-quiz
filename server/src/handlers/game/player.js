@@ -23,7 +23,7 @@ export default (socket, cache, io) => ({
         const session = await getGame(cache, code);
 
         if (!session) {
-            socket.emit("error", { soft: true, message: "Game not found." });
+            socket.emit("error", { message: "Game not found." });
             return;
         }
 

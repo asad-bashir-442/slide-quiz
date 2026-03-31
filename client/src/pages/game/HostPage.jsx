@@ -50,6 +50,7 @@ export function HostPage() {
     setPlayers([]);
     setGame({});
 
+    console.log(quiz.automatic);
     socket.emit("host:create", {
       mode: quiz.automatic ? "automatic" : "manual",
       quizID: id,
