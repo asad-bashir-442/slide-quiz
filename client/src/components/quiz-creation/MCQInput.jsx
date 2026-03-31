@@ -8,23 +8,22 @@ export function MCQInput({
   correct,
   answerId,
   onChange,
-
+  index,
   question,
   setQuestions,
   letter,
+  deleteTempAnswer,
 }) {
   let { id } = useParams();
 
   async function handleDelete() {
-    const questions = await getAllQuestionsById(id);
     if (!answerId) {
-      setQuestions(questions.data.questions);
-      toast.success("Removed Question");
+      deleteTempAnswer(index);
       return;
     }
     try {
       const res = await deleteAnswerById(id, question?.id, answerId);
-
+      const questions = await getAllQuestionsById(id);
       setQuestions(questions.data.questions);
       toast.success(res.message);
     } catch (error) {
@@ -33,11 +32,11 @@ export function MCQInput({
   }
 
   return (
-    <div className="flex items-center gap-4 group bg-base-200 p-6 rounded-2xl relative">
+    <div className="flex items-center gap-4 border border-transparent group bg-base-200 p-6 rounded-2xl focus-within:border-primary relative">
       <button
         type="button"
         onClick={handleDelete}
-        className="btn btn-sm btn-error opacity-0 absolute group-hover:opacity-20 translate-x-5 -translate-y-5 hover:opacity-100  right-0 top-0 btn-circle"
+        className="btn btn-sm btn-error group-hover:opacity-20 hover:opacity-100 opacity-0 absolute group-focus-within:opacity-20 focus:opacity-100 translate-x-5 -translate-y-5  right-0 top-0 btn-circle"
       >
         <X />
       </button>

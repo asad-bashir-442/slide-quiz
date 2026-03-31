@@ -23,6 +23,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
   }
 
   function addTempAnswer() {
+    console.log(tempAnswers);
     setTempAnswers((prev) => [
       ...prev,
       {
@@ -32,13 +33,21 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
     ]);
   }
 
+  function deleteTempAnswer(index) {
+    const updated = [...tempAnswers];
+    updated.splice(index, 1);
+    console.log(tempAnswers);
+    console.log(updated);
+    setTempAnswers(updated);
+  }
+
   async function saveAnswers(e) {
     e.preventDefault();
     try {
       const newAnswers = tempAnswers.filter((answer) => !answer.id);
 
       if (newAnswers.length === 0) {
-        toast.error("No answers to save");
+        toast.error("No new answers to save");
         return;
       }
 
@@ -95,6 +104,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
           ) : (
             tempAnswers?.map((tempAnswer, index) => (
               <MCQInput
+                index={index}
                 key={tempAnswer.id || `temp-${index}`}
                 letter={index + 1}
                 description={tempAnswer.description}
@@ -103,6 +113,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
                 answerId={tempAnswer.id}
                 question={question}
                 setQuestions={setQuestions}
+                deleteTempAnswer={deleteTempAnswer}
               />
             ))
           )}
