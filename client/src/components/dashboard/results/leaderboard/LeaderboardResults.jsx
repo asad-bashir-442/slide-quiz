@@ -1,6 +1,9 @@
 import { TrophyBox } from "./TrophyBox.jsx";
 
 export function LeaderboardResults() {
+
+
+
     {/* This is just dummy data for now*/}
     const players = [
         { id: 1, name: "Bob", score: "13/14", responses: 14 },
@@ -10,6 +13,7 @@ export function LeaderboardResults() {
         { id: 5, name: "John", score: "9/14", responses: 14 },
     ];
     return (
+
         <div className="w-11/12 max-w-5xl mx-auto py-8">
 
             {/* Title / Subtitle */}
