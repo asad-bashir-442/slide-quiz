@@ -4,7 +4,7 @@ import { comma } from "../../../../utility/numbers";
 import { Copy, User } from "lucide-react";
 import { toast } from "sonner";
 
-export function LobbyState({ quiz, game, players, softError, showResults, updateMode, updateResults, kick, start }) {
+export function LobbyState({ quiz, game, players, softError, showResults, updateMode, updateResults, kick, start, automatic }) {
     const copy = () => {
         if (!game.code) return;
 
@@ -38,7 +38,7 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
                                         type="checkbox"
                                         value="light"
                                         className="toggle toggle-primary"
-                                        checked={quiz?.automatic}
+                                        checked={automatic}
                                         onChange={updateMode}
                                     />
 

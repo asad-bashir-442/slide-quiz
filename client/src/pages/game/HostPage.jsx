@@ -19,7 +19,8 @@ export function HostPage() {
   const [error, setError] = useState("");
   const [softError, setSoftError] = useState("");
 
-  const [quiz, setQuiz] = useState({ automatic: false });
+  const [quiz, setQuiz] = useState({});
+  const [automatic, setAutomatic] = useState(false);
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState("");
 
@@ -46,13 +47,12 @@ export function HostPage() {
     return -1;
   }
 
-  const createGame = () => {
+  const createGame = (automaticGame) => {
     setPlayers([]);
     setGame({});
 
-    console.log(quiz.automatic);
     socket.emit("host:create", {
-      mode: quiz.automatic ? "automatic" : "manual",
+      mode: automaticGame ? "automatic" : "manual",
       quizID: id,
       token,
     });
@@ -61,8 +61,15 @@ export function HostPage() {
   const updateMode = () => {
     if (state != "CONNECTED") return;
 
-    setQuiz({ ...quiz, automatic: !quiz.automatic });
-    createGame();
+    const auto = !automatic;
+
+    setState("DISCONNECTED");
+    socket.disconnect();
+
+    socket.connect();
+
+    setAutomatic(auto);
+    createGame(auto);
   };
 
   const kick = (playerID, username) => {
@@ -79,7 +86,7 @@ export function HostPage() {
   };
 
   const jump = (id) => {
-    if (quiz.automatic || id == currentQuestion.id) return;
+    if (automatic || id == currentQuestion.id) return;
 
     const index = getQuestionIndex(id);
 
@@ -92,7 +99,7 @@ export function HostPage() {
   };
 
   const jumpNext = () => {
-    if (quiz.automatic) return;
+    if (automatic) return;
 
     const index = getQuestionIndex(currentQuestion.id);
 
@@ -114,7 +121,7 @@ export function HostPage() {
       return;
     }
 
-    navigate("/results");
+    navigate("/dashboard");
   };
 
   useEffect(() => {
@@ -133,14 +140,17 @@ export function HostPage() {
           throw new Error("Quiz not found");
         }
 
+        const isAutomatic = details.data.automatic === 1 || details.data.automatic === true;
+
         setQuiz(details.data);
+        setAutomatic(isAutomatic);
 
         if (details.data.questions?.length == 0) {
           setSoftError("Not enough questions to host a game!");
           return;
         }
 
-        createGame();
+        createGame(isAutomatic);
       } catch (err) {
         console.error(err);
 
@@ -213,7 +223,6 @@ export function HostPage() {
     )
   }
 
-  // TODO: This should be last
   if (state == "CONNECTED") {
     return (
       <LobbyState
@@ -222,6 +231,7 @@ export function HostPage() {
         players={players}
         softError={softError}
         showResults={showResults}
+        automatic={automatic}
         updateMode={updateMode}
         updateResults={updateResults}
         kick={kick}
@@ -230,7 +240,9 @@ export function HostPage() {
     )
   }
 
-  return game.automatic ? <h1>hi</h1> : (
+  return automatic ? (
+    <h1>hi</h1>
+  ) : (
     <ManualState
       allQuestions={allQuestions}
       currentQuestion={currentQuestion}

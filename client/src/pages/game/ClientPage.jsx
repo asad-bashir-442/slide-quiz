@@ -34,6 +34,7 @@ export function ClientPage() {
     setCode("");
     setUsername("");
     setCurrentQuestion(placeholder);
+    setResponses([]);
     setState("DISCONNECTED");
 
     socket.connect();
@@ -68,14 +69,17 @@ export function ClientPage() {
     const onPlayerKicked = (msg) => {
       toast.error(msg?.message || "You've been kicked!");
       leaveGame();
-    }
+    };
 
     const onGameQuestion = (msg) => {
       setCurrentQuestion(msg);
       setState("RESPONDING");
-    }
+    };
 
-    const onGameEnded = () => console.log("game ended");
+    const onGameEnded = () => {
+      toast.success("Game has ended! Thank you for playing.");
+      leaveGame();
+    };
 
     socket.on("connect", onConnect);
     socket.on("error", onError);
