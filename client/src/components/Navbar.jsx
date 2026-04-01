@@ -17,7 +17,6 @@ export function Navbar() {
     navigate("/");
   }
 
-  // TODO: Eventually put hosting/joining links in here
   return (
     <div className="navbar bg-base-100 shadow-sm rounded-lg">
       <div className="navbar-start">
@@ -32,6 +31,7 @@ export function Navbar() {
           >
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About</Link></li>
+            <li><Link to="/join">Join</Link></li>
             {user ? (
               <li>
                 <a>{truncateText(user?.name, 10)}</a>
@@ -62,6 +62,7 @@ export function Navbar() {
         <ul className="menu menu-horizontal px-1">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/about">About</Link></li>
+          <li><Link to="/join">Join</Link></li>
           {user ? (
             <li>
               <details>

@@ -103,9 +103,7 @@ export default (socket, cache, io) => ({
             return;
         }
 
-        const { error } = (
-            question.shortAnswer ? shortAnswerSchema : choiceAnswerSchema
-        ).validate(response);
+        const { error } = (question.shortAnswer ? shortAnswerSchema : choiceAnswerSchema).validate(response);
 
         if (error) {
             socket.emit("error", { message: "Invalid response." });
@@ -136,24 +134,17 @@ export default (socket, cache, io) => ({
 
         const playerDetails = {
             id: player.id,
-            username: player.username
+            username: player.username,
         };
 
         const responseDetails = {
-            answer, correct,
+            answer,
+            correct,
             timestamp: Date.now(),
         };
 
         // Save and emit to host
-        await createResponse(
-            cache,
-            session.owner,
-            session.longCode,
-            socket.id,
-            playerDetails,
-            responseDetails,
-            index,
-        );
+        await createResponse(cache, session.owner, session.longCode, socket.id, playerDetails, responseDetails, index);
 
         io.to(session.host).emit("host:response", {
             player: playerDetails,

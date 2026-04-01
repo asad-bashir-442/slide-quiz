@@ -10,6 +10,9 @@ import { SettingsPage } from "./pages/user/SettingsPage";
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
 import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
 
+import { ClientPage } from "./pages/game/ClientPage.jsx";
+import { HostPage } from "./pages/game/HostPage.jsx";
+
 import { PageNotFound } from "./pages/PageNotFound.jsx";
 
 import { Navbar } from "./components/Navbar";
@@ -20,9 +23,10 @@ import { useAuth } from "./context/AuthContext.jsx";
 
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router";
-import { JoinPage } from "./pages/JoinPage.jsx";
+
 import { LeaderboardResults } from "./components/dashboard/results/leaderboard/LeaderboardResults.jsx";
-import { SessionResultsPanel } from "./components/dashboard/results/session/SessionResultsPanel.jsx";
+
+// TODO: File names are inconsistent
 
 export function App() {
   const { loading } = useAuth();
@@ -46,13 +50,15 @@ export function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
 
-          <Route path="join" element={<JoinPage />} />
-          <Route path="leaderboardTest" element={<SessionResultsPanel />} />
+          <Route path="join" element={<ClientPage />} />
+
+          <Route path="leaderboardTest" element={<LeaderboardResults />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="quiz/:id" element={<QuizDetailPage />} />
+            <Route path="quiz/:id/host" element={<HostPage />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
