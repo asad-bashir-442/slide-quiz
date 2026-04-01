@@ -1,5 +1,7 @@
 import { Loading } from "../utility/Loading.jsx";
 import { Error } from "../utility/Error.jsx";
+import { useParams } from "react-router";
+import { getAllResponses } from "../../api/responses.js";
 
 // import { getAllResults } from "../../api/auth.js";
 import { useEffect, useState } from "react";
@@ -12,6 +14,8 @@ export function ResultsPanel() {
   // Since this is redis, it isn't too bad
   // Especially since old entries will expire on their own
 
+  let { id } = useParams();
+
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -21,17 +25,50 @@ export function ResultsPanel() {
       try {
         // const data = await getAllResults();
         // TODO: Dummy data, should be replaced with a real API call
+
+        const responses = await getAllResponses();
+        console.log(responses);
         const data = {
           statusCode: 200,
           data: [
-            { id: 0, name: "Countries of the world", lastPlayed: "2020-01-01", totalResponses: 25, averageScore: 0.5 },
-            { id: 1, name: "Countries of the world 2", lastPlayed: "2020-01-01", totalResponses: 26, averageScore: 0.6 },
-            { id: 2, name: "Countries of the world 2", lastPlayed: "2020-01-01", totalResponses: 26, averageScore: 0.6 },
-            { id: 3, name: "Countries of the world 2", lastPlayed: "2020-01-01", totalResponses: 26, averageScore: 0.6 },
-            { id: 4, name: "Countries of the world 2", lastPlayed: "2020-01-01", totalResponses: 26, averageScore: 0.6 }
+            {
+              id: 0,
+              name: "Countries of the world",
+              lastPlayed: "2020-01-01",
+              totalResponses: 25,
+              averageScore: 0.5,
+            },
+            {
+              id: 1,
+              name: "Countries of the world 2",
+              lastPlayed: "2020-01-01",
+              totalResponses: 26,
+              averageScore: 0.6,
+            },
+            {
+              id: 2,
+              name: "Countries of the world 2",
+              lastPlayed: "2020-01-01",
+              totalResponses: 26,
+              averageScore: 0.6,
+            },
+            {
+              id: 3,
+              name: "Countries of the world 2",
+              lastPlayed: "2020-01-01",
+              totalResponses: 26,
+              averageScore: 0.6,
+            },
+            {
+              id: 4,
+              name: "Countries of the world 2",
+              lastPlayed: "2020-01-01",
+              totalResponses: 26,
+              averageScore: 0.6,
+            },
           ],
 
-          message: "ok"
+          message: "ok",
         };
 
         if (data?.statusCode == 200) {
@@ -46,22 +83,24 @@ export function ResultsPanel() {
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchResults();
   }, []);
 
-  if (loading) return (
-    <div className="text-center">
-      <Loading />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="text-center">
+        <Loading />
+      </div>
+    );
 
-  if (error) return (
-    <div className="text-center text-error">
-      <Error message={error} />
-    </div>
-  );
+  if (error)
+    return (
+      <div className="text-center text-error">
+        <Error message={error} />
+      </div>
+    );
 
   return (
     <>
@@ -87,5 +126,4 @@ export function ResultsPanel() {
       )}
     </>
   );
-};
-
+}

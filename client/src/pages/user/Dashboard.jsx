@@ -35,13 +35,13 @@ export function Dashboard() {
           <div className="max-[900px]:flex max-[900px]:justify-center">
             <div className="tabs tabs-box">
               <button
-                className={`tab [--tab-bg:theme(colors.primary)] ${!tabs ? 'tab-active' : ''}`}
+                className={`tab [--tab-bg:theme(colors.primary)] ${!tabs ? "tab-active" : ""}`}
                 onClick={() => setTabs(false)}
               >
                 My Quizzes
               </button>
               <button
-                className={`tab [--tab-bg:theme(colors.primary)] ${tabs ? 'tab-active' : ''}`}
+                className={`tab [--tab-bg:theme(colors.primary)] ${tabs ? "tab-active" : ""}`}
                 onClick={() => setTabs(true)}
               >
                 Quiz Results
@@ -52,11 +52,11 @@ export function Dashboard() {
 
         {/* Right Column */}
         <div className="mt-6 md:mt-0 md:ml-6 w-full md:w-auto">
-          { !tabs ? <NewQuizButton /> : <ClearResultsButton /> }
+          {!tabs ? <NewQuizButton /> : <ClearResultsButton />}
         </div>
       </div>
 
-      { !tabs ? <QuizPanel /> : <ResultsPanel /> }
+      {!tabs ? <QuizPanel /> : <ResultsPanel />}
     </div>
   );
 }
