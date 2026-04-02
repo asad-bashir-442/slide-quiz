@@ -8,7 +8,10 @@ export function JoinState({ joinGame }) {
     const [loading, setLoading] = useState(false);
 
     // TODO: Profanity filter?
-    const random = () => setUsername(generateUsername("", 3, 15));
+    const random = () => setUsername(
+        // NOTE: This includes `-` for some reason, despite the docs saying it won't
+        generateUsername("", 3, 15).replace(/-/g, "")
+    );
 
     const submit = async (e) => {
         e.preventDefault();
