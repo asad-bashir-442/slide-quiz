@@ -2,11 +2,11 @@ import { SquareArrowRightExit } from "lucide-react";
 
 export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, end, jump, jumpNext }) {
     return (
-        <div className="mt-10 mb-10 flex gap-4">
-            <div className="w-[20%] p-6 rounded-xl bg-base-200 flex flex-col justify-between min-h-[400px]">
+        <div className="mt-10 mb-10 flex gap-4 overflow-hidden">
+            <div className="w-[20%] max-w-[250px] p-6 rounded-xl bg-base-200 flex flex-col justify-between min-h-[400px] shrink-0">
                 <div>
                     {allQuestions.map((question) => (
-                        <label className="label" key={question.id}>
+                        <label className="label block my-2" key={question.id}>
                             <input
                                 className="radio radio-xl radio-primary"
                                 type="radio"
@@ -15,7 +15,9 @@ export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, e
                                 onClick={() => jump(question.id)}
                             />
 
-                            <span className="label-text">Question #{getQuestionIndex(question.id) + 1}</span>
+                            <span className="label-text ml-2">
+                                <span className="max-[1500px]:hidden">Question</span> #{getQuestionIndex(question.id) + 1}
+                            </span>
                         </label>
                     ))}
                 </div>
@@ -26,7 +28,7 @@ export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, e
                 </button>
             </div>
 
-            <div className="w-full p-6 rounded-xl bg-base-200">
+            <div className="flex-1 min-w-0 p-6 rounded-xl bg-base-200">
                 <button
                     className="btn btn-primary float-right"
                     onClick={jumpNext}
@@ -54,9 +56,9 @@ export function ManualState({ allQuestions, currentQuestion, getQuestionIndex, e
                         currentQuestion.answers.map((answer) => (
                             <li
                                 key={answer.id}
-                                className="p-6 my-6 text-xl bg-base-300 rounded-xl"
+                                className="p-6 my-6 text-xl bg-base-300 rounded-xl break-words overflow-hidden"
                             >
-                                <span className="font-normal">{answer.description}</span>
+                                <span className="font-normal break-words">{answer.description}</span>
                             </li>
                         ))
                     )}

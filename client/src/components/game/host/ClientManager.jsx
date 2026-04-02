@@ -27,6 +27,8 @@ export function ClientManager({ players, responses, kick, end }) {
         return total;
     };
 
+    // TODO: Respond date
+
     const user = main?.id && (
         <div className="w-full p-6 rounded-xl bg-base-200">
             <button
