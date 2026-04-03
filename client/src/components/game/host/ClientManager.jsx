@@ -3,9 +3,8 @@ import { truncateText } from "../../../utility/truncate";
 
 import { User, X, CircleCheck, CircleX } from "lucide-react";
 import { useState } from "react";
-import { Loading } from "../../utility/Loading";
 
-export function ClientManager({ players, responses, kick, end }) {
+export function ClientManager({ players, responses, kick }) {
     const [main, setMain] = useState({});
 
     const kicked = () => {
@@ -68,7 +67,7 @@ export function ClientManager({ players, responses, kick, end }) {
                     <div className="text-center">
                         <h2 className="font-bold opacity-40 text-2xl">No Responses</h2>
                         <h2 className="font-bold mb-8 italic opacity-40 text-lg">Waiting for responses...</h2>
-                        <Loading />
+                        <span className="loading loading-ring"></span>
                     </div>
                 )}
 
@@ -95,19 +94,20 @@ export function ClientManager({ players, responses, kick, end }) {
                         </div>
 
                         <div className="collapse-content text-sm">
-                            <div className="flex mb-4">
+                            <div className={`flex mb-4 ${res.question.shortAnswer ? "hidden" : ""}`}>
                                 <div className="inline-block mr-4">
-                                    {(res.response.correct && !res.question.shortAnswer) ? <CircleCheck className="text-success" /> : <CircleX className="text-error" />}
+                                    {res.response.correct ? <CircleCheck className="text-success" /> : <CircleX className="text-error" />}
                                 </div>
 
                                 <span className="font-bold">{res.response.correct ? "Correct" : "Incorrect"}</span>
                             </div>
 
-
                             {res.question.shortAnswer ? (
-                                <textarea className="textarea textarea-primary w-full h-[200px]" readOnly>
-                                    {res.response.answer}
-                                </textarea>
+                                <textarea
+                                    className="textarea textarea-primary w-full h-[200px]"
+                                    readOnly
+                                    value={res.response.answer}
+                                />
                             ) : (
                                 <div className="p-6 my-6 text-xl bg-base-300 rounded-xl border border-transparent transition duration-200 ease-in-out">
                                     <span className="font-bold">A: </span>
@@ -122,7 +122,7 @@ export function ClientManager({ players, responses, kick, end }) {
     );
 
     return (
-        <div className="mt-10 mb-10 flex gap-4">
+        <div className="mt-4 flex gap-4">
             <div
                 className={`${!main?.id ? "w-full" : "w-[20%]"} p-6 rounded-xl bg-base-200 min-h-[400px]`}
             >

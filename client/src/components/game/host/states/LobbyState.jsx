@@ -103,7 +103,10 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
                 <div className="mx-auto mt-2 mb-10 p-6 bg-base-200 rounded-xl text-center shadow-md max-[900px]:block max-[900px]:p-4">
                     {players.length == 0 ?
                         (
-                            <h1 className="opacity-60 font-bold text-2xl my-8 select-none">No players yet...</h1>
+                            <>
+                                <h1 className="opacity-60 font-bold text-2xl mt-8 select-none">No players yet...</h1>
+                                <span className="loading loading-ring loading-lg my-4"></span>
+                            </>
                         ) : (
                             players.map((player) => (
                                 <div className="text-center bg-base-300 inline-block p-4 m-4 rounded-xl w-[130px] h-[130px]" key={player.id}>

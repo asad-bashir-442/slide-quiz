@@ -118,19 +118,27 @@ export function HostPage() {
     setResponses(prevResponses => {
       const updated = { ...prevResponses };
       const playerID = answer.player.id;
+      const questionID = answer.question.id;
 
       if (!updated[playerID]) {
         updated[playerID] = [];
       }
 
-      updated[playerID].push({
-        question: answer.question,
-        response: answer.response
-      });
+      // Check for duplicate
+      const alreadyExists = updated[playerID].some(
+        existing => existing.question.id === questionID
+      );
+
+      if (!alreadyExists) {
+        updated[playerID].push({
+          question: answer.question,
+          response: answer.response
+        });
+      }
 
       return updated;
     });
-  };
+  }
 
   // TODO: Maybe confirm alert?
   // NOTE: This needs to be confirmed
@@ -266,12 +274,14 @@ export function HostPage() {
       players={players}
       responses={responses}
       kick={kick}
-      end={end}
     />
   ) : (
     <ManualState
       allQuestions={allQuestions}
       currentQuestion={currentQuestion}
+      players={players}
+      responses={responses}
+      kick={kick}
       getQuestionIndex={getQuestionIndex}
       end={end}
       jump={jump}
