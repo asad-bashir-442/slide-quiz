@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_BASE_URL;
+import { BASE_URL } from "../utility/env";
 
 export async function registerUser(userData) {
   const url = `${BASE_URL}/@me/register`;
