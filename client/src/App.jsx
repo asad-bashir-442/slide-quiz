@@ -25,6 +25,7 @@ import { Toaster } from "sonner";
 import { Routes, Route } from "react-router";
 
 import { LeaderboardResults } from "./components/dashboard/results/leaderboard/LeaderboardResults.jsx";
+import { SessionResultsPanel } from "./components/dashboard/results/session/SessionResultsPanel.jsx";
 
 // TODO: File names are inconsistent
 
