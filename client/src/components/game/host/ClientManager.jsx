@@ -27,8 +27,6 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
         return total;
     };
 
-    // TODO: Respond date
-
     const user = main?.id && (
         <div className="w-full p-6 rounded-xl bg-base-200">
             <button
@@ -39,10 +37,10 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
             </button>
 
             <div className="flex align-middle">
-                <User className="w-[6em] h-[6em]" />
+                <User className="w-[6em] h-[6em] max-[400px]:hidden" />
 
-                <div className="ml-4">
-                    <h2 className="text-[2em]">{truncateText(main.username, 10)}</h2>
+                <div className="min-[400px]:ml-4">
+                    <h2 className="min-[400px]:text-[2em]">{truncateText(main.username, 10)}</h2>
                     <p className="mb-2 text-xs">
                         <span className="font-bold">Points: </span>
                         <span>{points()}</span>
@@ -50,7 +48,7 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
 
                     {players.map((p) => p.id).includes(main.id) && (
                         <button
-                            className="btn btn-error btn-xs"
+                            className="btn btn-error btn-xs max-[400px]:btn-outline"
                             onClick={kicked}
                         >
                             Kick
@@ -128,7 +126,7 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
 
     return (
         <div className="mt-4 flex gap-4">
-            <div className={`${!main?.id ? "w-full" : "w-[20%]"} p-6 rounded-xl bg-base-200 min-h-[400px]`}>
+            <div className={`${!main?.id ? "w-full" : "w-[20%] max-[900px]:hidden"} p-6 rounded-xl bg-base-200 min-h-[400px]`}>
                 <ClientUser
                     text="Active"
                     players={players}

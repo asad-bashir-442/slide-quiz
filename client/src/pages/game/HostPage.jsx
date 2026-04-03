@@ -83,8 +83,7 @@ export function HostPage() {
   };
 
   const start = () => {
-    // TODO: Uncomment this
-    // if (state != "CONNECTED" || players.length == 0) return;
+    if (state != "CONNECTED" || players.length == 0) return;
 
     socket.emit("host:start", { code: game.code });
     setState("PLAYING");

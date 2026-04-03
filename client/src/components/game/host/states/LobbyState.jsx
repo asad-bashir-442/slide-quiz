@@ -88,8 +88,7 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
 
                             <button
                                 className="btn btn-outline btn-success max-[500px]:w-full"
-                                // TODO: Uncomment this
-                                // disabled={softError != "" || players.length == 0}
+                                disabled={softError != "" || players.length == 0}
                                 onClick={start}
                             >
                                 Start Game
