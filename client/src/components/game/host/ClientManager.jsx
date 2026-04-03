@@ -1,8 +1,9 @@
 import { truncateText } from "../../../utility/truncate";
+import { ClientUser } from "./ClientUser";
 
 import { User, X, CircleCheck, CircleX } from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
 import { useState } from "react";
-import { ClientUser } from "./ClientUser";
 
 export function ClientManager({ players, disconnectedPlayers, responses, kick }) {
     const [main, setMain] = useState({});
@@ -93,6 +94,10 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
                             </h4>
                         </div>
 
+                        <h2 className="opacity-40 text-xs text-right mb-4 mr-4" title={format(res.response.timestamp, "PPpp")}>
+                            {formatDistanceToNow(res.response.timestamp, { addSuffix: true })}
+                        </h2>
+
                         <div className="collapse-content text-sm">
                             <div className={`flex mb-4 ${res.question.shortAnswer ? "hidden" : ""}`}>
                                 <div className="inline-block mr-4">
@@ -129,6 +134,8 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
                     players={players}
                     setMain={setMain}
                 />
+
+                <hr className="opacity-40 my-4" />
 
                 <ClientUser
                     text="Inactive"

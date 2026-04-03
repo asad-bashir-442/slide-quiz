@@ -3,7 +3,7 @@ import { socket } from "../../api/socket";
 
 import { LobbyState } from "../../components/game/host/states/LobbyState";
 import { ManualState } from "../../components/game/host/states/ManualState";
-import { ClientManager } from "../../components/game/host/ClientManager";
+import { AutomaticState } from "../../components/game/host/states/AutomaticState";
 import { Loading } from "../../components/utility/Loading";
 
 import { useState, useEffect } from "react";
@@ -292,14 +292,17 @@ export function HostPage() {
   }
 
   return automatic ? (
-    <ClientManager
+    <AutomaticState
+      code={game.code}
       players={players}
-      responses={responses}
       disconnectedPlayers={disconnectedPlayers}
+      responses={responses}
       kick={kick}
+      end={end}
     />
   ) : (
     <ManualState
+      code={game.code}
       allQuestions={allQuestions}
       currentQuestion={currentQuestion}
       players={players}

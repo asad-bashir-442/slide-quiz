@@ -2,7 +2,7 @@ import { ClientManager } from "../ClientManager";
 
 import { SquareArrowRightExit, Settings } from "lucide-react";
 
-export function ManualState({ allQuestions, currentQuestion, players, disconnectedPlayers, responses, kick, getQuestionIndex, end, jump, jumpNext }) {
+export function ManualState({ code, allQuestions, currentQuestion, players, disconnectedPlayers, responses, kick, getQuestionIndex, end, jump, jumpNext }) {
     const toggleModal = () => document.getElementById("client_manager_modal").showModal()
 
     return (
@@ -64,7 +64,7 @@ export function ManualState({ allQuestions, currentQuestion, players, disconnect
                         Next Question
                     </button>
 
-                    <h4>Question {getQuestionIndex(currentQuestion.id) + 1}</h4>
+                    <h4>Question {getQuestionIndex(currentQuestion.id) + 1} <span className="opacity-60">#{code}</span></h4>
                     <h2 className="text-2xl font-bold my-4 break-words">{currentQuestion.description}</h2>
 
                     <ol className="list-[upper-alpha] list-inside font-bold">
