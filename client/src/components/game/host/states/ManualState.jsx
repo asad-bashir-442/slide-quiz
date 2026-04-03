@@ -2,7 +2,7 @@ import { ClientManager } from "../ClientManager";
 
 import { SquareArrowRightExit, Settings } from "lucide-react";
 
-export function ManualState({ allQuestions, currentQuestion, players, responses, kick, getQuestionIndex, end, jump, jumpNext }) {
+export function ManualState({ allQuestions, currentQuestion, players, disconnectedPlayers, responses, kick, getQuestionIndex, end, jump, jumpNext }) {
     const toggleModal = () => document.getElementById("client_manager_modal").showModal()
 
     return (
@@ -15,6 +15,7 @@ export function ManualState({ allQuestions, currentQuestion, players, responses,
 
                     <ClientManager
                         players={players}
+                        disconnectedPlayers={disconnectedPlayers}
                         responses={responses}
                         kick={kick}
                     />

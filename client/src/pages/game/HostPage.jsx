@@ -23,6 +23,7 @@ export function HostPage() {
   const [quiz, setQuiz] = useState({});
   const [automatic, setAutomatic] = useState(false);
   const [players, setPlayers] = useState([]);
+  const [disconnectedPlayers, setDisconnectedPlayers] = useState([]);
   const [responses, setResponses] = useState([]);
   const [game, setGame] = useState("");
 
@@ -51,6 +52,7 @@ export function HostPage() {
 
   const createGame = (automaticGame) => {
     setPlayers([]);
+    setDisconnectedPlayers([]);
     setResponses([]);
     setGame({});
 
@@ -115,7 +117,7 @@ export function HostPage() {
   };
 
   const addAnswer = (answer) => {
-    setResponses(prevResponses => {
+    setResponses((prevResponses) => {
       const updated = { ...prevResponses };
       const playerID = answer.player.id;
       const questionID = answer.question.id;
@@ -139,6 +141,26 @@ export function HostPage() {
       return updated;
     });
   }
+
+  const addPlayer = (player) => {
+    setPlayers(prevPlayers => {
+      const removedPlayers = prevPlayers.filter(
+        prevPlayer => !player.players.some(newPlayer => newPlayer.id === prevPlayer.id)
+      );
+
+      if (removedPlayers.length > 0) {
+        setDisconnectedPlayers(prev => {
+          const newDisconnected = removedPlayers.filter(
+            removedPlayer => !prev.some(p => p.id === removedPlayer.id)
+          );
+
+          return [...prev, ...newDisconnected];
+        });
+      }
+
+      return player.players;
+    });
+  };
 
   // TODO: Maybe confirm alert?
   // NOTE: This needs to be confirmed
@@ -204,7 +226,7 @@ export function HostPage() {
     };
 
     const onHostCreated = (msg) => setGame(msg);
-    const onHostPlayers = (msg) => setPlayers(msg.players);
+    const onHostPlayers = (msg) => addPlayer(msg);
     const onHostQuestions = (msg) => setAllQuestions(msg.questions);
     const onHostResponse = (msg) => addAnswer(msg);
     const onGameQuestion = (msg) => setCurrentQuestion(msg);
@@ -273,6 +295,7 @@ export function HostPage() {
     <ClientManager
       players={players}
       responses={responses}
+      disconnectedPlayers={disconnectedPlayers}
       kick={kick}
     />
   ) : (
@@ -280,6 +303,7 @@ export function HostPage() {
       allQuestions={allQuestions}
       currentQuestion={currentQuestion}
       players={players}
+      disconnectedPlayers={disconnectedPlayers}
       responses={responses}
       kick={kick}
       getQuestionIndex={getQuestionIndex}

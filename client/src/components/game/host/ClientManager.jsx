@@ -1,10 +1,10 @@
-import { comma } from "../../../utility/numbers";
 import { truncateText } from "../../../utility/truncate";
 
 import { User, X, CircleCheck, CircleX } from "lucide-react";
 import { useState } from "react";
+import { ClientUser } from "./ClientUser";
 
-export function ClientManager({ players, responses, kick }) {
+export function ClientManager({ players, disconnectedPlayers, responses, kick }) {
     const [main, setMain] = useState({});
 
     const kicked = () => {
@@ -123,31 +123,18 @@ export function ClientManager({ players, responses, kick }) {
 
     return (
         <div className="mt-4 flex gap-4">
-            <div
-                className={`${!main?.id ? "w-full" : "w-[20%]"} p-6 rounded-xl bg-base-200 min-h-[400px]`}
-            >
-                <h2>
-                    <span className="font-bold">Player Count: </span>
-                    <span
-                        className={players.length == 0 ? "text-error" : "text-success"}
-                    >
-                        {comma(players.length)}
-                    </span>
-                </h2>
+            <div className={`${!main?.id ? "w-full" : "w-[20%]"} p-6 rounded-xl bg-base-200 min-h-[400px]`}>
+                <ClientUser
+                    text="Active"
+                    players={players}
+                    setMain={setMain}
+                />
 
-                <ul className="ml-4 mt-4">
-                    {players.map((player) => (
-                        <li
-                            key={player.id}
-                            onClick={() => setMain(player)}
-                            className="font-bold"
-                        >
-                            <span className="hover:opacity-100 opacity-60">
-                                <User className="inline-block w-[1em]" /> {truncateText(player.username, 10)}
-                            </span>
-                        </li>
-                    ))}
-                </ul>
+                <ClientUser
+                    text="Inactive"
+                    players={disconnectedPlayers}
+                    setMain={setMain}
+                />
             </div>
 
             {user}
