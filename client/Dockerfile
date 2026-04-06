@@ -1,10 +1,10 @@
-FROM node:lts AS builder
+FROM node:lts
 
 # Install
-RUN npm install -g pnpm
+RUN npm install -g pnpm serve
 WORKDIR /app
 
-COPY package.json .
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm i
 
 # Build
@@ -15,7 +15,4 @@ COPY . .
 RUN pnpm run build
 
 # Host
-FROM nginx:alpine AS production
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "dist", "-l", "3000"]

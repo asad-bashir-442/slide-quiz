@@ -68,7 +68,7 @@ services:
         environment:
             VITE_BASE_URL: ${CLIENT_API}
         ports:
-            - "${CLIENT_PORT:-3001}:80"
+            - "${CLIENT_PORT:-3001}:3000"
 
 networks:
     default:
