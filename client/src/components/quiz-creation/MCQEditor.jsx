@@ -78,6 +78,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         <div className="flex items-center justify-between flex-col lg:flex-row">
           <h1 className="text-2xl my-3 md:text-4xl font-bold">
             {truncateText(question?.description, 20)}
+            {/* {question?.description} */}
           </h1>
           <DeleteQuestionButton
             question={question}

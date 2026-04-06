@@ -58,12 +58,14 @@ export async function deleteAllResponse() {
 export async function deleteResponseById(id) {
   const url = `${BASE_URL}/@me/response/${id}`;
   const token = localStorage.getItem("token");
-  const res = fetch(url, {
+  const res = await fetch(url, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
+  const data = await res.json();
 
   if (!res.ok) {
     return Error(data.message || "Something went wrong");
