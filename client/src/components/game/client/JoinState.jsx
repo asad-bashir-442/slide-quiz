@@ -8,7 +8,10 @@ export function JoinState({ joinGame }) {
     const [loading, setLoading] = useState(false);
 
     // TODO: Profanity filter?
-    const random = () => setUsername(generateUsername("", 3, 15));
+    const random = () => setUsername(
+        // NOTE: This includes `-` for some reason, despite the docs saying it won't
+        generateUsername("", 3, 15).replace(/-/g, "")
+    );
 
     const submit = async (e) => {
         e.preventDefault();
@@ -52,7 +55,7 @@ export function JoinState({ joinGame }) {
                             />
                         </label>
 
-                        <p className="validator-hint">Enter valid game code</p>
+                        <p className="validator-hint">Enter a valid game code</p>
                     </fieldset>
 
                     <fieldset className="fieldset">
@@ -75,13 +78,13 @@ export function JoinState({ joinGame }) {
                             />
                         </label>
 
-                        <p className="validator-hint">Enter valid username</p>
+                        <p className="validator-hint">Enter a valid username</p>
                     </fieldset>
 
                     <div className="flex">
                         <button
                             type="button"
-                            className="btn btn-secondary mb-4 btn-sm"
+                            className="btn btn-secondary my-4 btn-sm max-[900px]:w-full max-[900px]:btn-outline"
                             onClick={random}
                             disabled={loading}
                         >
@@ -90,7 +93,7 @@ export function JoinState({ joinGame }) {
                     </div>
 
                     <button
-                        className="btn btn-primary w-full"
+                        className="btn btn-primary w-full max-[900px]:btn-outline"
                         disabled={loading}
                     >
                         Join

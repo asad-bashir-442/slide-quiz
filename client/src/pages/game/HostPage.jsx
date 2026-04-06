@@ -3,6 +3,7 @@ import { socket } from "../../api/socket";
 
 import { LobbyState } from "../../components/game/host/states/LobbyState";
 import { ManualState } from "../../components/game/host/states/ManualState";
+import { AutomaticState } from "../../components/game/host/states/AutomaticState";
 import { Loading } from "../../components/utility/Loading";
 
 import { useState, useEffect } from "react";
@@ -22,6 +23,8 @@ export function HostPage() {
   const [quiz, setQuiz] = useState({});
   const [automatic, setAutomatic] = useState(false);
   const [players, setPlayers] = useState([]);
+  const [disconnectedPlayers, setDisconnectedPlayers] = useState([]);
+  const [responses, setResponses] = useState([]);
   const [game, setGame] = useState("");
 
   const [allQuestions, setAllQuestions] = useState([]);
@@ -49,6 +52,8 @@ export function HostPage() {
 
   const createGame = (automaticGame) => {
     setPlayers([]);
+    setDisconnectedPlayers([]);
+    setResponses([]);
     setGame({});
 
     socket.emit("host:create", {
@@ -64,8 +69,8 @@ export function HostPage() {
     const auto = !automatic;
 
     setState("DISCONNECTED");
-    socket.disconnect();
 
+    socket.disconnect();
     socket.connect();
 
     setAutomatic(auto);
@@ -78,8 +83,7 @@ export function HostPage() {
   };
 
   const start = () => {
-    // TODO: Uncomment this
-    // if (state != "CONNECTED" || players.length == 0) return;
+    if (state != "CONNECTED" || players.length == 0) return;
 
     socket.emit("host:start", { code: game.code });
     setState("PLAYING");
@@ -109,6 +113,52 @@ export function HostPage() {
     }
 
     socket.emit("host:jump", { code: game.code, index: index + 1 });
+  };
+
+  const addAnswer = (answer) => {
+    setResponses((prevResponses) => {
+      const updated = { ...prevResponses };
+      const playerID = answer.player.id;
+      const questionID = answer.question.id;
+
+      if (!updated[playerID]) {
+        updated[playerID] = [];
+      }
+
+      // Check for duplicate
+      const alreadyExists = updated[playerID].some(
+        existing => existing.question.id === questionID
+      );
+
+      if (!alreadyExists) {
+        updated[playerID].push({
+          question: answer.question,
+          response: answer.response
+        });
+      }
+
+      return updated;
+    });
+  }
+
+  const addPlayer = (player) => {
+    setPlayers(prevPlayers => {
+      const removedPlayers = prevPlayers.filter(
+        prevPlayer => !player.players.some(newPlayer => newPlayer.id === prevPlayer.id)
+      );
+
+      if (removedPlayers.length > 0) {
+        setDisconnectedPlayers(prev => {
+          const newDisconnected = removedPlayers.filter(
+            removedPlayer => !prev.some(p => p.id === removedPlayer.id)
+          );
+
+          return [...prev, ...newDisconnected];
+        });
+      }
+
+      return player.players;
+    });
   };
 
   // TODO: Maybe confirm alert?
@@ -175,9 +225,9 @@ export function HostPage() {
     };
 
     const onHostCreated = (msg) => setGame(msg);
-    const onHostPlayers = (msg) => setPlayers(msg.players);
+    const onHostPlayers = (msg) => addPlayer(msg);
     const onHostQuestions = (msg) => setAllQuestions(msg.questions);
-    const onHostResponse = (msg) => console.log("got response -> ", msg);
+    const onHostResponse = (msg) => addAnswer(msg);
     const onGameQuestion = (msg) => setCurrentQuestion(msg);
 
     socket.on("connect", onConnect);
@@ -241,11 +291,23 @@ export function HostPage() {
   }
 
   return automatic ? (
-    <h1>hi</h1>
+    <AutomaticState
+      code={game.code}
+      players={players}
+      disconnectedPlayers={disconnectedPlayers}
+      responses={responses}
+      kick={kick}
+      end={end}
+    />
   ) : (
     <ManualState
+      code={game.code}
       allQuestions={allQuestions}
       currentQuestion={currentQuestion}
+      players={players}
+      disconnectedPlayers={disconnectedPlayers}
+      responses={responses}
+      kick={kick}
       getQuestionIndex={getQuestionIndex}
       end={end}
       jump={jump}
