@@ -9,7 +9,7 @@ import { NewQuestionButton } from "../components/editor/NewQuestionButton";
 import { ago } from "../utility/date";
 export function QuizDetailPage() {
   const [quiz, setQuiz] = useState(null);
-  const [questions, setQuestions] = useState();
+  const [questions, setQuestions] = useState([]);
   const [severError, setServerError] = useState(null);
   let { id } = useParams();
 
@@ -51,19 +51,19 @@ export function QuizDetailPage() {
       {/* Two column layout */}
       <div className="flex ">
         {/* Left column (25%) */}
-        <div className="w-1/4 p-6 bg-base-200 flex flex-col gap-4 max-lg:hidden">
+        <div className="w-1/4 p-6 bg-base-200 flex flex-col gap-4 max-lg:hidden rounded-xl">
           {questions?.map((question, index) => (
-            <QuestionNoButton num={index + 1} />
+            <QuestionNoButton key={question.id} num={index + 1} />
           ))}
         </div>
 
         {/* Right column (75%) */}
-        <div className="w-3/4 p-6 flex flex-col mx-auto">
+        <div className="w-3/4 flex flex-col mx-auto">
           <div>
             {questions?.length > 0 ? (
               questions.map((question, index) => (
                 <MCQEditor
-                  key={index}
+                  key={question.id || `temp-${index}`}
                   questionNum={index + 1}
                   question={question}
                   setQuestions={setQuestions}

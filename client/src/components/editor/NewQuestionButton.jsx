@@ -7,18 +7,17 @@ import { useParams } from "react-router";
 
 export function NewQuestionButton({ setQuestions }) {
   const [description, setDescription] = useState("");
+  const [questionType, setQuestionType] = useState("mcq");
   const [points, setPoints] = useState(1);
   let { id } = useParams();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const isShortAnswerInput = document.getElementById("is_short_answer");
-
     const questionData = {
       description,
       points,
-      shortAnswer: isShortAnswerInput.checked,
+      shortAnswer: questionType === "short_answer",
     };
 
     try {
@@ -79,16 +78,35 @@ export function NewQuestionButton({ setQuestions }) {
               </p>
             </fieldset>
 
-            <div className="flex flex-col">
+            <div>
               <fieldset className="fieldset">
                 <legend className="fieldset-legend text-base-content/70 text-lg">
-                  Is short answer?
+                  Select Question Type
                 </legend>
-                <input
-                  id="is_short_answer"
-                  type="checkbox"
-                  className="checkbox checkbox-primary"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="question_type"
+                    className="radio radio-primary "
+                    defaultChecked
+                    value="mcq"
+                    checked={questionType === "mcq"}
+                    onChange={(e) => setQuestionType(e.target.value)}
+                  />
+                  <span className="text-lg">Multiple Choice</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="question_type"
+                    className="radio radio-primary"
+                    value="short_answer"
+                    checked={questionType === "short_answer"}
+                    onChange={(e) => setQuestionType(e.target.value)}
+                  />
+                  <span className="text-lg">Short Answer</span>
+                </div>
               </fieldset>
 
               <legend className="fieldset-legend text-base-content/70 text-lg">

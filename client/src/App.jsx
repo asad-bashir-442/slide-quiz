@@ -8,7 +8,6 @@ import { Dashboard } from "./pages/user/Dashboard.jsx";
 import { SettingsPage } from "./pages/user/SettingsPage";
 
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
-import { QuizCreatorPage } from "./pages/QuizCreatorPage.jsx"; // TODO: Editor
 
 import { ClientPage } from "./pages/game/ClientPage.jsx";
 import { HostPage } from "./pages/game/HostPage.jsx";
@@ -25,7 +24,7 @@ import { Toaster } from "sonner";
 import { Routes, Route } from "react-router";
 
 import { LeaderboardResults } from "./components/dashboard/results/leaderboard/LeaderboardResults.jsx";
-import { SessionResultsPanel } from "./components/dashboard/results/session/SessionResultsPanel.jsx";
+import { ResultsPage } from "./pages/ResultsPage.jsx";
 
 // TODO: File names are inconsistent
 
@@ -60,6 +59,7 @@ export function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="quiz/:id" element={<QuizDetailPage />} />
             <Route path="quiz/:id/host" element={<HostPage />} />
+            <Route path="results/:id" element={<ResultsPage />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
