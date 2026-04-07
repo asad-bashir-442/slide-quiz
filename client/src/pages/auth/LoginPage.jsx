@@ -3,11 +3,18 @@ import { loginUser } from "../../api/auth";
 
 import { Mail, KeyRound } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const { login } = useAuth();
   const [email, setEmail] = useState("");
@@ -36,7 +43,7 @@ export function LoginPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center">
@@ -95,8 +102,13 @@ export function LoginPage() {
               <p className="validator-hint">Must be between 5-20 characters</p>
             </fieldset>
 
-            <button className="btn btn-primary w-full btn-lg rounded-lg mt-2" disabled={isLoading}>
-              {isLoading && <span className="loading loading-spinner loading-xs"></span>}
+            <button
+              className="btn btn-primary w-full btn-lg rounded-lg mt-2"
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <span className="loading loading-spinner loading-xs"></span>
+              )}
               Login
             </button>
           </form>

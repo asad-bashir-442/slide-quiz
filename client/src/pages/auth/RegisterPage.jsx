@@ -4,16 +4,23 @@ import { registerUser } from "../../api/auth";
 import { User, Mail, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function RegisterPage() {
   const navigate = useNavigate();
 
+  const { user } = useAuth();
   const { login } = useAuth();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +45,7 @@ export function RegisterPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center">
@@ -46,7 +53,8 @@ export function RegisterPage() {
         <div className="text-center my-8 min-[900px]:hidden">
           <h1 className="text-3xl font-bold mb-4">SlideQuiz Register</h1>
           <p className="opacity-60">
-            Set up your profile to start building interactive quizzes for your presentations.
+            Set up your profile to start building interactive quizzes for your
+            presentations.
           </p>
         </div>
 
@@ -118,8 +126,13 @@ export function RegisterPage() {
               <p className="validator-hint">Must be between 5-20 characters</p>
             </fieldset>
 
-            <button className="btn btn-primary w-full btn-lg rounded-lg mt-2" disabled={isLoading}>
-              {isLoading && <span className="loading loading-spinner loading-xs"></span>}
+            <button
+              className="btn btn-primary w-full btn-lg rounded-lg mt-2"
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <span className="loading loading-spinner loading-xs"></span>
+              )}
               Register
             </button>
           </form>
@@ -127,7 +140,8 @@ export function RegisterPage() {
           <div className="mx-auto flex flex-col gap-5 max-[900px]:hidden">
             <h1 className="text-5xl font-bold">SlideQuiz Register</h1>
             <p className="max-w-[48ch]">
-              Set up your profile to start building interactive quizzes for your presentations.
+              Set up your profile to start building interactive quizzes for your
+              presentations.
             </p>
             <Link to="/login">
               <button className="btn btn-outline btn-secondary btn-wide btn-lg rounded-lg">
