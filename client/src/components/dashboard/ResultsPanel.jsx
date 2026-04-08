@@ -32,9 +32,8 @@ export function ResultsPanel({ loading, error, responses, setResponses }) {
               mode={response.mode}
               name={response.name}
               lastPlayed={response.createdAt}
-              totalResponses={1}
-              averageScore={0.6}
               setResponses={setResponses}
+              numOfQuestion={response.questions}
             />
           ))}
         </div>
