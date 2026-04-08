@@ -16,6 +16,16 @@ const answerSchema = Joi.object({
     correct: Joi.boolean().required(),
 });
 
+const questionUpdateSchema = Joi.object({
+    description: Joi.string().trim().min(3).max(1500),
+    points: Joi.number().min(1).max(100).integer(),
+});
+
+const answerUpdateSchema = Joi.object({
+    description: Joi.string().trim().min(3).max(500),
+    correct: Joi.boolean(),
+});
+
 export const getAll = async (req, res) => {
     const data = await queryQuestions(req.server.mysql, req.user.id, req.params.id);
 
@@ -94,6 +104,95 @@ export const createQuestion = async (req, res) => {
         });
     } catch (err) {
         consola.info(`[editor] Cannot create question - ${err}`);
+        connection.release();
+
+        return res.code(500).send({
+            statusCode: 500,
+            message: "Internal server error.",
+        });
+    }
+};
+
+export const updateQuestion = async (req, res) => {
+    const uid = req.user.id;
+
+    // Empty body?
+    if (!req.body) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Missing body.",
+        });
+    }
+
+    const { id } = req.params;
+    const { question } = req.query;
+
+    // Valid body?
+    const updateValidate = questionUpdateSchema.validate(req.body);
+    const idValidate = idSchema.validate(question);
+
+    if (updateValidate?.error || idValidate?.error) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Invalid update question body.",
+        });
+    }
+
+    const connection = await req.server.mysql.getConnection();
+
+    try {
+        // Does question exist?
+        const [questions] = await connection.query(
+            `
+                SELECT q.Description, q.Points FROM Questions q
+                JOIN Quizzes z ON q.QuizID = z.ID
+                WHERE q.ID = ? AND q.QuizID = ? AND z.UserID = ? LIMIT 1
+            `,
+
+            [question, id, req.user.id],
+        );
+
+        if (questions.length == 0) {
+            connection.release();
+
+            return res.code(404).send({
+                statusCode: 404,
+                message: "Question not found!",
+            });
+        }
+
+        const q = questions[0];
+        const details = {
+            description: q.Description,
+            points: q.Points,
+        };
+
+        // Does description exist?
+        if (req.body.description) {
+            details.description = req.body.description;
+        }
+
+        // Does points exist?
+        if (req.body.points) {
+            details.points = req.body.points;
+        }
+
+        // Update
+        await connection.query(
+            "UPDATE Questions SET Description = ?, Points = ? WHERE ID = ? AND QuizID = ?",
+
+            [details.description, details.points, question, id],
+        );
+
+        connection.release();
+
+        return res.code(200).send({
+            statusCode: 200,
+            message: "Updated question.",
+            data: details,
+        });
+    } catch (err) {
+        consola.error(`[editor] Cannot update question - ${err}`);
         connection.release();
 
         return res.code(500).send({
@@ -227,6 +326,8 @@ export const createAnswer = async (req, res) => {
         });
     }
 };
+
+export const updateAnswer = async (req, res) => {};
 
 export const deleteAnswer = async (req, res) => {
     const uid = req.user.id;
