@@ -49,11 +49,11 @@ export function QuizDetailPage() {
       </div>
 
       {/* Two column layout */}
-      <div className="flex ">
+      <div className="flex items-start">
         {/* Left column (25%) */}
-        <div className="w-1/4 p-6 bg-base-200 flex flex-col gap-4 max-lg:hidden rounded-xl">
+        <div className="w-1/4 p-6 bg-base-200 flex flex-col gap-4 max-lg:hidden rounded-xl sticky top-0">
           {questions?.map((question, index) => (
-            <QuestionNoButton key={question.id} num={index + 1} />
+            <QuestionNoButton id={question.id} num={index + 1} />
           ))}
         </div>
 

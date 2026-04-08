@@ -68,7 +68,7 @@ export function NewQuestionButton({ setQuestions }) {
                 minLength="3"
                 maxLength="1500"
                 className="textarea h-30 w-full resize-none validator"
-                placeholder="Quiz Description"
+                placeholder="Question Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />

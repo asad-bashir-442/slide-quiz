@@ -1,5 +1,5 @@
 import { truncateText } from "../../../../utility/truncate";
-import { deleteResponseById } from "../../../../api/responses";
+import { deleteResponseById, getAllResponses } from "../../../../api/responses";
 import { toast } from "sonner";
 
 export function DeleteResultsButton({ id, name, setResponses }) {
@@ -7,7 +7,10 @@ export function DeleteResultsButton({ id, name, setResponses }) {
     e.preventDefault();
 
     try {
-      const data = await deleteResponseById(id);
+      await deleteResponseById(id);
+      const responses = await getAllResponses();
+      document.getElementById(`delete_result_modal/${id}`).close();
+      setResponses(responses?.data);
       toast.success("result deleted");
     } catch (error) {
       toast.error(error.message);

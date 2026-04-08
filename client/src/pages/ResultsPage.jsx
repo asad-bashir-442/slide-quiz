@@ -11,7 +11,7 @@ export function ResultsPage() {
   const [totalPoints, setTotalPoints] = useState(0);
   const [maxTotalPoints, setMaxTotalPoints] = useState(0);
   const [top3Players, setTop3Players] = useState(0);
-
+  const [totalAnswers, setTotalAnswers] = useState(0);
   const [players, setPlayers] = useState([]);
 
   function formatPercent(decimal) {
@@ -71,7 +71,14 @@ export function ResultsPage() {
           totalPlayerPoints += player.points;
         });
 
+        console.log(sortedPlayers);
+
         const tempTop3Players = sortedPlayers.slice(0, 3);
+
+        let totalPlayerResponses = 0;
+        sortedPlayers.forEach((player) => {
+          totalPlayerResponses += player.responses;
+        });
 
         setQuestions(questions);
         setQuizName(name);
@@ -80,6 +87,7 @@ export function ResultsPage() {
         setPlayers(sortedPlayers);
         setTotalPlayers(playersMap.size);
         setTop3Players(tempTop3Players);
+        setTotalAnswers(totalPlayerResponses);
       } catch (error) {
         console.error(error.message);
         toast.error(error.message);
@@ -90,7 +98,7 @@ export function ResultsPage() {
 
   return (
     <div className="p-8">
-      <div className="bg-base-100 rounded-2xl">
+      <div className="bg-base-100 rounded-2xl p-4">
         <h1 className="text-5xl text-center capitalize pt-6 font-bold mb-2">
           {quizName}
         </h1>
@@ -102,8 +110,9 @@ export function ResultsPage() {
               <p>Total Questions</p>
               <p className="text-4xl">{questions?.length}</p>
             </article>
-            <article className="p-20 bg-base-300 rounded-lg">
-              <p>Total Answers</p>
+            <article className="p-20 text-center bg-base-300 rounded-lg">
+              <p>Total Responses</p>
+              <p className="text-4xl">{totalAnswers}</p>
             </article>
             <article className="p-20 text-center bg-base-300 rounded-lg">
               <p>Total Players</p>
