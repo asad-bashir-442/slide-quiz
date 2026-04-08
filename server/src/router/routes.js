@@ -8,7 +8,7 @@ import PlayerClient from "../handlers/game/player.js";
 
 import { register, login, whoami, update } from "../handlers/users.js";
 import { getQuizzes, createQuiz, getQuiz, updateQuiz, deleteQuiz } from "../handlers/quiz/quizzes.js";
-import { getAll, createQuestion, deleteQuestion, createAnswer, deleteAnswer } from "../handlers/quiz/editor.js";
+import { getAll, createQuestion, updateQuestion, deleteQuestion, createAnswer, updateAnswer, deleteAnswer } from "../handlers/quiz/editor.js";
 import { deleteResponse, deleteResponses, getAllResponses, getResponse } from "../handlers/answers.js";
 
 // Public routes
@@ -39,10 +39,12 @@ router.register(async (r) => {
     // Questions
     r.get("/@me/quiz/:id/editor", { onRequest: [r.auth] }, getAll);
     r.post("/@me/quiz/:id/editor", { onRequest: [r.auth] }, createQuestion);
+    r.patch("/@me/quiz/:id/editor", { onRequest: [r.auth] }, updateQuestion);
     r.delete("/@me/quiz/:id/editor", { onRequest: [r.auth] }, deleteQuestion);
 
     // Answers
     r.post("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, createAnswer);
+    r.patch("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, updateAnswer);
     r.delete("/@me/quiz/:id/editor/:qid", { onRequest: [r.auth] }, deleteAnswer);
 
     // Responses

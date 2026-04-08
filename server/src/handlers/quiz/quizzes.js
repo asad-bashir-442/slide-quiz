@@ -215,19 +215,16 @@ export const updateQuiz = async (req, res) => {
         // Does name exist?
         if (req.body.name) {
             details.name = req.body.name;
-            consola.info(`${id} name is being updated`);
         }
 
         // Does description exist?
         if (req.body.description) {
             details.description = req.body.description;
-            consola.info(`${id} description is being updated`);
         }
 
         // Does automatic default exist?
         if (req.body.automatic !== undefined) {
             details.automatic = String(req.body.automatic) == "true";
-            consola.info(`${id} automatic is being updated`);
         }
 
         // Update

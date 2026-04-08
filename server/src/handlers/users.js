@@ -241,7 +241,6 @@ export const update = async (req, res) => {
         // Is there a new username?
         if (req.body.name) {
             details.name = req.body.name;
-            consola.info(`${id} has changed their name.`);
         }
 
         // Is the new email in use?
@@ -258,13 +257,11 @@ export const update = async (req, res) => {
             }
 
             details.email = req.body.email;
-            consola.info(`${id} has changed their email.`);
         }
 
         // Is there a new password?
         if (req.body.newPassword) {
             details.password = await bcrypt.hash(req.body.newPassword, hashamt);
-            consola.info(`${id} has changed their password.`);
         }
 
         // Update content
