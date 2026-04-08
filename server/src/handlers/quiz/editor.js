@@ -134,7 +134,7 @@ export const updateQuestion = async (req, res) => {
     if (updateValidate?.error || idValidate?.error) {
         return res.code(400).send({
             statusCode: 400,
-            message: "Invalid update question body.",
+            message: "Invalid update question body/ID.",
         });
     }
 
@@ -146,10 +146,11 @@ export const updateQuestion = async (req, res) => {
             `
                 SELECT q.Description, q.Points FROM Questions q
                 JOIN Quizzes z ON q.QuizID = z.ID
-                WHERE q.ID = ? AND q.QuizID = ? AND z.UserID = ? LIMIT 1
+                WHERE q.ID = ? AND q.QuizID = ? AND z.UserID = ?
+                LIMIT 1
             `,
 
-            [question, id, req.user.id],
+            [question, id, uid],
         );
 
         if (questions.length == 0) {
@@ -327,7 +328,95 @@ export const createAnswer = async (req, res) => {
     }
 };
 
-export const updateAnswer = async (req, res) => {};
+export const updateAnswer = async (req, res) => {
+    const uid = req.user.id;
+
+    // Empty body?
+    if (!req.body) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Missing body.",
+        });
+    }
+
+    const { id, qid } = req.params;
+    const { answer } = req.query;
+
+    // Valid body?
+    const updateValidate = answerUpdateSchema.validate(req.body);
+    const idValidate = idSchema.validate(answer);
+
+    if (updateValidate?.error || idValidate?.error) {
+        return res.code(400).send({
+            statusCode: 400,
+            message: "Invalid update answer body/ID.",
+        });
+    }
+
+    const connection = await req.server.mysql.getConnection();
+
+    try {
+        // Does the answer exist?
+        const [answers] = await connection.query(
+            `
+                SELECT a.Description, a.Correct FROM Answers a
+                INNER JOIN Questions q ON a.QuestionID = q.ID
+                INNER JOIN Quizzes z ON q.QuizID = z.ID
+                WHERE q.QuizID = ? AND z.UserID = ? AND q.ID = ? AND a.ID = ?
+                LIMIT 1
+            `,
+
+            [id, uid, qid, answer],
+        );
+
+        if (answers.length == 0) {
+            connection.release();
+
+            return res.code(404).send({
+                statusCode: 404,
+                message: "Answer not found!",
+            });
+        }
+
+        const a = answers[0];
+        const details = {
+            description: a.Description,
+            correct: a.Correct,
+        };
+
+        // Does description exist?
+        if (req.body.description) {
+            details.description = req.body.description;
+        }
+
+        // Does correct exist? This is okay since JOI checks the type.
+        if (req.body.correct !== undefined) {
+            details.correct = req.body.correct;
+        }
+
+        await connection.query(
+            "UPDATE Answers SET Description = ?, Correct = ? WHERE ID = ? AND QuestionID = ?",
+
+            [details.description, details.correct, answer, qid],
+        );
+
+        connection.release();
+
+        return res.code(200).send({
+            statusCode: 200,
+            message: "Updated answer.",
+            data: details,
+        });
+    } catch (err) {
+        consola.error(`[editor] Cannot update answer - ${err}`);
+        connection.release();
+
+        return res.code(500).send({
+            statusCode: 500,
+            message: "Internal server error.",
+        });
+    }
+};
 
 export const deleteAnswer = async (req, res) => {
     const uid = req.user.id;
