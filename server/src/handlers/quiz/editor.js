@@ -103,7 +103,7 @@ export const createQuestion = async (req, res) => {
             data: { id: result.insertId },
         });
     } catch (err) {
-        consola.info(`[editor] Cannot create question - ${err}`);
+        consola.error(`[editor] Cannot create question - ${err}`);
         connection.release();
 
         return res.code(500).send({
@@ -318,7 +318,7 @@ export const createAnswer = async (req, res) => {
             data: { id: result.insertId },
         });
     } catch (err) {
-        consola.info(`[editor] Cannot create answer - ${err}`);
+        consola.error(`[editor] Cannot create answer - ${err}`);
         connection.release();
 
         return res.code(500).send({
