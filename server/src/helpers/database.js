@@ -60,7 +60,7 @@ export const queryQuestions = async (database, userID, quizID) => {
         connection.release();
         return data;
     } catch (err) {
-        consola.info(`[database] Cannot fetch all details - ${err}`);
+        consola.error(`[database] Cannot fetch all details - ${err}`);
         connection.release();
 
         return -1;

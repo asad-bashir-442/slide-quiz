@@ -1,0 +1,6 @@
+# Development
+/node_modules
+
+# Private
+.env
+
