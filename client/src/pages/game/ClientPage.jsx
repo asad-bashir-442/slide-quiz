@@ -8,15 +8,20 @@ import { Loading } from "../../components/utility/Loading";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { useLocation } from "react-router";
+
 const placeholder = {
   id: "0123",
   description: "Loading question...",
   shortAnswer: 1,
-  points: 1
-}
+  points: 1,
+};
 
 export function ClientPage() {
   const [state, setState] = useState("DISCONNECTED");
+
+  const location = useLocation();
+  const data = location?.state?.code;
 
   const [code, setCode] = useState("");
   const [username, setUsername] = useState("");
@@ -38,7 +43,7 @@ export function ClientPage() {
     setState("DISCONNECTED");
 
     socket.connect();
-  }
+  };
 
   const respond = (response) => {
     if (state != "RESPONDING") return;
@@ -107,20 +112,16 @@ export function ClientPage() {
   if (state == "DISCONNECTED") {
     return (
       <div className="text-center my-8">
-        <h2 className="text-xl opacity-40 my-8 font-bold italic">Disconnected, connecting...</h2>
+        <h2 className="text-xl opacity-40 my-8 font-bold italic">
+          Disconnected, connecting...
+        </h2>
         <Loading />
       </div>
     );
   }
 
   if (state == "IDLE") {
-    return (
-      <IdleState
-        username={username}
-        code={code}
-        leaveGame={leaveGame}
-      />
-    );
+    return <IdleState username={username} code={code} leaveGame={leaveGame} />;
   }
 
   if (state == "RESPONDING") {
@@ -134,7 +135,5 @@ export function ClientPage() {
     );
   }
 
-  return (
-    <JoinState joinGame={joinGame} />
-  );
+  return <JoinState data={data} joinGame={joinGame} />;
 }

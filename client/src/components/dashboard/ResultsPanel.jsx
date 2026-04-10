@@ -3,44 +3,10 @@ import { Error } from "../utility/Error.jsx";
 import { useParams } from "react-router";
 import { getAllResponses } from "../../api/responses.js";
 
-// import { getAllResults } from "../../api/auth.js";
 import { useEffect, useState } from "react";
 import { ResultDetailCard } from "./results/details/ResultDetailCard.jsx";
 
-export function ResultsPanel() {
-  // NOTE:
-  // The API will not be paginated here
-  // All results will simply be retrieved at once
-  // Since this is redis, it isn't too bad
-  // Especially since old entries will expire on their own
-
-  let { id } = useParams();
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [responses, setResponses] = useState([]);
-
-  useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        // const data = await getAllResults();
-        // TODO: Dummy data, should be replaced with a real API call
-
-        const responses = await getAllResponses();
-        //setQuestions(responses?.questions?.questions);
-        // console.log(responses);
-        setResponses(responses?.data);
-      } catch (err) {
-        console.log("[Dashboard]", err);
-        setError("Fetching error! Try reloading the page?");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResults();
-  }, []);
-
+export function ResultsPanel({ loading, error, responses, setResponses }) {
   if (loading)
     return (
       <div className="text-center">
@@ -63,11 +29,11 @@ export function ResultsPanel() {
             <ResultDetailCard
               key={response.longCode}
               id={response.longCode}
+              mode={response.mode}
               name={response.name}
               lastPlayed={response.createdAt}
-              totalResponses={1}
-              averageScore={0.6}
               setResponses={setResponses}
+              numOfQuestion={response.questions}
             />
           ))}
         </div>

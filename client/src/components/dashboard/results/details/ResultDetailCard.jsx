@@ -10,12 +10,13 @@ export function ResultDetailCard({
   id,
   name,
   lastPlayed,
-  totalResponses,
-  averageScore,
+  setResponses,
+  mode,
+  numOfQuestion,
 }) {
   let navigate = useNavigate();
   return (
-    <div className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary cursor-pointer max-[900px]:w-full">
+    <div className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary max-[900px]:w-full">
       <div className="card-body max-[900px]:text-center">
         <h2
           className="min-[900px]:card-title max-[900px]:text-xl font-bold overflow-hidden"
@@ -30,17 +31,15 @@ export function ResultDetailCard({
         <div className="status-all min-[900px]:flex justify-between w-full">
           <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
             <div className="stat">
-              <div className="stat-title">Total Respondents</div>
-              <div className="stat-value">{comma(totalResponses)}</div>
+              <div className="stat-title">Questions</div>
+              <div className="stat-value text-2xl">{comma(numOfQuestion)}</div>
             </div>
           </div>
 
           <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
             <div className="stat">
-              <div className="stat-title">Average</div>
-              <div className="stat-value">
-                {(averageScore * 100).toFixed(0)}%
-              </div>
+              <div className="stat-title">Type</div>
+              <div className="stat-value text-2xl">{mode}</div>
             </div>
           </div>
         </div>
@@ -57,10 +56,11 @@ export function ResultDetailCard({
             Download
           </button>
 
-          <DeleteResultsButton id={id} name={name} />
-          {/* <button className="btn btn-outline max-[900px]:w-full btn-error">
-            Delete
-          </button> */}
+          <DeleteResultsButton
+            setResponses={setResponses}
+            id={id}
+            name={name}
+          />
         </div>
       </div>
     </div>

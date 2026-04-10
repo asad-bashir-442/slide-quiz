@@ -11,7 +11,7 @@ export function ResultsPage() {
   const [totalPoints, setTotalPoints] = useState(0);
   const [maxTotalPoints, setMaxTotalPoints] = useState(0);
   const [top3Players, setTop3Players] = useState(0);
-
+  const [totalAnswers, setTotalAnswers] = useState(0);
   const [players, setPlayers] = useState([]);
 
   function formatPercent(decimal) {
@@ -58,7 +58,6 @@ export function ResultsPage() {
             if (playerResponse.response.correct === 1) {
               const questionIndex = Number(questionKey);
               player.points += questions[questionIndex]?.points || 0;
-              // player.points += questions[questionKey]?.points || 0;
             }
           });
         });
@@ -72,7 +71,14 @@ export function ResultsPage() {
           totalPlayerPoints += player.points;
         });
 
+        console.log(sortedPlayers);
+
         const tempTop3Players = sortedPlayers.slice(0, 3);
+
+        let totalPlayerResponses = 0;
+        sortedPlayers.forEach((player) => {
+          totalPlayerResponses += player.responses;
+        });
 
         setQuestions(questions);
         setQuizName(name);
@@ -81,6 +87,7 @@ export function ResultsPage() {
         setPlayers(sortedPlayers);
         setTotalPlayers(playersMap.size);
         setTop3Players(tempTop3Players);
+        setTotalAnswers(totalPlayerResponses);
       } catch (error) {
         console.error(error.message);
         toast.error(error.message);
@@ -90,92 +97,102 @@ export function ResultsPage() {
   }, [id]);
 
   return (
-    <div>
-      <h1 className="text-5xl">{quizName}</h1>
+    <div className="p-8">
+      <div className="bg-base-100 rounded-2xl p-4">
+        <h1 className="text-5xl text-center capitalize pt-6 font-bold mb-2">
+          {quizName}
+        </h1>
 
-      <div className="flex flex-col gap-6 items-center">
-        <h2 className="text-3xl font-bold">Overall Statistics</h2>
-        <p className="text-lg text-base-content/70">Details Below</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <article className="p-20 text-center bg-base-100 rounded-lg">
-            <p>Total Questions</p>
-            <p className="text-4xl">{questions?.length}</p>
-          </article>
-          <article className="p-20 bg-base-100 rounded-lg">
-            <p>Total Answers</p>
-          </article>
-          <article className="p-20 text-center bg-base-100 rounded-lg">
-            <p>Total Players</p>
-            <p className="text-4xl">{totalPlayers}</p>
-          </article>
-          <article className="p-20 text-center bg-base-100 rounded-lg">
-            <p>Correct</p>
-            <p className="text-4xl">
-              {formatPercent(totalPoints / (maxTotalPoints * totalPlayers))}%
-            </p>
-          </article>
-        </div>
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:h-56">
-          <div className="order-2 sm:order-1 sm:self-center">
-            {top3Players[1] && (
-              <TrophyBox
-                rank={2}
-                name={players?.at(1)?.name}
-                score={`${players?.at(1)?.points}/${maxTotalPoints}`}
-                percent={formatPercent(players?.at(1)?.points / maxTotalPoints)}
-              />
-            )}
+        <div className="flex flex-col gap-6 items-center">
+          <h2 className="text-3xl italic">Player Results</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <article className="p-20 text-center bg-base-300 rounded-lg">
+              <p>Total Questions</p>
+              <p className="text-4xl">{questions?.length}</p>
+            </article>
+            <article className="p-20 text-center bg-base-300 rounded-lg">
+              <p>Total Responses</p>
+              <p className="text-4xl">{totalAnswers}</p>
+            </article>
+            <article className="p-20 text-center bg-base-300 rounded-lg">
+              <p>Total Players</p>
+              <p className="text-4xl">{totalPlayers}</p>
+            </article>
+            <article className="p-20 text-center bg-base-300 rounded-lg">
+              <p>Correct</p>
+              <p className="text-4xl">
+                {formatPercent(totalPoints / (maxTotalPoints * totalPlayers))}%
+              </p>
+            </article>
           </div>
 
-          <div className="order-1 sm:order-1">
-            {top3Players[0] && (
-              <TrophyBox
-                rank={1}
-                name={players?.at(0)?.name}
-                score={`${players?.at(0)?.points}/${maxTotalPoints}`}
-                percent={formatPercent(players?.at(0)?.points / maxTotalPoints)}
-              />
-            )}
+          <div className="flex flex-col gap-4 sm:flex-row sm:h-56">
+            <div className="order-2 sm:order-1 sm:self-center">
+              {top3Players[1] && (
+                <TrophyBox
+                  rank={2}
+                  name={players?.at(1)?.name}
+                  score={`${players?.at(1)?.points}/${maxTotalPoints}`}
+                  percent={formatPercent(
+                    players?.at(1)?.points / maxTotalPoints,
+                  )}
+                />
+              )}
+            </div>
+
+            <div className="order-1 sm:order-1">
+              {top3Players[0] && (
+                <TrophyBox
+                  rank={1}
+                  name={players?.at(0)?.name}
+                  score={`${players?.at(0)?.points}/${maxTotalPoints}`}
+                  percent={formatPercent(
+                    players?.at(0)?.points / maxTotalPoints,
+                  )}
+                />
+              )}
+            </div>
+
+            <div className="order-3 sm:order-1 sm:self-center">
+              {top3Players[2] && (
+                <TrophyBox
+                  rank={3}
+                  name={players?.at(2)?.name}
+                  score={`${players?.at(2)?.points}/${maxTotalPoints}`}
+                  percent={formatPercent(
+                    players?.at(2)?.points / maxTotalPoints,
+                  )}
+                />
+              )}
+            </div>
           </div>
 
-          <div className="order-3 sm:order-1 sm:self-center">
-            {top3Players[2] && (
-              <TrophyBox
-                rank={3}
-                name={players?.at(2)?.name}
-                score={`${players?.at(2)?.points}/${maxTotalPoints}`}
-                percent={formatPercent(players?.at(2)?.points / maxTotalPoints)}
-              />
-            )}
-          </div>
-        </div>
+          <h2 className="text-3xl font-bold">Leaderboard</h2>
 
-        <h2 className="text-3xl font-bold">Leaderboard</h2>
-
-        <div className="overflow-x-auto">
-          <table className="table-xl m-4">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>Score</th>
-                <th>Responses</th>
-              </tr>
-            </thead>
-            <tbody>
-              {players.map((player, index) => (
-                <tr key={player.name}>
-                  <td>{index + 1}</td>
-                  <td className="text-center"> {player.name}</td>
-                  <td className="text-center">
-                    {player.points} / {maxTotalPoints}
-                  </td>
-                  <td className="text-center">{player.responses}</td>
+          <div className="overflow-x-auto">
+            <table className="table-xl m-4">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Username</th>
+                  <th>Score</th>
+                  <th>Responses</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {players.map((player, index) => (
+                  <tr key={player.name}>
+                    <td>{index + 1}</td>
+                    <td className="text-center"> {player.name}</td>
+                    <td className="text-center">
+                      {player.points} / {maxTotalPoints}
+                    </td>
+                    <td className="text-center">{player.responses}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

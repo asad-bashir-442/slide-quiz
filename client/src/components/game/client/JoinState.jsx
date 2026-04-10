@@ -2,9 +2,9 @@ import { generateUsername } from "unique-username-generator";
 import { User, Hash } from "lucide-react";
 import { useState } from "react";
 
-export function JoinState({ joinGame }) {
+export function JoinState({ joinGame,data }) {
     const [username, setUsername] = useState("");
-    const [code, setCode] = useState("");
+    const [code, setCode] = useState(data || "");
     const [loading, setLoading] = useState(false);
 
     // TODO: Profanity filter?

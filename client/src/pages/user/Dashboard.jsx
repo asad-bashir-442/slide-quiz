@@ -1,11 +1,12 @@
 import { NewQuizButton } from "../../components/dashboard/quiz/buttons/NewQuizButton.jsx";
 import { ClearResultsButton } from "../../components/dashboard/results/buttons/ClearResultsButton.jsx";
+import { getAllResponses } from "../../api/responses.js";
 
 import { QuizPanel } from "../../components/dashboard/QuizPanel.jsx";
 import { ResultsPanel } from "../../components/dashboard/ResultsPanel.jsx";
 
 import { useAuth } from "../../context/AuthContext.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -18,6 +19,25 @@ export function Dashboard() {
   // True -> Results
   // False -> Quizzes
   const [tabs, setTabs] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [responses, setResponses] = useState([]);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const responses = await getAllResponses();
+        setResponses(responses?.data);
+      } catch (err) {
+        console.log("[Dashboard]", err);
+        setError("Fetching error! Try reloading the page?");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, []);
 
   return (
     <div className="w-[90%] mx-auto">
@@ -52,11 +72,24 @@ export function Dashboard() {
 
         {/* Right Column */}
         <div className="mt-6 md:mt-0 md:ml-6 w-full md:w-auto">
-          {!tabs ? <NewQuizButton /> : <ClearResultsButton />}
+          {!tabs ? (
+            <NewQuizButton />
+          ) : (
+            <ClearResultsButton setResponses={setResponses} />
+          )}
         </div>
       </div>
 
-      {!tabs ? <QuizPanel /> : <ResultsPanel />}
+      {!tabs ? (
+        <QuizPanel />
+      ) : (
+        <ResultsPanel
+          loading={loading}
+          error={error}
+          responses={responses}
+          setResponses={setResponses}
+        />
+      )}
     </div>
   );
 }

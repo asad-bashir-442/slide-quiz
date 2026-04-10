@@ -36,8 +36,6 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
   function deleteTempAnswer(index) {
     const updated = [...tempAnswers];
     updated.splice(index, 1);
-    console.log(tempAnswers);
-    console.log(updated);
     setTempAnswers(updated);
   }
 
@@ -50,8 +48,6 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         toast.error("No new answers to save");
         return;
       }
-
-      console.log(newAnswers);
 
       const promises = newAnswers.map((tempAnswer) =>
         createAnswerById(id, question.id, {
@@ -71,14 +67,19 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
   }
 
   return (
-    <div className="w-[90%] mx-auto mb-10 p-6 bg-base-100 rounded-xl shadow-md flex flex-col gap-6">
+    <div
+      id={`question_linkto_${question.id}`}
+      className="w-[90%] mx-auto mb-10 p-6 bg-base-100 rounded-xl shadow-md flex flex-col gap-6"
+    >
       {/* Top row */}
       <div>
-        <h3 className="text-md">Question {questionNum}</h3>
+        <div className="flex justify-between">
+          <h3 className="text-md">Question {questionNum}</h3>
+          <p className="text-sm">Points: {question.points}</p>
+        </div>
         <div className="flex items-center justify-between flex-col lg:flex-row">
-          <h1 className="text-2xl my-3 md:text-4xl font-bold">
-            {truncateText(question?.description, 20)}
-            {/* {question?.description} */}
+          <h1 className="text-2xl break-all my-3 md:text-4xl font-bold mr-2">
+            {question?.description}
           </h1>
           <DeleteQuestionButton
             question={question}
@@ -87,14 +88,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         </div>
       </div>
 
-      {/* Response inputs */}
-
       {question?.shortAnswer ? (
-        // <textarea
-        //   placeholder="Any Text (Multi-Line)"
-        //   readOnly
-        //   className="textarea w-full resize-none h-20"
-        // />
         <></>
       ) : (
         <form className="flex flex-col gap-4" onSubmit={saveAnswers}>
