@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { DeleteQuestionButton } from "../editor/DeleteQuestionButton";
 import { MCQInput } from "./MCQInput";
 import { useParams } from "react-router";
-import { createAnswerById, getAllQuestionsById } from "../../api/editor";
+import {
+  createAnswerById,
+  getAllQuestionsById,
+  updateAnswerById,
+} from "../../api/editor";
 import { toast } from "sonner";
 import { Error } from "../utility/Error";
 import { EditQuestonButton } from "../editor/EditQuestionButton";
@@ -42,20 +46,31 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
     e.preventDefault();
     try {
       const newAnswers = tempAnswers.filter((answer) => !answer.id);
+      const existingAnswers = tempAnswers.filter((answer) => answer.id);
 
-      if (newAnswers.length === 0) {
-        toast.error("No new answers to save");
-        return;
-      }
+      console.dir(existingAnswers);
 
-      const promises = newAnswers.map((tempAnswer) =>
+      // if (newAnswers.length === 0) {
+      //   toast.error("No new answers to save");
+      //   return;
+      // }
+
+      const createPromises = newAnswers.map((tempAnswer) =>
         createAnswerById(id, question.id, {
           description: tempAnswer.description,
           correct: tempAnswer.correct ?? false,
         }),
       );
 
-      await Promise.all(promises);
+      const updatePromises = existingAnswers.map((tempAnswer) =>
+        updateAnswerById(id, question.id, tempAnswer.id, {
+          description: tempAnswer.description,
+          correct: Boolean(tempAnswer.correct),
+        }),
+      );
+
+      //await Promise.all(createPromises);
+      await Promise.all([...createPromises, ...updatePromises]);
       const updated = await getAllQuestionsById(id);
       setQuestions(updated.data.questions);
 
