@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import { DeleteQuestionButton } from "../editor/DeleteQuestionButton";
 import { MCQInput } from "./MCQInput";
 import { useParams } from "react-router";
-import { createAnswerById, getAllQuestionsById } from "../../api/editor";
+import {
+  createAnswerById,
+  getAllQuestionsById,
+  updateAnswerById,
+} from "../../api/editor";
 import { toast } from "sonner";
-import { truncateText } from "../../utility/truncate";
 import { Error } from "../utility/Error";
+import { EditQuestonButton } from "../editor/EditQuestionButton";
 
 export function MCQEditor({ question, setQuestions, questionNum }) {
   const [tempAnswers, setTempAnswers] = useState(question?.answers || []);
@@ -23,7 +27,6 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
   }
 
   function addTempAnswer() {
-    console.log(tempAnswers);
     setTempAnswers((prev) => [
       ...prev,
       {
@@ -43,26 +46,39 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
     e.preventDefault();
     try {
       const newAnswers = tempAnswers.filter((answer) => !answer.id);
+      const existingAnswers = tempAnswers.filter((answer) => answer.id);
 
-      if (newAnswers.length === 0) {
-        toast.error("No new answers to save");
-        return;
-      }
+      console.dir(existingAnswers);
 
-      const promises = newAnswers.map((tempAnswer) =>
+      // if (newAnswers.length === 0) {
+      //   toast.error("No new answers to save");
+      //   return;
+      // }
+
+      const createPromises = newAnswers.map((tempAnswer) =>
         createAnswerById(id, question.id, {
           description: tempAnswer.description,
           correct: tempAnswer.correct ?? false,
         }),
       );
 
-      await Promise.all(promises);
+      const updatePromises = existingAnswers.map((tempAnswer) =>
+        updateAnswerById(id, question.id, tempAnswer.id, {
+          description: tempAnswer.description,
+          correct: Boolean(tempAnswer.correct),
+        }),
+      );
+
+      //await Promise.all(createPromises);
+      await Promise.all([...createPromises, ...updatePromises]);
       const updated = await getAllQuestionsById(id);
       setQuestions(updated.data.questions);
 
       toast.success("Answers saved!");
     } catch (error) {
       toast.error(error.message);
+
+      console.dir(error);
     }
   }
 
@@ -75,8 +91,16 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
       <div>
         <div className="flex justify-between">
           <h3 className="text-md">Question {questionNum}</h3>
-          <p className="text-sm">Points: {question.points}</p>
+          <EditQuestonButton
+            points={question.points}
+            description={question.description}
+            quizId={id}
+            questionId={question.id}
+            setQuestions={setQuestions}
+          />
         </div>
+        <p className="text-sm">Points: {question.points}</p>
+
         <div className="flex items-center justify-between flex-col lg:flex-row">
           <h1 className="text-2xl break-all my-3 md:text-4xl font-bold mr-2">
             {question?.description}

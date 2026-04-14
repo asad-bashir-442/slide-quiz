@@ -50,13 +50,17 @@ export function MCQInput({
           maxLength="500"
           required
           value={description}
-          onChange={(e) => onChange({ description: e.target.value, correct })}
+          onChange={(e) =>
+            onChange({ description: e.target.value, correct, id: answerId })
+          }
           placeholder="Type Response here"
           className="input input-ghost input-lg w-full validator text-3xl outline-0 bg-base-200"
         />
         <input
           type="checkbox"
-          onChange={(e) => onChange({ description, correct: e.target.checked })}
+          onChange={(e) =>
+            onChange({ description, correct: e.target.checked, id: answerId })
+          }
           checked={correct}
           className="toggle toggle-success"
         />
