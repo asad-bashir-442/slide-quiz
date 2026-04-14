@@ -23,7 +23,6 @@ import { useAuth } from "./context/AuthContext.jsx";
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router";
 
-import { LeaderboardResults } from "./components/dashboard/results/leaderboard/LeaderboardResults.jsx";
 import { ResultsPage } from "./pages/ResultsPage.jsx";
 
 // TODO: File names are inconsistent
@@ -52,7 +51,6 @@ export function App() {
 
           <Route path="join" element={<ClientPage />} />
 
-          <Route path="leaderboardTest" element={<LeaderboardResults />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />

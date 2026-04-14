@@ -16,7 +16,7 @@ export function QuizDetailCard({
   const navigate = useNavigate();
 
   return (
-    <div className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary max-[900px]:w-full">
+    <div className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary max-[900px]:w-full capitalize">
       <div className="card-body">
         <h2 className="card-title overflow-hidden" title={quizName}>
           <span>{truncateText(quizName, 25)}</span>

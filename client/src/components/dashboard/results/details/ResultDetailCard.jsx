@@ -19,7 +19,7 @@ export function ResultDetailCard({
     <div className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary max-[900px]:w-full">
       <div className="card-body max-[900px]:text-center">
         <h2
-          className="min-[900px]:card-title max-[900px]:text-xl font-bold overflow-hidden"
+          className="min-[900px]:card-title max-[900px]:text-xl font-bold overflow-hidden capitalize"
           title={name}
         >
           {truncateText(name, 25)}

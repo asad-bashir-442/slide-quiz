@@ -24,6 +24,7 @@ export function Dashboard() {
   const [responses, setResponses] = useState([]);
 
   useEffect(() => {
+    document.title = "SideQuiz | Dashboard"
     const fetchResults = async () => {
       try {
         const responses = await getAllResponses();

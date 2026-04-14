@@ -48,7 +48,7 @@ export function EditQuizButton({
 
   return (
     <>
-      <Pencil onClick={handleClick} className="h-[0.8em] hover:opacity-40" />
+      <Pencil onClick={handleClick} className="h-[0.8em] hover:opacity-40 cursor-pointer" />
       <dialog
         onClick={(e) => e.stopPropagation()}
         id={`edit_quiz_modal/${id}`}

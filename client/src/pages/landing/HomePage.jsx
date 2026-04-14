@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function HomePage() {
   const [code, setCode] = useState("");
@@ -11,11 +11,16 @@ export function HomePage() {
     });
   }
 
+
+  useEffect(()=>{
+    document.title = "SlideQuiz | Home"
+  },[])
+
   return (
     <div className="w-[80%] mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
       {/* Content Column */}
       <div className="md:col-span-2 space-y-6">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight bg-linear-to-r bg-clip-text from-primary to-secondary text-transparent">
           Present. Ask. Interact.
         </h1>
 
@@ -77,7 +82,7 @@ export function HomePage() {
       </div>
 
       <div className="col-span-full">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-2">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-12 font-bold bg-linear-to-r bg-clip-text from-secondary to-primary text-transparent">
           SlideQuiz In Action
         </h2>
         <div className="aspect-video w-full max-w-4xl mx-auto">
@@ -90,8 +95,8 @@ export function HomePage() {
         </div>
 
         <div className="w-full py-20">
-          <div className="w-[80%] mx-auto text-center space-y-12">
-            <h2 className="text-3xl md:text-4xl font-bold">
+          <div className="w-[80%] mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12">
               Why Use SlideQuiz?
             </h2>
 

@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import {Link} from "react-router";
 
 export function AboutPage() {
+
+    useEffect(()=>{
+        document.title = "SlideQuiz | About"
+    })
     return (
         <div className="w-[90%] md:w-[80%] mx-auto mt-10 space-y-8">
 

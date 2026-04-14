@@ -17,6 +17,7 @@ export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    document.title = "SlideQuiz | Register"
     if (user) {
       navigate("/dashboard");
     }

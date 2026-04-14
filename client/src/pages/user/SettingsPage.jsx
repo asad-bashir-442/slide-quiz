@@ -7,7 +7,7 @@ import { updateUser } from "../../api/auth";
 import { KeyRound, User, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -20,6 +20,11 @@ export function SettingsPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(()=>{
+    document.title = "SideQuiz | Settings"
+
+  },[])
 
   const handleLogout = () => {
     logout();

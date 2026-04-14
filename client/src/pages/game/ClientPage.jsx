@@ -53,6 +53,7 @@ export function ClientPage() {
   };
 
   useEffect(() => {
+    document.title = "SlideQuiz | Join"
     socket.connect();
 
     const onConnect = () => {

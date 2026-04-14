@@ -11,6 +11,7 @@ export function LoginPage() {
   const { user } = useAuth();
 
   useEffect(() => {
+    document.title = "SlideQuiz | Login"
     if (user) {
       navigate("/dashboard");
     }

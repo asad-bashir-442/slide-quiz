@@ -175,6 +175,7 @@ export function HostPage() {
   };
 
   useEffect(() => {
+    document.title = "SlideQuiz | Host"
     (async () => {
       if (!id) {
         setError("Invalid ID");

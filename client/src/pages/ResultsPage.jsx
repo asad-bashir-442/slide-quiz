@@ -22,6 +22,7 @@ export function ResultsPage() {
   let { id } = useParams();
 
   useEffect(() => {
+    document.title = "SlideQuiz | Results"
     async function fetchResults() {
       try {
         const data = await getReponseById(id);
