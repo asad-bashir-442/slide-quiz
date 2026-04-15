@@ -80,11 +80,11 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
             {/* Top row */}
             <div>
                 <div className="flex justify-between">
-                    <h3 className="text-md">Question {questionNum}</h3>
+                    <h3 className="text-md font-bold mb-2">Question {questionNum}</h3>
                     <EditQuestonButton points={question.points} description={question.description} quizId={id} questionId={question.id} setQuestions={setQuestions} />
                 </div>
 
-                <p className="text-sm">Points: {question.points}</p>
+                <p className="text-xs">Points: {question.points}</p>
 
                 <div className="flex items-center justify-between flex-col lg:flex-row">
                     <h1 className="text-2xl break-all my-3 md:text-4xl font-bold mr-2 max-[1024px]:mb-8">{question?.description}</h1>

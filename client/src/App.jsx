@@ -7,8 +7,8 @@ import { RegisterPage } from "./pages/auth/RegisterPage";
 import { Dashboard } from "./pages/user/Dashboard.jsx";
 import { SettingsPage } from "./pages/user/SettingsPage";
 
-import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
-import { ResultsPage } from "./pages/ResultsPage.jsx";
+import { EditorPage } from "./pages/details/EditorPage.jsx";
+import { ResultsPage } from "./pages/details/ResultsPage.jsx";
 
 import { ClientPage } from "./pages/game/ClientPage.jsx";
 import { HostPage } from "./pages/game/HostPage.jsx";
@@ -58,7 +58,7 @@ export function App() {
                             <Route path="dashboard" element={<Dashboard />} />
                             <Route path="settings" element={<SettingsPage />} />
 
-                            <Route path="quiz/:id" element={<QuizDetailPage />} />
+                            <Route path="quiz/:id" element={<EditorPage />} />
                             <Route path="quiz/:id/host" element={<HostPage />} />
 
                             <Route path="results/:id" element={<ResultsPage />} />

@@ -1,8 +1,8 @@
-import { getReponseById } from "../api/responses";
+import { getReponseById } from "../../api/responses";
 
-import { fadeIn } from "../utility/animation";
-import { truncateText } from "../utility/truncate";
-import { TrophyBox } from "../components/results/TrophyBox";
+import { fadeIn } from "../../utility/animation";
+import { truncateText } from "../../utility/truncate";
+import { TrophyBox } from "../../components/results/TrophyBox";
 
 import { toast } from "sonner";
 import { motion } from "motion/react";

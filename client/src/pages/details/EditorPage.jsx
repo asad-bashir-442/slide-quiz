@@ -1,19 +1,19 @@
-import { getQuizById } from "../api/quiz";
-import { getAllQuestionsById } from "../api/editor";
+import { getQuizById } from "../../api/quiz";
+import { getAllQuestionsById } from "../../api/editor";
 
-import { Error } from "../components/utility/Error";
-import { MCQEditor } from "../components/quiz-creation/MCQEditor";
-import { QuestionNoButton } from "../components/quiz-creation/QuestionNoButton";
-import { NewQuestionButton } from "../components/editor/NewQuestionButton";
+import { Error } from "../../components/utility/Error";
+import { MCQEditor } from "../../components/quiz-creation/MCQEditor";
+import { QuestionNoButton } from "../../components/quiz-creation/QuestionNoButton";
+import { NewQuestionButton } from "../../components/editor/NewQuestionButton";
 
-import { ago } from "../utility/date";
-import { fadeIn } from "../utility/animation";
+import { ago } from "../../utility/date";
+import { fadeIn } from "../../utility/animation";
 
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-export function QuizDetailPage() {
+export function EditorPage() {
     const [quiz, setQuiz] = useState(null);
     const [questions, setQuestions] = useState([]);
     const [severError, setServerError] = useState(null);
@@ -49,22 +49,18 @@ export function QuizDetailPage() {
 
     return (
         <motion.div {...fadeIn} className="flex-1">
-            {/* Top header */}
             <div className="p-6">
                 <h1 className="text-3xl font-bold capitalize">{quiz?.name}</h1>
                 <h2 className="opacity-70">Saved - {ago(quiz?.updatedAt)}</h2>
             </div>
 
-            {/* Two column layout */}
             <div className="flex items-start">
-                {/* Left column (25%) */}
                 <div className="w-1/4 p-6 bg-base-200 flex flex-col gap-4 max-lg:hidden rounded-xl sticky top-0">
                     {questions?.map((question, index) => (
                         <QuestionNoButton id={question.id} num={index + 1} />
                     ))}
                 </div>
 
-                {/* Right column (75%) */}
                 <div className="w-3/4 flex flex-col mx-auto max-[900px]:w-full">
                     <div>
                         {questions?.length > 0 ? (
