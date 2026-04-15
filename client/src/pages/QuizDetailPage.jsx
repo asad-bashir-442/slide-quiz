@@ -21,7 +21,8 @@ export function QuizDetailPage() {
     const { id } = useParams();
 
     useEffect(() => {
-        document.title = "SlideQuiz | Quiz";
+        document.title = "SlideQuiz | Editor";
+
         const fetchQuiz = async () => {
             try {
                 const quizData = await getQuizById(id);

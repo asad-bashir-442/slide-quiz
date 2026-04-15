@@ -16,6 +16,7 @@ export function LoginPage() {
 
     useEffect(() => {
         document.title = "SlideQuiz | Login";
+
         if (user) {
             navigate("/dashboard");
         }

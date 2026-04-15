@@ -20,6 +20,7 @@ export function Dashboard() {
 
     useEffect(() => {
         document.title = "SideQuiz | Dashboard";
+
         const fetchResults = async () => {
             try {
                 const responses = await getAllResponses();

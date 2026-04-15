@@ -30,7 +30,7 @@ export function ResultDetailCard({ id, name, lastPlayed, setResponses, mode, num
                     <div className="min-[900px]:stats shadow bg-base-300 min-[900px]:min-w-[45%] max-[900px]:mb-2">
                         <div className="stat">
                             <div className="stat-title">Type</div>
-                            <div className="stat-value text-2xl">{mode}</div>
+                            <div className="stat-value text-2xl capitalize">{mode}</div>
                         </div>
                     </div>
                 </div>

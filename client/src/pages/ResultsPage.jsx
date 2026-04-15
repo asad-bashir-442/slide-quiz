@@ -1,7 +1,8 @@
 import { getReponseById } from "../api/responses";
 
 import { fadeIn } from "../utility/animation";
-import { TrophyBox } from "../components/dashboard/results/leaderboard/TrophyBox";
+import { truncateText } from "../utility/truncate";
+import { TrophyBox } from "../components/results/TrophyBox";
 
 import { toast } from "sonner";
 import { motion } from "motion/react";
@@ -39,6 +40,8 @@ export function ResultsPage() {
                 const responses = data?.data?.responses;
 
                 let maxPoints = 0;
+
+                document.title = `SlideQuiz | ${truncateText(name, 25)} Results`;
 
                 data?.data?.questions?.questions.forEach((question) => {
                     maxPoints += question.points;

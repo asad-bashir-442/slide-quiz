@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 export function PageNotFound() {
     useEffect(() => {
-        document.title = "SlideQuiz | Not Found";
+        document.title = "SlideQuiz | 404";
     }, []);
 
     return (

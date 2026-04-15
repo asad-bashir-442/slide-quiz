@@ -155,8 +155,6 @@ export function HostPage() {
         });
     };
 
-    // TODO: Maybe confirm alert?
-    // NOTE: This needs to be confirmed
     const end = () => {
         if (showResults) {
             socket.disconnect();
@@ -170,6 +168,7 @@ export function HostPage() {
 
     useEffect(() => {
         document.title = "SlideQuiz | Host";
+
         (async () => {
             if (!id) {
                 setError("Invalid ID");
