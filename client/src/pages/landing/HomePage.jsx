@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 
 export function HomePage() {
   const [code, setCode] = useState("");
@@ -11,15 +12,20 @@ export function HomePage() {
     });
   }
 
-
-  useEffect(()=>{
-    document.title = "SlideQuiz | Home"
-  },[])
+  useEffect(() => {
+    document.title = "SlideQuiz | Home";
+  }, []);
 
   return (
     <div className="w-[80%] mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
       {/* Content Column */}
-      <div className="md:col-span-2 space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="md:col-span-2 space-y-6"
+      >
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight bg-linear-to-r bg-clip-text from-primary to-secondary text-transparent">
           Present. Ask. Interact.
         </h1>
@@ -71,90 +77,125 @@ export function HomePage() {
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
       {/* Image Column */}
-      <div className="flex justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="flex justify-center"
+      >
         <img
           src="/images/preview.png"
           alt="Smartphone with a preview of the SlideQuiz Application"
-          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl shadow-lg"
+          className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl"
         />
-      </div>
+      </motion.div>
 
       <div className="col-span-full">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-12 font-bold bg-linear-to-r bg-clip-text from-secondary to-primary text-transparent">
-          SlideQuiz In Action
-        </h2>
-        <div className="aspect-video w-full max-w-4xl mx-auto">
-          <iframe
-            className="w-full h-full rounded-xl shadow-lg"
-            src="https://www.youtube.com/embed/rRP1v0p7pHM"
-            title="SlideQuiz Demo"
-            allowFullScreen
-          />
-        </div>
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-12 font-bold bg-linear-to-r bg-clip-text from-secondary to-primary text-transparent">
+            SlideQuiz In Action
+          </h2>
+          <div className="aspect-video w-full max-w-4xl mx-auto">
+            <iframe
+              className="w-full h-full rounded-xl shadow-lg"
+              src="https://www.youtube.com/embed/rRP1v0p7pHM"
+              title="SlideQuiz Demo"
+              allowFullScreen
+            />
+          </div>
+        </motion.section>
 
-        <div className="w-full py-20">
-          <div className="w-[80%] mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12">
-              Why Use SlideQuiz?
-            </h2>
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="w-full py-20">
+            <div className="w-[80%] mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-12">
+                Why Use SlideQuiz?
+              </h2>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="p-6 rounded-xl bg-base-200 shadow">
-                <h3 className="text-xl font-semibold">⚡ Fast Creation</h3>
-                <p>
-                  Create quizzes in seconds without slowing down your
-                  presentation.
-                </p>
-              </div>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="p-6 rounded-xl bg-base-200 shadow">
+                  <h3 className="text-xl font-semibold">⚡ Fast Creation</h3>
+                  <p>
+                    Create quizzes in seconds without slowing down your
+                    presentation.
+                  </p>
+                </div>
 
-              <div className="p-6 rounded-xl bg-base-200 shadow">
-                <h3 className="text-xl font-semibold">🎯 Engage Audience</h3>
-                <p>Keep everyone involved with live interaction.</p>
-              </div>
+                <div className="p-6 rounded-xl bg-base-200 shadow">
+                  <h3 className="text-xl font-semibold">🎯 Engage Audience</h3>
+                  <p>Keep everyone involved with live interaction.</p>
+                </div>
 
-              <div className="p-6 rounded-xl bg-base-200 shadow">
-                <h3 className="text-xl font-semibold">📊 Instant Results</h3>
-                <p>See responses in real-time and adapt your flow.</p>
+                <div className="p-6 rounded-xl bg-base-200 shadow">
+                  <h3 className="text-xl font-semibold">📊 Instant Results</h3>
+                  <p>See responses in real-time and adapt your flow.</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.section>
 
-        <div className="w-full bg-base-200 py-20">
-          <div className="w-[80%] mx-auto space-y-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold">How It Works</h2>
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="w-full bg-base-200 py-20 rounded-2xl">
+            <div className="w-[80%] mx-auto space-y-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold">How It Works</h2>
 
-            <div className="grid md:grid-cols-3 gap-10">
-              <div>
-                <h3 className="text-xl font-semibold">1. Create</h3>
-                <p>Build your quiz in seconds.</p>
-              </div>
+              <div className="grid md:grid-cols-3 gap-10">
+                <div>
+                  <h3 className="text-2xl font-semibold">1. Create</h3>
+                  <p>Build your quiz in seconds.</p>
+                </div>
 
-              <div>
-                <h3 className="text-xl font-semibold">2. Share</h3>
-                <p>Send a code to your audience.</p>
-              </div>
+                <div>
+                  <h3 className="text-2xl font-semibold">2. Share</h3>
+                  <p>Send a code to your audience.</p>
+                </div>
 
-              <div>
-                <h3 className="text-xl font-semibold">3. Interact</h3>
-                <p>Watch responses live.</p>
+                <div>
+                  <h3 className="text-2xl font-semibold">3. Interact</h3>
+                  <p>Watch responses live.</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-full py-20 text-center">
-          <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Ready to Try SlideQuiz?
-            </h2>
+        </motion.section>
 
-            <Link to="/register" className="btn btn-primary btn-lg">
-              Get Started Free
-            </Link>
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="w-full py-20 text-center">
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Ready to Try SlideQuiz?
+              </h2>
+
+              <Link to="/register" className="btn btn-primary btn-lg">
+                Get Started
+              </Link>
+            </div>
           </div>
-        </div>
+        </motion.section>
       </div>
     </div>
   );

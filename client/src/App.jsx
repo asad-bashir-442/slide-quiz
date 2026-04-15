@@ -21,14 +21,16 @@ import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 
 import { Toaster } from "sonner";
-import { Routes, Route } from "react-router";
+import { Routes, Route, useLocation } from "react-router";
 
 import { ResultsPage } from "./pages/ResultsPage.jsx";
+import { AnimatePresence } from "motion/react";
 
 // TODO: File names are inconsistent
 
 export function App() {
   const { loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -42,25 +44,26 @@ export function App() {
       <Toaster richColors position="bottom-right" />
       <Navbar />
       <main className="flex-1 flex flex-col">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="about" element={<AboutPage />} />
 
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
 
-          <Route path="join" element={<ClientPage />} />
+            <Route path="join" element={<ClientPage />} />
 
-
-          <Route element={<ProtectedRoute />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="quiz/:id" element={<QuizDetailPage />} />
-            <Route path="quiz/:id/host" element={<HostPage />} />
-            <Route path="results/:id" element={<ResultsPage />} />
-          </Route>
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+            <Route element={<ProtectedRoute />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="quiz/:id" element={<QuizDetailPage />} />
+              <Route path="quiz/:id/host" element={<HostPage />} />
+              <Route path="results/:id" element={<ResultsPage />} />
+            </Route>
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       <Footer />

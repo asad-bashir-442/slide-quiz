@@ -33,7 +33,7 @@ export function HostPage() {
     id: "0123",
     description: "Loading question...",
     shortAnswer: 1,
-    points: 1
+    points: 1,
   });
 
   const updateResults = () => {
@@ -48,7 +48,7 @@ export function HostPage() {
     }
 
     return -1;
-  }
+  };
 
   const createGame = (automaticGame) => {
     setPlayers([]);
@@ -79,7 +79,7 @@ export function HostPage() {
 
   const kick = (playerID, username) => {
     socket.emit("host:kick", { code: game.code, playerID });
-    toast.success(`Kicked ${username}`)
+    toast.success(`Kicked ${username}`);
   };
 
   const start = () => {
@@ -127,30 +127,31 @@ export function HostPage() {
 
       // Check for duplicate
       const alreadyExists = updated[playerID].some(
-        existing => existing.question.id === questionID
+        (existing) => existing.question.id === questionID,
       );
 
       if (!alreadyExists) {
         updated[playerID].push({
           question: answer.question,
-          response: answer.response
+          response: answer.response,
         });
       }
 
       return updated;
     });
-  }
+  };
 
   const addPlayer = (player) => {
-    setPlayers(prevPlayers => {
+    setPlayers((prevPlayers) => {
       const removedPlayers = prevPlayers.filter(
-        prevPlayer => !player.players.some(newPlayer => newPlayer.id === prevPlayer.id)
+        (prevPlayer) =>
+          !player.players.some((newPlayer) => newPlayer.id === prevPlayer.id),
       );
 
       if (removedPlayers.length > 0) {
-        setDisconnectedPlayers(prev => {
+        setDisconnectedPlayers((prev) => {
           const newDisconnected = removedPlayers.filter(
-            removedPlayer => !prev.some(p => p.id === removedPlayer.id)
+            (removedPlayer) => !prev.some((p) => p.id === removedPlayer.id),
           );
 
           return [...prev, ...newDisconnected];
@@ -175,7 +176,7 @@ export function HostPage() {
   };
 
   useEffect(() => {
-    document.title = "SlideQuiz | Host"
+    document.title = "SlideQuiz | Host";
     (async () => {
       if (!id) {
         setError("Invalid ID");
@@ -191,7 +192,8 @@ export function HostPage() {
           throw new Error("Quiz not found");
         }
 
-        const isAutomatic = details.data.automatic === 1 || details.data.automatic === true;
+        const isAutomatic =
+          details.data.automatic === 1 || details.data.automatic === true;
 
         setQuiz(details.data);
         setAutomatic(isAutomatic);
@@ -259,19 +261,23 @@ export function HostPage() {
   if (state == "DISCONNECTED") {
     return (
       <div className="text-center my-8">
-        <h2 className="text-xl opacity-40 my-8 font-bold italic">Disconnected, reconnecting...</h2>
+        <h2 className="text-xl opacity-40 my-8 font-bold italic">
+          Disconnected, reconnecting...
+        </h2>
         <Loading />
       </div>
-    )
+    );
   }
 
   if (state == "ERROR") {
     return (
       <div className="text-center my-8">
-        <h2 className="text-xl text-error opacity-40 my-8 font-bold italic">Error, try reloading the page.</h2>
+        <h2 className="text-xl text-error opacity-40 my-8 font-bold italic">
+          Error, try reloading the page.
+        </h2>
         <h4 className="text-lg opacity-40 font-bold">Error: {error}</h4>
       </div>
-    )
+    );
   }
 
   if (state == "CONNECTED") {
@@ -288,7 +294,7 @@ export function HostPage() {
         kick={kick}
         start={start}
       />
-    )
+    );
   }
 
   return automatic ? (

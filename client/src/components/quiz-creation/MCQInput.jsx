@@ -3,6 +3,8 @@ import { deleteAnswerById, getAllQuestionsById } from "../../api/editor";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 import { numberToLetter } from "../../utility/numbers";
+import { motion } from "motion/react";
+import { fadeIn } from "../../utility/animation";
 export function MCQInput({
   description,
   correct,
@@ -32,7 +34,7 @@ export function MCQInput({
   }
 
   return (
-    <div className="flex items-center gap-4 border border-transparent group bg-base-200 p-6 rounded-2xl focus-within:border-primary relative">
+    <motion.div className="flex items-center gap-4 border border-transparent group bg-base-200 p-6 rounded-2xl focus-within:border-primary relative">
       <button
         type="button"
         onClick={handleDelete}
@@ -65,6 +67,6 @@ export function MCQInput({
           className="toggle toggle-success"
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

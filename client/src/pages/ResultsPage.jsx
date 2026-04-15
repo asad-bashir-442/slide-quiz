@@ -3,6 +3,8 @@ import { getReponseById } from "../api/responses";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { TrophyBox } from "../components/dashboard/results/leaderboard/TrophyBox";
+import { motion } from "motion/react";
+import { fadeIn } from "../utility/animation";
 
 export function ResultsPage() {
   const [questions, setQuestions] = useState([]);
@@ -22,7 +24,7 @@ export function ResultsPage() {
   let { id } = useParams();
 
   useEffect(() => {
-    document.title = "SlideQuiz | Results"
+    document.title = "SlideQuiz | Results";
     async function fetchResults() {
       try {
         const data = await getReponseById(id);
@@ -98,7 +100,7 @@ export function ResultsPage() {
   }, [id]);
 
   return (
-    <div className="p-8">
+    <motion.div {...fadeIn} className="p-8">
       <div className="bg-base-100 rounded-2xl p-4">
         <h1 className="text-5xl text-center capitalize pt-6 font-bold mb-2">
           {quizName}
@@ -196,6 +198,6 @@ export function ResultsPage() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
