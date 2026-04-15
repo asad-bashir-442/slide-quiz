@@ -4,149 +4,109 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Pencil } from "lucide-react";
 
-export function EditQuizButton({
-  id,
-  name,
-  descrption,
-  isAutomatic,
-  setQuizzes,
-}) {
-  const [quizName, setQuizName] = useState("");
-  const [quizDescription, setQuizDescription] = useState("");
-  const [isChecked, setIsChecked] = useState(isAutomatic);
+export function EditQuizButton({ id, name, descrption, isAutomatic, setQuizzes }) {
+    const [quizName, setQuizName] = useState("");
+    const [quizDescription, setQuizDescription] = useState("");
+    const [isChecked, setIsChecked] = useState(isAutomatic);
 
-  function handleClick(e) {
-    e.stopPropagation();
-    setQuizName(name);
-    setQuizDescription(descrption);
-    document.getElementById(`edit_quiz_modal/${id}`).showModal();
-  }
+    function handleClick(e) {
+        e.stopPropagation();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+        setQuizName(name);
+        setQuizDescription(descrption);
 
-    const quizTypeInput = document.getElementById(`edit_quiz_type/${id}`);
-    const quizData = {
-      name: quizName,
-      description: quizDescription,
-      automatic: quizTypeInput.checked,
-    };
-
-    try {
-      const res = await editQuizById(id, quizData);
-
-      console.dir(res);
-      toast.success(res.message);
-
-      const quizzes = await getAllQuizzes();
-      setQuizzes(quizzes.data);
-      document.getElementById(`edit_quiz_modal/${id}`).close();
-    } catch (error) {
-      toast.error(error.message);
+        document.getElementById(`edit_quiz_modal/${id}`).showModal();
     }
-  }
 
-  return (
-    <>
-      <Pencil onClick={handleClick} className="h-[0.8em] hover:opacity-40 cursor-pointer" />
-      <dialog
-        onClick={(e) => e.stopPropagation()}
-        id={`edit_quiz_modal/${id}`}
-        className="modal"
-      >
-        <div className="modal-box">
-          <h3 className="font-bold text-base-content/70 text-2xl">
-            Edit Quiz Details
-          </h3>
+    async function handleSubmit(e) {
+        e.preventDefault();
 
-          <p className="mt-2 text-base-content/70">Edit Quiz Metadata</p>
+        const quizTypeInput = document.getElementById(`edit_quiz_type/${id}`);
+        const quizData = {
+            name: quizName,
+            description: quizDescription,
+            automatic: quizTypeInput.checked,
+        };
 
-          <form onSubmit={handleSubmit} className="modal-action flex-col">
-            <button
-              type="button"
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              onClick={() =>
-                document.getElementById(`edit_quiz_modal/${id}`).close()
-              }
-            >
-              ✕
-            </button>
+        try {
+            const res = await editQuizById(id, quizData);
+            const quizzes = await getAllQuizzes();
 
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend text-base-content/70 text-lg">
-                Quiz Name
-              </legend>
+            toast.success(res.message);
+            setQuizzes(quizzes.data);
 
-              <input
-                autoFocus
-                required
-                type="text"
-                minLength="3"
-                maxLength="50"
-                className="input w-full validator"
-                placeholder="Quiz Name"
-                value={quizName}
-                onChange={(e) => setQuizName(e.target.value)}
-              />
+            document.getElementById(`edit_quiz_modal/${id}`).close();
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
 
-              <p className="validator-hint">
-                Name must be between 3 and 50 characters
-              </p>
-            </fieldset>
+    return (
+        <>
+            <Pencil onClick={handleClick} className="h-[0.8em] hover:opacity-40 cursor-pointer" />
+            <dialog onClick={(e) => e.stopPropagation()} id={`edit_quiz_modal/${id}`} className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-base-content/70 text-2xl">Edit Quiz Details</h3>
 
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend text-base-content/70 text-lg">
-                Quiz Description
-              </legend>
+                    <p className="mt-2 text-base-content/70">Edit Quiz Metadata</p>
 
-              <textarea
-                required
-                minLength="5"
-                maxLength="250"
-                className="textarea h-30 w-full resize-none validator"
-                placeholder="Quiz Description"
-                value={quizDescription}
-                onChange={(e) => setQuizDescription(e.target.value)}
-              ></textarea>
+                    <form onSubmit={handleSubmit} className="modal-action flex-col">
+                        <button type="button" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={() => document.getElementById(`edit_quiz_modal/${id}`).close()}>
+                            ✕
+                        </button>
 
-              <p className="validator-hint">
-                Description must be between 5 and 250 characters
-              </p>
-            </fieldset>
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend text-base-content/70 text-lg">Quiz Name</legend>
 
-            <div className="flex gap-2 items-center w-fit">
-              <p>Automatic</p>
+                            <input
+                                autoFocus
+                                required
+                                type="text"
+                                minLength="3"
+                                maxLength="50"
+                                className="input w-full validator"
+                                placeholder="Quiz Name"
+                                value={quizName}
+                                onChange={(e) => setQuizName(e.target.value)}
+                            />
 
-              <input
-                id={`edit_quiz_type/${id}`}
-                type="checkbox"
-                checked={isChecked}
-                onChange={(e) => setIsChecked(e.target.checked)}
-                className="checkbox checkbox-primary"
-              />
-            </div>
+                            <p className="validator-hint">Name must be between 3 and 50 characters</p>
+                        </fieldset>
 
-            <div className="modal-action max-[900px]:block max-[900px]:w-full">
-              <button
-                onClick={() =>
-                  document.getElementById(`edit_quiz_modal/${id}`).close()
-                }
-                type="reset"
-                className="btn max-[900px]:mb-4 max-[900px]:w-full"
-              >
-                Cancel
-              </button>
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend text-base-content/70 text-lg">Quiz Description</legend>
 
-              <button
-                type="submit"
-                className="btn btn-primary max-[900px]:w-full"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
-      </dialog>
-    </>
-  );
+                            <textarea
+                                required
+                                minLength="5"
+                                maxLength="250"
+                                className="textarea h-30 w-full resize-none validator"
+                                placeholder="Quiz Description"
+                                value={quizDescription}
+                                onChange={(e) => setQuizDescription(e.target.value)}
+                            ></textarea>
+
+                            <p className="validator-hint">Description must be between 5 and 250 characters</p>
+                        </fieldset>
+
+                        <div className="flex gap-2 items-center w-fit">
+                            <p>Automatic</p>
+
+                            <input id={`edit_quiz_type/${id}`} type="checkbox" checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} className="checkbox checkbox-primary" />
+                        </div>
+
+                        <div className="modal-action max-[900px]:block max-[900px]:w-full">
+                            <button onClick={() => document.getElementById(`edit_quiz_modal/${id}`).close()} type="reset" className="btn max-[900px]:mb-4 max-[900px]:w-full">
+                                Cancel
+                            </button>
+
+                            <button type="submit" className="btn btn-primary max-[900px]:w-full">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </dialog>
+        </>
+    );
 }

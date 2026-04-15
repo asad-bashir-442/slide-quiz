@@ -34,25 +34,13 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
 
                             <div className="max-w-[60%] max-[900px]:max-w-full max-[900px]:flex-row text-left">
                                 <div className="my-4">
-                                    <input
-                                        type="checkbox"
-                                        value="light"
-                                        className="toggle toggle-primary"
-                                        checked={automatic}
-                                        onChange={updateMode}
-                                    />
+                                    <input type="checkbox" value="light" className="toggle toggle-primary" checked={automatic} onChange={updateMode} />
 
                                     <span className="ml-4">Automatic Mode?</span>
                                 </div>
 
                                 <div className="my-4">
-                                    <input
-                                        type="checkbox"
-                                        value="light"
-                                        className="toggle toggle-primary"
-                                        checked={showResults}
-                                        onChange={updateResults}
-                                    />
+                                    <input type="checkbox" value="light" className="toggle toggle-primary" checked={showResults} onChange={updateResults} />
 
                                     <span className="ml-4">Show Results?</span>
                                 </div>
@@ -86,11 +74,7 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
                         <div className="flex justify-between">
                             <div className="max-[500px]:hidden"></div>
 
-                            <button
-                                className="btn btn-outline btn-success max-[500px]:w-full"
-                                disabled={softError != "" || players.length == 0}
-                                onClick={start}
-                            >
+                            <button className="btn btn-outline btn-success max-[500px]:w-full" disabled={softError != "" || players.length == 0} onClick={start}>
                                 Start Game
                             </button>
                         </div>
@@ -100,27 +84,24 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
 
             <div className="w-[90%] mx-auto">
                 <div className="mx-auto mt-2 mb-10 p-6 bg-base-200 rounded-xl text-center shadow-md max-[900px]:block max-[900px]:p-4">
-                    {players.length == 0 ?
-                        (
-                            <>
-                                <h1 className="opacity-60 font-bold text-2xl mt-8 select-none">No players yet...</h1>
-                                <span className="loading loading-ring loading-lg my-4"></span>
-                            </>
-                        ) : (
-                            players.map((player) => (
-                                <div className="text-center bg-base-300 inline-block p-4 m-4 rounded-xl w-[130px] h-[130px]" key={player.id}>
-                                    <User className="m-auto" />
-                                    <h4 className="text-md font-bold my-2" title={player.username}>{truncateText(player.username, 8)}</h4>
-                                    <button
-                                        className="btn btn-outline btn-error text-xs"
-                                        onClick={() => kick(player.id, player.username)}
-                                    >
-                                        Kick
-                                    </button>
-                                </div>
-                            ))
-                        )
-                    }
+                    {players.length == 0 ? (
+                        <>
+                            <h1 className="opacity-60 font-bold text-2xl mt-8 select-none">No players yet...</h1>
+                            <span className="loading loading-ring loading-lg my-4"></span>
+                        </>
+                    ) : (
+                        players.map((player) => (
+                            <div className="text-center bg-base-300 inline-block p-4 m-4 rounded-xl w-[130px] h-[130px]" key={player.id}>
+                                <User className="m-auto" />
+                                <h4 className="text-md font-bold my-2" title={player.username}>
+                                    {truncateText(player.username, 8)}
+                                </h4>
+                                <button className="btn btn-outline btn-error text-xs" onClick={() => kick(player.id, player.username)}>
+                                    Kick
+                                </button>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </>

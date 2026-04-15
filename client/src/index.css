@@ -1,28 +1,29 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
-  themes:
-    light --default,
-    dark --prefersdark;
+    themes:
+        light --default,
+        dark --prefersdark;
 }
 
 @layer base {
-  body {
-    @apply bg-base-300;
-  }
+    body {
+        @apply bg-base-300;
+    }
 }
 
 * {
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-  font-family: Arial, sans-serif;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+    font-family: Arial, sans-serif;
 }
 
 fieldset,
 fieldset label {
-  width: 100%;
+    width: 100%;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }

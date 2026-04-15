@@ -46,68 +46,64 @@ export function SessionResultsPanel() {
         { id: 5, name: "John", score: "9/14", responses: 14 },
     ];
 
-        return (
-            <dialog className="modal" open>
-                <div className="modal-box w-11/12 max-w-5xl">
-                    <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost hover:bg-base-200 absolute right-2 top-2">
-                            ✕
-                        </button>
-                    </form>
-                    {/* Title Bar */}
-                    <div className="mb-6 text-left">
-                        <h1 className="text-3xl font-bold">Quiz Title</h1>
-                        <h4 className="text-sm opacity-70">Completed: x Days Ago</h4>
+    return (
+        <dialog className="modal" open>
+            <div className="modal-box w-11/12 max-w-5xl">
+                <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost hover:bg-base-200 absolute right-2 top-2">✕</button>
+                </form>
+                {/* Title Bar */}
+                <div className="mb-6 text-left">
+                    <h1 className="text-3xl font-bold">Quiz Title</h1>
+                    <h4 className="text-sm opacity-70">Completed: x Days Ago</h4>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="mb-8">
+                    <div className="text-center mb-4">
+                        <h2 className="text-2xl font-semibold">Overall Statistics</h2>
+                        <h3 className="text-sm opacity-70">Details Below</h3>
                     </div>
 
-                    {/* Quick Stats */}
-                    <div className="mb-8">
-                        <div className="text-center mb-4">
-                            <h2 className="text-2xl font-semibold">Overall Statistics</h2>
-                            <h3 className="text-sm opacity-70">Details Below</h3>
+                    <div className="stats stats-vertical md:stats-horizontal shadow w-full bg-base-300">
+                        <div className="stat place-items-center">
+                            <div className="stat-title">Total Questions</div>
+                            <div className="stat-value">XX</div>
                         </div>
 
-                        <div className="stats stats-vertical md:stats-horizontal shadow w-full bg-base-300">
-                            <div className="stat place-items-center">
-                                <div className="stat-title">Total Questions</div>
-                                <div className="stat-value">XX</div>
-                            </div>
+                        <div className="stat place-items-center">
+                            <div className="stat-title">Total Answers</div>
+                            <div className="stat-value">XXX</div>
+                        </div>
 
-                            <div className="stat place-items-center">
-                                <div className="stat-title">Total Answers</div>
-                                <div className="stat-value">XXX</div>
-                            </div>
+                        <div className="stat place-items-center">
+                            <div className="stat-title">Total Players</div>
+                            <div className="stat-value">XX</div>
+                        </div>
 
-                            <div className="stat place-items-center">
-                                <div className="stat-title">Total Players</div>
-                                <div className="stat-value">XX</div>
-                            </div>
-
-                            <div className="stat place-items-center">
-                                <div className="stat-title">% Correct</div>
-                                <div className="stat-value">XX%</div>
-                            </div>
+                        <div className="stat place-items-center">
+                            <div className="stat-title">% Correct</div>
+                            <div className="stat-value">XX%</div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Leaderboard */}
-                    <div className="text-center">
-                        <h2 className="text-2xl font-semibold mb-4">
-                            Leaderboard
-                        </h2>
+                {/* Leaderboard */}
+                <div className="text-center">
+                    <h2 className="text-2xl font-semibold mb-4">Leaderboard</h2>
 
-                        <div className="overflow-x-auto flex justify-center">
-                            <table className="table w-full max-w-3xl">
-                                <thead>
+                    <div className="overflow-x-auto flex justify-center">
+                        <table className="table w-full max-w-3xl">
+                            <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Username</th>
                                     <th>Score</th>
                                     <th>Responses</th>
                                 </tr>
-                                </thead>
+                            </thead>
 
-                                <tbody>
+                            <tbody>
                                 {players.map((player, index) => (
                                     <tr key={player.id} className="hover">
                                         <th>{index + 1}</th>
@@ -116,15 +112,11 @@ export function SessionResultsPanel() {
                                         <td>{player.responses}</td>
                                     </tr>
                                 ))}
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
-
-
-
                 </div>
-            </dialog>
-        );
-
+            </div>
+        </dialog>
+    );
 }

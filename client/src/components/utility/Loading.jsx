@@ -1,6 +1,3 @@
-
 export function Loading() {
-  return (
-    <span className="loading loading-spinner text-primary"></span>
-  );
+    return <span className="loading loading-spinner text-primary"></span>;
 }
