@@ -1,10 +1,10 @@
-import { X } from "lucide-react";
 import { deleteAnswerById, getAllQuestionsById } from "../../api/editor";
+
+import { X } from "lucide-react";
+import { motion } from "motion/react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
-import { numberToLetter } from "../../utility/numbers";
-import { motion } from "motion/react";
-import { fadeIn } from "../../utility/animation";
+
 export function MCQInput({
   description,
   correct,
@@ -13,7 +13,6 @@ export function MCQInput({
   index,
   question,
   setQuestions,
-  letter,
   deleteTempAnswer,
 }) {
   let { id } = useParams();
@@ -26,6 +25,7 @@ export function MCQInput({
     try {
       const res = await deleteAnswerById(id, question?.id, answerId);
       const questions = await getAllQuestionsById(id);
+
       setQuestions(questions.data.questions);
       toast.success(res.message);
     } catch (error) {
@@ -34,7 +34,7 @@ export function MCQInput({
   }
 
   return (
-    <motion.div className="flex items-center gap-4 border border-transparent group bg-base-200 p-6 rounded-2xl focus-within:border-primary relative">
+    <motion.li className="text-3xl gap-4 border border-transparent group bg-base-200 p-6 rounded-2xl focus-within:border-primary relative my-4">
       <button
         type="button"
         onClick={handleDelete}
@@ -43,30 +43,24 @@ export function MCQInput({
         <X />
       </button>
 
-      <div className="flex items-center w-full">
-        <span className="text-3xl">{`${numberToLetter(letter)}.`}</span>
-
+      <div className="inline-flex items-center w-[90%]">
         <input
           type="text"
           minLength="3"
           maxLength="500"
           required
           value={description}
-          onChange={(e) =>
-            onChange({ description: e.target.value, correct, id: answerId })
-          }
+          onChange={(e) => onChange({ description: e.target.value, correct, id: answerId })}
           placeholder="Type Response here"
           className="input input-ghost input-lg w-full validator text-3xl outline-0 bg-base-200"
         />
         <input
           type="checkbox"
-          onChange={(e) =>
-            onChange({ description, correct: e.target.checked, id: answerId })
-          }
+          onChange={(e) => onChange({ description, correct: e.target.checked, id: answerId })}
           checked={correct}
           className="toggle toggle-success"
         />
       </div>
-    </motion.div>
+    </motion.li>
   );
 }

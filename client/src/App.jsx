@@ -8,6 +8,7 @@ import { Dashboard } from "./pages/user/Dashboard.jsx";
 import { SettingsPage } from "./pages/user/SettingsPage";
 
 import { QuizDetailPage } from "./pages/QuizDetailPage.jsx";
+import { ResultsPage } from "./pages/ResultsPage.jsx";
 
 import { ClientPage } from "./pages/game/ClientPage.jsx";
 import { HostPage } from "./pages/game/HostPage.jsx";
@@ -20,11 +21,9 @@ import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 
 import { useAuth } from "./context/AuthContext.jsx";
 
+import { AnimatePresence } from "motion/react";
 import { Toaster } from "sonner";
 import { Routes, Route, useLocation } from "react-router";
-
-import { ResultsPage } from "./pages/ResultsPage.jsx";
-import { AnimatePresence } from "motion/react";
 
 // TODO: File names are inconsistent
 

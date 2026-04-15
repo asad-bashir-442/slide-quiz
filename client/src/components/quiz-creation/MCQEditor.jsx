@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import { createAnswerById, getAllQuestionsById, updateAnswerById } from "../../api/editor";
+
+import { Error } from "../utility/Error";
 import { DeleteQuestionButton } from "../editor/DeleteQuestionButton";
 import { MCQInput } from "./MCQInput";
-import { useParams } from "react-router";
-import {
-  createAnswerById,
-  getAllQuestionsById,
-  updateAnswerById,
-} from "../../api/editor";
-import { toast } from "sonner";
-import { Error } from "../utility/Error";
 import { EditQuestonButton } from "../editor/EditQuestionButton";
+
+import { useParams } from "react-router";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export function MCQEditor({ question, setQuestions, questionNum }) {
   const [tempAnswers, setTempAnswers] = useState(question?.answers || []);
@@ -22,6 +20,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
 
   function handleAnswerChange(index, updatedAnswer) {
     const updated = [...tempAnswers];
+
     updated[index] = updatedAnswer;
     setTempAnswers(updated);
   }
@@ -44,16 +43,10 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
 
   async function saveAnswers(e) {
     e.preventDefault();
+
     try {
       const newAnswers = tempAnswers.filter((answer) => !answer.id);
       const existingAnswers = tempAnswers.filter((answer) => answer.id);
-
-      console.dir(existingAnswers);
-
-      // if (newAnswers.length === 0) {
-      //   toast.error("No new answers to save");
-      //   return;
-      // }
 
       const createPromises = newAnswers.map((tempAnswer) =>
         createAnswerById(id, question.id, {
@@ -69,11 +62,12 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         }),
       );
 
-      //await Promise.all(createPromises);
       await Promise.all([...createPromises, ...updatePromises]);
-      const updated = await getAllQuestionsById(id);
-      setQuestions(updated.data.questions);
 
+      // Refresh
+      const updated = await getAllQuestionsById(id);
+
+      setQuestions(updated.data.questions);
       toast.success("Answers saved!");
     } catch (error) {
       toast.error(error.message);
@@ -99,12 +93,14 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
             setQuestions={setQuestions}
           />
         </div>
+
         <p className="text-sm">Points: {question.points}</p>
 
         <div className="flex items-center justify-between flex-col lg:flex-row">
-          <h1 className="text-2xl break-all my-3 md:text-4xl font-bold mr-2">
+          <h1 className="text-2xl break-all my-3 md:text-4xl font-bold mr-2 max-[1024px]:mb-8">
             {question?.description}
           </h1>
+
           <DeleteQuestionButton
             question={question}
             setQuestions={setQuestions}
@@ -116,26 +112,27 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         <></>
       ) : (
         <form className="flex flex-col gap-4" onSubmit={saveAnswers}>
-          {tempAnswers?.length === 0 ? (
-            <div className="text-center text-primary">
-              <Error message="No Answers Saved! Try creating one?" />
-            </div>
-          ) : (
-            tempAnswers?.map((tempAnswer, index) => (
-              <MCQInput
-                index={index}
-                key={tempAnswer.id || `temp-${index}`}
-                letter={index + 1}
-                description={tempAnswer.description}
-                correct={tempAnswer.correct}
-                onChange={(updated) => handleAnswerChange(index, updated)}
-                answerId={tempAnswer.id}
-                question={question}
-                setQuestions={setQuestions}
-                deleteTempAnswer={deleteTempAnswer}
-              />
-            ))
-          )}
+          <ol className="min-[900px]:list-[upper-alpha] list-inside font-bold">
+            {tempAnswers?.length === 0 ? (
+              <div className="text-center text-primary my-8">
+                <Error message="No Answers Saved! Try creating one?" />
+              </div>
+            ) : (
+              tempAnswers?.map((tempAnswer, index) => (
+                <MCQInput
+                  index={index}
+                  key={tempAnswer.id || `temp-${index}`}
+                  description={tempAnswer.description}
+                  correct={tempAnswer.correct}
+                  onChange={(updated) => handleAnswerChange(index, updated)}
+                  answerId={tempAnswer.id}
+                  question={question}
+                  setQuestions={setQuestions}
+                  deleteTempAnswer={deleteTempAnswer}
+                />
+              ))
+            )}
+          </ol>
 
           <div className="flex justify-between flex-col sm:flex-row gap-4 sm:gap-0">
             <button

@@ -1,18 +1,23 @@
-import { useParams } from "react-router";
 import { getQuizById } from "../api/quiz";
 import { getAllQuestionsById } from "../api/editor";
-import { useEffect, useState } from "react";
+
 import { Error } from "../components/utility/Error";
 import { MCQEditor } from "../components/quiz-creation/MCQEditor";
 import { QuestionNoButton } from "../components/quiz-creation/QuestionNoButton";
 import { NewQuestionButton } from "../components/editor/NewQuestionButton";
-import { motion } from "motion/react";
+
 import { ago } from "../utility/date";
 import { fadeIn } from "../utility/animation";
+
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+
 export function QuizDetailPage() {
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [severError, setServerError] = useState(null);
+
   let { id } = useParams();
 
   useEffect(() => {
@@ -20,11 +25,9 @@ export function QuizDetailPage() {
     const fetchQuiz = async () => {
       try {
         const quizData = await getQuizById(id);
-
-        setQuiz(quizData.data);
-
         const questionData = await getAllQuestionsById(id);
 
+        setQuiz(quizData.data);
         setQuestions(questionData.data.questions);
       } catch (error) {
         setServerError(error.message);
@@ -61,7 +64,7 @@ export function QuizDetailPage() {
         </div>
 
         {/* Right column (75%) */}
-        <div className="w-3/4 flex flex-col mx-auto">
+        <div className="w-3/4 flex flex-col mx-auto max-[900px]:w-full">
           <div>
             {questions?.length > 0 ? (
               questions.map((question, index) => (
@@ -79,7 +82,6 @@ export function QuizDetailPage() {
             )}
           </div>
 
-          {/* <MCQEditor questionName="Example Question" questionNum={13} /> */}
           <NewQuestionButton setQuestions={setQuestions} />
         </div>
       </div>

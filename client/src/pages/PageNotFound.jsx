@@ -4,8 +4,8 @@ import { NavLink } from "react-router";
 export function PageNotFound() {
   useEffect(()=>{
     document.title = "SlideQuiz | Not Found"
+  },[]);
 
-  },[])
   return (
     <div className="flex justify-center text-center mt-20 align-middle">
       <div>
