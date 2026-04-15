@@ -29,10 +29,7 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
 
     const user = main?.id && (
         <div className="w-full p-6 rounded-xl bg-base-200">
-            <button
-                className="float-right opacity-20 hover:opacity-100"
-                onClick={() => setMain({})}
-            >
+            <button className="float-right opacity-20 hover:opacity-100" onClick={() => setMain({})}>
                 <X />
             </button>
 
@@ -47,10 +44,7 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
                     </p>
 
                     {players.map((p) => p.id).includes(main.id) && (
-                        <button
-                            className="btn btn-error btn-xs max-[400px]:btn-outline"
-                            onClick={kicked}
-                        >
+                        <button className="btn btn-error btn-xs max-[400px]:btn-outline" onClick={kicked}>
                             Kick
                         </button>
                     )}
@@ -71,10 +65,7 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
                 )}
 
                 {(responses[main.id] || []).map((res) => (
-                    <div
-                        className="collapse collapse-arrow bg-base-100 border border-base-300"
-                        key={res.question.id}
-                    >
+                    <div className="collapse collapse-arrow bg-base-100 border border-base-300" key={res.question.id}>
                         <input type="radio" name="my-accordion-2" checked="checked" />
                         <div className="collapse-title font-semibold">
                             <h2>Q: {truncateText(res.question.description, 50)}</h2>
@@ -83,11 +74,7 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
                                 <span>
                                     <span>Points: </span>
 
-                                    {res.question.shortAnswer ? res.question.points : (
-                                        <span className={res.response.correct ? "text-success" : "text-error"}>
-                                            {res.question.points}
-                                        </span>
-                                    )}
+                                    {res.question.shortAnswer ? res.question.points : <span className={res.response.correct ? "text-success" : "text-error"}>{res.question.points}</span>}
                                 </span>
                             </h4>
                         </div>
@@ -98,19 +85,13 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
 
                         <div className="collapse-content text-sm">
                             <div className={`flex mb-4 ${res.question.shortAnswer ? "hidden" : ""}`}>
-                                <div className="inline-block mr-4">
-                                    {res.response.correct ? <CircleCheck className="text-success" /> : <CircleX className="text-error" />}
-                                </div>
+                                <div className="inline-block mr-4">{res.response.correct ? <CircleCheck className="text-success" /> : <CircleX className="text-error" />}</div>
 
                                 <span className="font-bold">{res.response.correct ? "Correct" : "Incorrect"}</span>
                             </div>
 
                             {res.question.shortAnswer ? (
-                                <textarea
-                                    className="textarea textarea-primary w-full h-[200px]"
-                                    readOnly
-                                    value={res.response.answer}
-                                />
+                                <textarea className="textarea textarea-primary w-full h-[200px]" readOnly value={res.response.answer} />
                             ) : (
                                 <div className="p-6 my-6 text-xl bg-base-300 rounded-xl border border-transparent transition duration-200 ease-in-out">
                                     <span className="font-bold">A: </span>
@@ -127,19 +108,11 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
     return (
         <div className="mt-4 flex gap-4">
             <div className={`${!main?.id ? "w-full" : "w-[20%] max-[900px]:hidden"} p-6 rounded-xl bg-base-200 min-h-[400px]`}>
-                <ClientUser
-                    text="Active"
-                    players={players}
-                    setMain={setMain}
-                />
+                <ClientUser text="Active" players={players} setMain={setMain} />
 
                 <hr className="opacity-40 my-4" />
 
-                <ClientUser
-                    text="Inactive"
-                    players={disconnectedPlayers}
-                    setMain={setMain}
-                />
+                <ClientUser text="Inactive" players={disconnectedPlayers} setMain={setMain} />
             </div>
 
             {user}
