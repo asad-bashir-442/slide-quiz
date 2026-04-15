@@ -8,6 +8,8 @@ import { KeyRound, User, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { fadeIn } from "../../utility/animation";
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -21,17 +23,16 @@ export function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(()=>{
-    document.title = "SideQuiz | Settings"
-
-  },[])
+  useEffect(() => {
+    document.title = "SideQuiz | Settings";
+  }, []);
 
   const handleLogout = () => {
     logout();
 
     toast.success("Successfully logged out");
     navigate("/");
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,16 +68,18 @@ export function SettingsPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="flex items-center justify-center">
+    <motion.div {...fadeIn} className="flex items-center justify-center">
       <form
         id="settings-form"
         onSubmit={handleSubmit}
         className="min-[400px]:bg-base-100 flex flex-col my-12.5 items-center rounded-lg px-20 py-10 min-[400px]:shadow max-[400px]:px-8"
       >
-        <h1 className="text-3xl mb-2 max-[900px]:text-center">Welcome {user.name}</h1>
+        <h1 className="text-3xl mb-2 max-[900px]:text-center">
+          Welcome {user.name}
+        </h1>
         <div className="my-4">
           <Avatar />
         </div>
@@ -209,12 +212,14 @@ export function SettingsPage() {
               className="btn btn-success rounded-lg px-6 max-[900px]:btn-outline max-[900px]:w-full"
               disabled={isLoading}
             >
-              {isLoading && <span className="loading loading-spinner loading-xs"></span>}
+              {isLoading && (
+                <span className="loading loading-spinner loading-xs"></span>
+              )}
               Save
             </button>
           </div>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }

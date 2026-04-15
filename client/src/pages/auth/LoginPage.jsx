@@ -5,13 +5,15 @@ import { Mail, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { motion } from "motion/react";
+import { fadeIn } from "../../utility/animation";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
-    document.title = "SlideQuiz | Login"
+    document.title = "SlideQuiz | Login";
     if (user) {
       navigate("/dashboard");
     }
@@ -47,7 +49,7 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center">
+    <motion.div {...fadeIn} className="flex flex-1 items-center justify-center">
       <div className="w-254.5 bg-base-200 p-6 rounded-lg max-[900px]:w-full my-4">
         <div className="text-center my-8 min-[900px]:hidden">
           <h1 className="text-3xl font-bold mb-4">SlideQuiz Login</h1>
@@ -127,6 +129,6 @@ export function LoginPage() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

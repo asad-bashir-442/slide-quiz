@@ -7,6 +7,8 @@ import { ResultsPanel } from "../../components/dashboard/ResultsPanel.jsx";
 
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import { fadeIn } from "../../utility/animation.js";
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -24,7 +26,7 @@ export function Dashboard() {
   const [responses, setResponses] = useState([]);
 
   useEffect(() => {
-    document.title = "SideQuiz | Dashboard"
+    document.title = "SideQuiz | Dashboard";
     const fetchResults = async () => {
       try {
         const responses = await getAllResponses();
@@ -41,7 +43,7 @@ export function Dashboard() {
   }, []);
 
   return (
-    <div className="w-[90%] mx-auto">
+    <motion.div {...fadeIn} className="w-[90%] mx-auto">
       <div className="mx-auto mt-10 mb-10 p-6 bg-base-200 rounded-xl shadow-md flex flex-col md:flex-row md:justify-between md:items-start max-[900px]:text-center max-[900px]:block max-[900px]:p-4">
         {/* Left Column */}
         <div className="flex-1 p-4">
@@ -91,6 +93,6 @@ export function Dashboard() {
           setResponses={setResponses}
         />
       )}
-    </div>
+    </motion.div>
   );
 }

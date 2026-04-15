@@ -6,7 +6,9 @@ import { Error } from "../components/utility/Error";
 import { MCQEditor } from "../components/quiz-creation/MCQEditor";
 import { QuestionNoButton } from "../components/quiz-creation/QuestionNoButton";
 import { NewQuestionButton } from "../components/editor/NewQuestionButton";
+import { motion } from "motion/react";
 import { ago } from "../utility/date";
+import { fadeIn } from "../utility/animation";
 export function QuizDetailPage() {
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -14,7 +16,7 @@ export function QuizDetailPage() {
   let { id } = useParams();
 
   useEffect(() => {
-    document.title = "SlideQuiz | Quiz"
+    document.title = "SlideQuiz | Quiz";
     const fetchQuiz = async () => {
       try {
         const quizData = await getQuizById(id);
@@ -42,10 +44,10 @@ export function QuizDetailPage() {
   }
 
   return (
-    <div className="flex-1">
+    <motion.div {...fadeIn} className="flex-1">
       {/* Top header */}
       <div className="p-6">
-        <h1 className="text-3xl font-bold">{quiz?.name}</h1>
+        <h1 className="text-3xl font-bold capitalize">{quiz?.name}</h1>
         <h2 className="opacity-70">Saved - {ago(quiz?.updatedAt)}</h2>
       </div>
 
@@ -81,6 +83,6 @@ export function QuizDetailPage() {
           <NewQuestionButton setQuestions={setQuestions} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
