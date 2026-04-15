@@ -1,4 +1,4 @@
-import { createQuestionById, getAllQuestionsById } from "../../api/editor";
+import { createQuestionById, getAllQuestionsById } from "../../../api/editor";
 
 import { toast } from "sonner";
 import { Plus } from "lucide-react";

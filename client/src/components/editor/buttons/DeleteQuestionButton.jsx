@@ -1,7 +1,5 @@
-import { deleteQuestionById } from "../../api/editor";
-import { getAllQuestionsById } from "../../api/editor";
-
-import { truncateText } from "../../utility/truncate";
+import { getAllQuestionsById, deleteQuestionById } from "../../../api/editor";
+import { truncateText } from "../../../utility/truncate";
 
 import { useParams } from "react-router";
 import { toast } from "sonner";

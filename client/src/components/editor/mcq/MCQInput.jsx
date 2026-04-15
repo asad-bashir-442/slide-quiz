@@ -1,4 +1,4 @@
-import { deleteAnswerById, getAllQuestionsById } from "../../api/editor";
+import { deleteAnswerById, getAllQuestionsById } from "../../../api/editor";
 
 import { X } from "lucide-react";
 import { motion } from "motion/react";

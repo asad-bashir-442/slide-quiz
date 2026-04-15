@@ -1,9 +1,10 @@
-import { createAnswerById, getAllQuestionsById, updateAnswerById } from "../../api/editor";
+import { createAnswerById, getAllQuestionsById, updateAnswerById } from "../../../api/editor";
 
-import { Error } from "../utility/Error";
-import { DeleteQuestionButton } from "../editor/DeleteQuestionButton";
+import { DeleteQuestionButton } from "../buttons/DeleteQuestionButton";
+import { EditQuestonButton } from "../buttons/EditQuestionButton";
+
+import { Error } from "../../utility/Error";
 import { MCQInput } from "./MCQInput";
-import { EditQuestonButton } from "../editor/EditQuestionButton";
 
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";

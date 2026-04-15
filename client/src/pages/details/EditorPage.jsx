@@ -2,9 +2,9 @@ import { getQuizById } from "../../api/quiz";
 import { getAllQuestionsById } from "../../api/editor";
 
 import { Error } from "../../components/utility/Error";
-import { MCQEditor } from "../../components/quiz-creation/MCQEditor";
-import { QuestionNoButton } from "../../components/quiz-creation/QuestionNoButton";
-import { NewQuestionButton } from "../../components/editor/NewQuestionButton";
+import { MCQEditor } from "../../components/editor/mcq/MCQEditor";
+import { QuestionNoButton } from "../../components/editor/buttons/QuestionNoButton";
+import { NewQuestionButton } from "../../components/editor/buttons/NewQuestionButton";
 
 import { ago } from "../../utility/date";
 import { fadeIn } from "../../utility/animation";
