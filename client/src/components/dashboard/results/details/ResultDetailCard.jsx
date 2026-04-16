@@ -1,3 +1,5 @@
+import { exportResults } from "../../../../api/export";
+import { save } from "../../../../utility/save";
 import { truncateText } from "../../../../utility/truncate";
 import { ago } from "../../../../utility/date";
 import { comma } from "../../../../utility/numbers";
@@ -5,9 +7,22 @@ import { comma } from "../../../../utility/numbers";
 import { DeleteResultsButton } from "../buttons/DeleteResultButton";
 
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function ResultDetailCard({ id, name, lastPlayed, setResponses, mode, numOfQuestion }) {
     const navigate = useNavigate();
+
+    const download = async () => {
+        try {
+            const results = await exportResults(id);
+
+            save(`SlideQuiz-Results.csv`, [results], { type: "text/csv" });
+            toast.success("Results exported successfully!");
+        } catch (err) {
+            toast.error("Failed to export results!");
+            console.error(err);
+        }
+    };
 
     return (
         <div className="card w-96 bg-base-100 border border-transparent shadow-sm transition duration-200 ease-in-out hover:border-primary max-[900px]:w-full">
@@ -35,12 +50,14 @@ export function ResultDetailCard({ id, name, lastPlayed, setResponses, mode, num
                     </div>
                 </div>
 
-                {/* TODO: Should implement these too */}
                 <div className="card-actions justify-center flex-nowrap gap-3 mt-4 max-[900px]:flex-wrap max-[900px]:gap-2">
                     <button onClick={() => navigate(`/results/${id}`)} className="btn btn-outline max-[900px]:w-full btn-primary">
                         View Details
                     </button>
-                    <button className="btn btn-outline max-[900px]:w-full btn-secondary">Download</button>
+
+                    <button onClick={download} className="btn btn-outline max-[900px]:w-full btn-secondary">
+                        Download
+                    </button>
 
                     <DeleteResultsButton setResponses={setResponses} id={id} name={name} />
                 </div>
