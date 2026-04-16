@@ -15,7 +15,7 @@ import {
     hasResponse
 } from "../../helpers/cache.js";
 
-const shortAnswerSchema = Joi.string().trim().min(3).max(1000).required();
+const shortAnswerSchema = Joi.string().trim().min(1).max(1000).required();
 const choiceAnswerSchema = Joi.string().uuid().required();
 
 export default (socket, cache, io) => ({
