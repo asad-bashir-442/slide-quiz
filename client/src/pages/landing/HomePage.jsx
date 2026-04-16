@@ -1,10 +1,18 @@
-import { motion } from "motion/react";
+import { useAuth } from "../../context/AuthContext";
+
 import { Link, useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+import { motion } from "motion/react";
 
 export function HomePage() {
     const [code, setCode] = useState("");
+    const [videoError, setVideoError] = useState(false);
+
     const navigate = useNavigate();
+    const { user } = useAuth();
+
+    const videoRef = useRef(null);
 
     function handleClick() {
         navigate("/join", {
@@ -14,11 +22,35 @@ export function HomePage() {
 
     useEffect(() => {
         document.title = "SlideQuiz | Home";
+
+        // Some browsers refuse to autoplay videos. This is a fallback.
+        const video = videoRef.current;
+
+        if (!video) return;
+
+        const playPromise = video.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                setVideoError(true);
+                setTimeout(() => {
+                    if (videoRef.current) {
+                        videoRef.current.muted = true;
+                        videoRef.current.play().catch(() => setVideoError(true));
+                    }
+                }, 100);
+            });
+        }
+
+        const handleError = () => setVideoError(true);
+
+        video.addEventListener("error", handleError);
+        return () => video.removeEventListener("error", handleError);
     }, []);
 
     return (
-        <div className="w-[80%] mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="md:col-span-2 space-y-6">
+        <div className="w-[80%] mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-y-10 items-center max-w-250">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="col-span-2 space-y-6 max-[900px]:col-span-full">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight bg-linear-to-r bg-clip-text from-primary to-secondary text-transparent hover:animate-gradient">
                     Present. Ask. Interact.
                 </h1>
@@ -39,11 +71,18 @@ export function HomePage() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <Link to="/register" className="btn btn-outline btn-primary btn-lg flex-1 max-[900px]:py-2">
-                            Get Started
-                        </Link>
+                        {user ? (
+                            <Link to="/dashboard" className="btn btn-outline btn-primary btn-lg flex-1 max-[900px]:py-2 text-sm">
+                                Dashboard
+                            </Link>
 
-                        <Link to="/about" className="btn btn-outline btn-secondary btn-lg flex-1 max-[900px]:py-2">
+                        ) : (
+                            <Link to="/register" className="btn btn-outline btn-primary btn-lg flex-1 max-[900px]:py-2 text-sm">
+                                Get Started
+                            </Link>
+                        )}
+
+                        <Link to="/about" className="btn btn-outline btn-secondary btn-lg flex-1 max-[900px]:py-2 text-sm">
                             How to use SlideQuiz?
                         </Link>
                     </div>
@@ -51,25 +90,25 @@ export function HomePage() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="flex justify-center max-[900px]:hidden">
-
-                <video width="" height="" autoPlay muted playsInline
-                    className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl">
-                    <source src="output-cropped.webm" type="video/webm" />
-                </video>
+                {!videoError ? (
+                    <video ref={videoRef} autoPlay muted playsInline className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl">
+                        <source src="/landing/landing.webm" type="video/webm" />
+                    </video>
+                ) : (
+                    <img src="/landing/landing.png" alt="Smartphone with a preview of the SlideQuiz Application" className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl" />
+                )}
             </motion.div>
 
-            <div className="col-span-full">
+            <div className="col-span-full mt-10">
                 <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl text-center my-6 font-bold">
-                        SlideQuiz In Action
-                    </h2>
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl text-center my-6 font-bold">SlideQuiz In Action</h2>
 
                     <div className="divider my-10 max-[900px]:hidden">
                         <span className="opacity-60 text-md italic font-bold">What is SlideQuiz? How does it work?</span>
                     </div>
 
                     <div className="aspect-video w-full max-w-4xl mx-auto max-[900px]:mt-10">
-                        <iframe className="w-full h-full rounded-xl shadow-lg" src="https://www.youtube.com/embed/rRP1v0p7pHM" title="SlideQuiz Demo" allowFullScreen />
+                        <iframe className="w-full h-full rounded-xl shadow-lg hover:border-primary border border-transparent" src="https://www.youtube.com/embed/rRP1v0p7pHM" title="SlideQuiz Demo" allowFullScreen />
                     </div>
                 </motion.section>
 
@@ -127,14 +166,28 @@ export function HomePage() {
                     <div className="w-full py-20 text-center">
                         <div className="space-y-6">
                             <h2 className="text-3xl md:text-4xl font-bold">Ready to Try SlideQuiz?</h2>
+                            {user ? (
+                                <>
+                                    <h2 className="text-lg font-bold opacity-60">Create Your First Quiz</h2>
 
-                            <Link to="/register" className="btn btn-primary btn-lg">
-                                Get Started
-                            </Link>
+                                    <Link to="/dashboard" className="btn btn-primary btn-outline btn-lg">
+                                        Create a Quiz
+                                    </Link>
+                                </>
+
+                            ) : (
+                                <>
+                                    <h2 className="text-lg font-bold opacity-60">Start Engaging Your Audience Today</h2>
+
+                                    <Link to="/register" className="btn btn-primary btn-outline btn-lg">
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </motion.section>
             </div>
-        </div >
+        </div>
     );
 }

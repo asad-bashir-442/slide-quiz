@@ -11,7 +11,6 @@ export function QuestionNoButton({ num, id }) {
                     });
                 }
             }}
-
             className="label w-fit"
         >
             <input type="radio" name="radio-1" className="radio radio-xl radio-primary" checked />
