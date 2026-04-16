@@ -176,7 +176,9 @@ export function ResultsPage() {
                             <h3 className="text-md font-bold mt-4 opacity-60">Top 3 Players</h3>
                         </div>
 
-                        <div className="flex flex-col gap-4 min-[950px]:flex-row min-[950px]:h-56">
+                        {players.length == 0 && (<h2 className="my-8 mb-20 font-bold italic opacity-60">No Players!</h2>)}
+
+                        <div className={`flex flex-col gap-4 min-[950px]:flex-row min-[950px]:h-56 ${top3Players.length == 0 && "hidden"}`}>
                             <div className="order-2 min-[950px]:order-1 sm:self-center">
                                 {top3Players[1] && (
                                     <TrophyBox
@@ -212,8 +214,9 @@ export function ResultsPage() {
                         </div>
 
                         <h2 className="text-3xl font-bold">Leaderboard</h2>
+                        {players.length == 0 && (<h2 className="my-8 mb-20 font-bold italic opacity-60">No Players!</h2>)}
 
-                        <div className="overflow-x-auto w-full">
+                        <div className={`overflow-x-auto w-full ${players.length == 0 && "hidden"}`}>
                             <table className="table-xl w-full max-w-300 m-auto">
                                 <thead className="text-left text-lg bg-base-200 rounded-xl">
                                     <tr>

@@ -1,5 +1,5 @@
 import { format, formatDistanceToNow } from "date-fns";
-import { User, CircleCheck, CircleX } from "lucide-react";
+import { CircleCheck, CircleX } from "lucide-react";
 
 export function UserPopup({ target }) {
     return (
@@ -28,7 +28,6 @@ export function UserPopup({ target }) {
 
                                         <div className="text-xs mt-2 font-semibold opacity-60">
                                             <span title={format(o.response.response.timestamp, "PPpp")}>{formatDistanceToNow(o.response.response.timestamp, { addSuffix: true })}</span>
-
                                             {!o.question.shortAnswer && <span> - {o.question.points} Point(s)</span>}
                                         </div>
 
