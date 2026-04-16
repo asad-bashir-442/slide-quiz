@@ -25,8 +25,6 @@ import { AnimatePresence } from "motion/react";
 import { Routes, Route, useLocation } from "react-router";
 import { Toaster } from "sonner";
 
-// TODO: File names are inconsistent
-
 export function App() {
     const { loading } = useAuth();
     const location = useLocation();

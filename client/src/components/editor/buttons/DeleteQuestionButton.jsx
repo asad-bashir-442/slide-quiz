@@ -52,7 +52,6 @@ export function DeleteQuestionButton({ question, setQuestions }) {
                                     Cancel
                                 </button>
 
-                                {/* TODO: Maybe an icon here */}
                                 <button type="submit" className="btn btn-error max-[900px]:w-full">
                                     Yes I know what I'm doing
                                 </button>

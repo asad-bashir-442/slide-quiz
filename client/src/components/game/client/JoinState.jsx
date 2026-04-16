@@ -9,7 +9,6 @@ export function JoinState({ joinGame, data }) {
     const [code, setCode] = useState(data || "");
     const [loading, setLoading] = useState(false);
 
-    // TODO: Profanity filter?
     const random = () =>
         setUsername(
             // NOTE: This includes `-` for some reason, despite the docs saying it won't
