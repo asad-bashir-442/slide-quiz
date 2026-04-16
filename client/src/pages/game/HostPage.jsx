@@ -169,7 +169,7 @@ export function HostPage() {
 
             navigate("/dashboard");
         }, 50);
-    }
+    };
 
     const validMCQ = (questions) => {
         for (const q of questions) {
