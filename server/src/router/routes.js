@@ -10,6 +10,7 @@ import { register, login, whoami, update } from "../handlers/users.js";
 import { getQuizzes, createQuiz, getQuiz, updateQuiz, deleteQuiz } from "../handlers/quiz/quizzes.js";
 import { getAll, createQuestion, updateQuestion, deleteQuestion, createAnswer, updateAnswer, deleteAnswer } from "../handlers/quiz/editor.js";
 import { deleteResponse, deleteResponses, getAllResponses, getResponse } from "../handlers/answers.js";
+import { exportQuiz, exportResponse } from "../handlers/export.js";
 
 // Public routes
 router.register(async (r) => {
@@ -53,6 +54,10 @@ router.register(async (r) => {
 
     r.get("/@me/response/:id", { onRequest: [r.auth] }, getResponse);
     r.delete("/@me/response/:id", { onRequest: [r.auth] }, deleteResponse);
+
+    // Export
+    r.get("/@me/quiz/:id/export", { onRequest: [r.auth] }, exportQuiz);
+    r.get("/@me/response/:id/export", { onRequest: [r.auth] }, exportResponse);
 });
 
 // Games & Lobbies
