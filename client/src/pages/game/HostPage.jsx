@@ -146,7 +146,6 @@ export function HostPage() {
             if (removedPlayers.length > 0) {
                 setDisconnectedPlayers((prev) => {
                     const newDisconnected = removedPlayers.filter((removedPlayer) => !prev.some((p) => p.id === removedPlayer.id));
-
                     return [...prev, ...newDisconnected];
                 });
             }
@@ -156,14 +155,27 @@ export function HostPage() {
     };
 
     const end = () => {
-        if (showResults) {
-            socket.disconnect();
-            navigate(`/results/${game.results}`);
+        socket.disconnect(true);
 
-            return;
+        setTimeout(() => {
+            if (showResults) {
+                navigate(`/results/${game.results}`);
+
+                return;
+            }
+
+            navigate("/dashboard");
+        }, 200);
+    };
+
+    const validMCQ = (questions) => {
+        for (const q of questions) {
+            if (!q.shortAnswer && [undefined, 0].includes(q.answers?.length)) {
+                return false;
+            }
         }
 
-        navigate("/dashboard");
+        return true;
     };
 
     useEffect(() => {
@@ -191,6 +203,11 @@ export function HostPage() {
 
                 if (details.data.questions?.length == 0) {
                     setSoftError("Not enough questions to host a game!");
+                    return;
+                }
+
+                if (!validMCQ(details.data.questions)) {
+                    setSoftError("A multiple choice question has no answers!");
                     return;
                 }
 

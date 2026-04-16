@@ -70,12 +70,14 @@ export function ClientManager({ players, disconnectedPlayers, responses, kick })
                         <div className="collapse-title font-semibold">
                             <h2>Q: {truncateText(res.question.description, 50)}</h2>
                             <h4 className="text-xs font-normal">
-                                <span className="italic">{res.question.shortAnswer ? "Short Answer, " : ""}</span>
-                                <span>
-                                    <span>Points: </span>
-
-                                    {res.question.shortAnswer ? res.question.points : <span className={res.response.correct ? "text-success" : "text-error"}>{res.question.points}</span>}
-                                </span>
+                                {res.question.shortAnswer ? (
+                                    <span className="italic">Short Answer</span>
+                                ) : (
+                                    <span>
+                                        <span>Points: </span>
+                                        <span className={res.response.correct ? "text-success" : "text-error"}>{res.question.points}</span>
+                                    </span>
+                                )}
                             </h4>
                         </div>
 
