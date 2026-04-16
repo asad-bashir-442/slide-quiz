@@ -1,7 +1,16 @@
 import Joi from "joi";
 import consola from "consola";
 
-import { createGame, getGame, updateGame, getPlayers, removePlayer, createResponseSession } from "../../helpers/cache.js";
+// prettier-ignore
+import {
+    createGame,
+    getGame,
+    updateGame,
+    getPlayers,
+    removePlayer,
+    createResponseSession,
+    deleteGame
+} from "../../helpers/cache.js";
 import { queryQuestions } from "../../helpers/database.js";
 
 const jumpSchema = Joi.number().min(0).max(999).integer().required();
@@ -209,5 +218,21 @@ export default (socket, cache, db, jwt, io) => ({
         } else {
             socket.emit("error", { message: "Player not found." });
         }
+    },
+
+    async end({ code }) {
+        const session = await getGame(cache, code);
+
+        if (!session || session.host !== socket.id) {
+            socket.emit("error", { message: "Invalid game." });
+            return;
+        }
+
+        io.to(code).emit("game:ended");
+
+        await deleteGame(cache, code);
+
+        // Once the game has properly been ended, disconnect the host
+        socket.emit("host:ended", { code });
     },
 });

@@ -155,18 +155,21 @@ export function HostPage() {
     };
 
     const end = () => {
+        socket.emit("host:end", { code: game.code });
+    };
+
+    const ended = () => {
         socket.disconnect(true);
 
         setTimeout(() => {
             if (showResults) {
                 navigate(`/results/${game.results}`);
-
                 return;
             }
 
             navigate("/dashboard");
-        }, 200);
-    };
+        }, 50);
+    }
 
     const validMCQ = (questions) => {
         for (const q of questions) {
@@ -248,6 +251,7 @@ export function HostPage() {
         socket.on("host:players", onHostPlayers);
         socket.on("host:questions", onHostQuestions);
         socket.on("host:response", onHostResponse);
+        socket.on("host:ended", ended);
         socket.on("game:question", onGameQuestion);
 
         // Cleanup on unmount

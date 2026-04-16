@@ -66,6 +66,7 @@ router.io.on("connection", (socket) => {
     socket.on("host:jump", host.jump);
     socket.on("host:jumper", host.jumper);
     socket.on("host:kick", host.kick);
+    socket.on("host:end", host.end);
 
     // Player
     socket.on("player:join", player.join);
