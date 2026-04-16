@@ -9,9 +9,9 @@ import { NewQuestionButton } from "../../components/editor/buttons/NewQuestionBu
 import { ago } from "../../utility/date";
 import { fadeIn } from "../../utility/animation";
 
-import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { motion } from "motion/react";
 
 export function EditorPage() {
     const [quiz, setQuiz] = useState(null);
