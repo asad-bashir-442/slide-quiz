@@ -4,7 +4,7 @@ import { AboutPage } from "./pages/landing/AboutPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 
-import { Dashboard } from "./pages/user/Dashboard.jsx";
+import { DashboardPage } from "./pages/user/DashboardPage.jsx";
 import { SettingsPage } from "./pages/user/SettingsPage";
 
 import { EditorPage } from "./pages/details/EditorPage.jsx";
@@ -53,7 +53,7 @@ export function App() {
                         <Route path="join" element={<ClientPage />} />
 
                         <Route element={<ProtectedRoute />}>
-                            <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="dashboard" element={<DashboardPage />} />
                             <Route path="settings" element={<SettingsPage />} />
 
                             <Route path="quiz/:id" element={<EditorPage />} />

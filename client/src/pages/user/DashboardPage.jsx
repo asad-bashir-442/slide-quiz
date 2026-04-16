@@ -1,39 +1,22 @@
+import { fadeIn } from "../../utility/animation.js";
+import { useAuth } from "../../context/AuthContext.jsx";
+
 import { NewQuizButton } from "../../components/dashboard/quiz/buttons/NewQuizButton.jsx";
 import { ClearResultsButton } from "../../components/dashboard/results/buttons/ClearResultsButton.jsx";
-import { getAllResponses } from "../../api/responses.js";
-
 import { QuizPanel } from "../../components/dashboard/QuizPanel.jsx";
 import { ResultsPanel } from "../../components/dashboard/ResultsPanel.jsx";
 
-import { useAuth } from "../../context/AuthContext.jsx";
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { fadeIn } from "../../utility/animation.js";
 
-export function Dashboard() {
+export function DashboardPage() {
     const { user } = useAuth();
 
     const [tabs, setTabs] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
     const [responses, setResponses] = useState([]);
 
     useEffect(() => {
         document.title = "SideQuiz | Dashboard";
-
-        const fetchResults = async () => {
-            try {
-                const responses = await getAllResponses();
-                setResponses(responses?.data);
-            } catch (err) {
-                console.log("[Dashboard]", err);
-                setError("Fetching error! Try reloading the page?");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchResults();
     }, []);
 
     return (
@@ -61,7 +44,7 @@ export function Dashboard() {
                 <div className="mt-6 md:mt-0 md:ml-6 w-full md:w-auto">{!tabs ? <NewQuizButton /> : <ClearResultsButton setResponses={setResponses} />}</div>
             </div>
 
-            {!tabs ? <QuizPanel /> : <ResultsPanel loading={loading} error={error} responses={responses} setResponses={setResponses} />}
+            {!tabs ? <QuizPanel /> : <ResultsPanel responses={responses} setResponses={setResponses} />}
         </motion.div>
     );
 }
