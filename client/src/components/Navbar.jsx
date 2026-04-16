@@ -3,19 +3,45 @@ import { truncateText } from "../utility/truncate";
 
 import { Menu } from "lucide-react";
 import { toast } from "sonner";
+
 import { Link, useNavigate } from "react-router";
+import { useRef, useEffect } from "react";
 
 export function Navbar() {
     const navigate = useNavigate();
+    const dropped = useRef(null);
 
     const { user, logout } = useAuth();
 
     const handleLogout = () => {
         logout();
-
         toast.success("Successfully logged out");
+
         navigate("/");
+        close();
     };
+
+    const close = () => {
+        if (dropped.current) {
+            dropped.current.open = false;
+        }
+    };
+
+    const handleNavigation = (path) => {
+        navigate(path);
+        close();
+    };
+
+    useEffect(() => {
+        const outside = (e) => {
+            if (dropped.current && !dropped.current.contains(e.target)) {
+                close();
+            }
+        };
+
+        document.addEventListener("click", outside);
+        return () => document.removeEventListener("click", outside);
+    }, []);
 
     return (
         <div className="navbar bg-base-100 shadow-sm rounded-lg">
@@ -82,28 +108,28 @@ export function Navbar() {
             <div className="navbar-end max-lg:hidden">
                 <ul className="menu menu-horizontal px-1">
                     <li>
-                        <Link to="/">Home</Link>
+                        <Link to="/" onClick={() => handleNavigation("/")}>Home</Link>
                     </li>
 
                     <li>
-                        <Link to="/about">About</Link>
+                        <Link to="/about" onClick={() => handleNavigation("/about")}>About</Link>
                     </li>
 
                     <li>
-                        <Link to="/join">Join</Link>
+                        <Link to="/join" onClick={() => handleNavigation("/join")}>Join</Link>
                     </li>
 
                     {user ? (
                         <li>
-                            <details>
+                            <details ref={dropped}>
                                 <summary>{truncateText(user?.name, 10)}</summary>
                                 <ul className="p-2">
                                     <li>
-                                        <Link to="/dashboard">Dashboard</Link>
+                                        <Link to="/dashboard" onClick={() => handleNavigation("/dashboard")}>Dashboard</Link>
                                     </li>
 
                                     <li>
-                                        <Link to="/settings">Settings</Link>
+                                        <Link to="/settings" onClick={() => handleNavigation("/settings")}>Settings</Link>
                                     </li>
 
                                     <li>
@@ -114,15 +140,15 @@ export function Navbar() {
                         </li>
                     ) : (
                         <li>
-                            <details>
+                            <details ref={dropped}>
                                 <summary>Get Started</summary>
                                 <ul className="p-2">
                                     <li>
-                                        <Link to="/login">Login</Link>
+                                        <Link to="/login" onClick={() => handleNavigation("/login")}>Login</Link>
                                     </li>
 
                                     <li>
-                                        <Link to="/register">Register</Link>
+                                        <Link to="/register" onClick={() => handleNavigation("/register")}>Register</Link>
                                     </li>
                                 </ul>
                             </details>

@@ -28,6 +28,8 @@ export function HomePage() {
 
         if (!video) return;
 
+        video.playbackRate = 2.5;
+
         const playPromise = video.play();
 
         if (playPromise !== undefined) {
@@ -91,7 +93,7 @@ export function HomePage() {
 
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="flex justify-center max-[900px]:hidden">
                 {!videoError ? (
-                    <video ref={videoRef} autoPlay muted playsInline className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl">
+                    <video ref={videoRef} autoPlay muted playsInline className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg rounded-xl" >
                         <source src="/landing/landing.webm" type="video/webm" />
                     </video>
                 ) : (
