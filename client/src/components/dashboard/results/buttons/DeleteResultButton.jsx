@@ -4,7 +4,7 @@ import { truncateText } from "../../../../utility/truncate";
 import { toast } from "sonner";
 
 export function DeleteResultsButton({ id, name, setResponses }) {
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
@@ -19,7 +19,8 @@ export function DeleteResultsButton({ id, name, setResponses }) {
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
+
     return (
         <>
             <button onClick={() => document.getElementById(`delete_result_modal/${id}`).showModal()} className="btn btn-outline max-[900px]:w-full btn-error">

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 export function DeleteQuestionButton({ question, setQuestions }) {
     const { id } = useParams();
 
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
@@ -21,7 +21,7 @@ export function DeleteQuestionButton({ question, setQuestions }) {
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
     return (
         <>

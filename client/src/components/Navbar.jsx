@@ -108,15 +108,21 @@ export function Navbar() {
             <div className="navbar-end max-lg:hidden">
                 <ul className="menu menu-horizontal px-1">
                     <li>
-                        <Link to="/" onClick={() => handleNavigation("/")}>Home</Link>
+                        <Link to="/" onClick={() => handleNavigation("/")}>
+                            Home
+                        </Link>
                     </li>
 
                     <li>
-                        <Link to="/about" onClick={() => handleNavigation("/about")}>About</Link>
+                        <Link to="/about" onClick={() => handleNavigation("/about")}>
+                            About
+                        </Link>
                     </li>
 
                     <li>
-                        <Link to="/join" onClick={() => handleNavigation("/join")}>Join</Link>
+                        <Link to="/join" onClick={() => handleNavigation("/join")}>
+                            Join
+                        </Link>
                     </li>
 
                     {user ? (
@@ -125,11 +131,15 @@ export function Navbar() {
                                 <summary>{truncateText(user?.name, 10)}</summary>
                                 <ul className="p-2">
                                     <li>
-                                        <Link to="/dashboard" onClick={() => handleNavigation("/dashboard")}>Dashboard</Link>
+                                        <Link to="/dashboard" onClick={() => handleNavigation("/dashboard")}>
+                                            Dashboard
+                                        </Link>
                                     </li>
 
                                     <li>
-                                        <Link to="/settings" onClick={() => handleNavigation("/settings")}>Settings</Link>
+                                        <Link to="/settings" onClick={() => handleNavigation("/settings")}>
+                                            Settings
+                                        </Link>
                                     </li>
 
                                     <li>
@@ -144,11 +154,15 @@ export function Navbar() {
                                 <summary>Get Started</summary>
                                 <ul className="p-2">
                                     <li>
-                                        <Link to="/login" onClick={() => handleNavigation("/login")}>Login</Link>
+                                        <Link to="/login" onClick={() => handleNavigation("/login")}>
+                                            Login
+                                        </Link>
                                     </li>
 
                                     <li>
-                                        <Link to="/register" onClick={() => handleNavigation("/register")}>Register</Link>
+                                        <Link to="/register" onClick={() => handleNavigation("/register")}>
+                                            Register
+                                        </Link>
                                     </li>
                                 </ul>
                             </details>

@@ -78,7 +78,7 @@ export const getResponse = async (req, res) => {
 
                 responses[question][answer.player.id] = {
                     username: answer.player.username,
-                    response: answer.response
+                    response: answer.response,
                 };
 
                 delete responses[question][id];

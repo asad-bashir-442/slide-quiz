@@ -19,14 +19,14 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         setTempAnswers(question?.answers ?? []);
     }, [question?.answers]);
 
-    function handleAnswerChange(index, updatedAnswer) {
+    const handleAnswerChange = (index, updatedAnswer) => {
         const updated = [...tempAnswers];
 
         updated[index] = updatedAnswer;
         setTempAnswers(updated);
-    }
+    };
 
-    function addTempAnswer() {
+    const addTempAnswer = () => {
         setTempAnswers((prev) => [
             ...prev,
             {
@@ -34,16 +34,16 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
                 correct: false,
             },
         ]);
-    }
+    };
 
-    function deleteTempAnswer(index) {
+    const deleteTempAnswer = (index) => {
         const updated = [...tempAnswers];
 
         updated.splice(index, 1);
         setTempAnswers(updated);
-    }
+    };
 
-    async function saveAnswers(e) {
+    const saveAnswers = async (e) => {
         e.preventDefault();
 
         try {
@@ -74,7 +74,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
     return (
         <div id={`question_linkto_${question.id}`} className="w-[90%] mx-auto mb-10 p-6 bg-base-100 rounded-xl shadow-md flex flex-col gap-6">
@@ -85,7 +85,7 @@ export function MCQEditor({ question, setQuestions, questionNum }) {
                     <EditQuestonButton points={question.points} description={question.description} quizId={id} questionId={question.id} setQuestions={setQuestions} />
                 </div>
 
-                <p className="text-xs">Points: {question.points}</p>
+                {question?.shortAnswer ? null : <p className="text-xs">Points: {question.points}</p>}
 
                 <div className="flex items-center justify-between flex-col lg:flex-row">
                     <h1 className="text-2xl break-all my-3 md:text-4xl font-bold mr-2 max-[1024px]:mb-8">{question?.description}</h1>

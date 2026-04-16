@@ -13,7 +13,7 @@ export function NewQuestionButton({ setQuestions }) {
 
     const { id } = useParams();
 
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const questionData = {
@@ -30,17 +30,28 @@ export function NewQuestionButton({ setQuestions }) {
 
             document.getElementById("new_question_modal").close();
             toast.success(res.message);
+            clearForm();
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
-    function clearForm() {
+    const clearForm = () => {
         setDescription("");
+        setQuestionType("mcq");
         setPoints(1);
 
         document.getElementById("new_question_modal").close();
-    }
+    };
+
+    const setQuestionTypePoints = (value) => {
+        setQuestionType(value);
+
+        if (value == "short_answer") {
+            setPoints(1);
+        }
+    };
+
     return (
         <>
             <button className="btn btn-primary btn-lg w-[90%] mx-auto mt-2" onClick={() => document.getElementById("new_question_modal").showModal()}>
@@ -81,8 +92,9 @@ export function NewQuestionButton({ setQuestions }) {
                                         defaultChecked
                                         value="mcq"
                                         checked={questionType === "mcq"}
-                                        onChange={(e) => setQuestionType(e.target.value)}
+                                        onChange={(e) => setQuestionTypePoints(e.target.value)}
                                     />
+
                                     <span className="text-lg">Multiple Choice</span>
                                 </div>
 
@@ -93,16 +105,19 @@ export function NewQuestionButton({ setQuestions }) {
                                         className="radio radio-primary"
                                         value="short_answer"
                                         checked={questionType === "short_answer"}
-                                        onChange={(e) => setQuestionType(e.target.value)}
+                                        onChange={(e) => setQuestionTypePoints(e.target.value)}
                                     />
+
                                     <span className="text-lg">Short Answer</span>
                                 </div>
                             </fieldset>
 
-                            <legend className="fieldset-legend text-base-content/70 text-lg">Point value</legend>
+                            <div className={questionType == "short_answer" ? "hidden" : ""}>
+                                <legend className="fieldset-legend text-base-content/70 text-lg mt-4">Points</legend>
 
-                            <input className="input validator w-fit" value={points} onChange={(e) => setPoints(Number(e.target.value))} type="number" min="1" max="100" />
-                            <p className="validator-hint">Points must be between 1 and 100 characters</p>
+                                <input className="input validator w-fit" value={points} onChange={(e) => setPoints(Number(e.target.value))} type="number" min="1" max="100" />
+                                <p className="validator-hint">Points must be between 1 and 100 characters</p>
+                            </div>
                         </div>
                         <div className="modal-action max-[900px]:block max-[900px]:w-full">
                             <button onClick={clearForm} type="reset" className="btn max-[900px]:mb-4 max-[900px]:w-full">

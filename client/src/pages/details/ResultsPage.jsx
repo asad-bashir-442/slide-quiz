@@ -20,17 +20,17 @@ export function ResultsPage() {
     const [totalAnswers, setTotalAnswers] = useState(0);
     const [players, setPlayers] = useState([]);
 
-    function formatPercent(decimal) {
+    const formatPercent = (decimal) => {
         if (!decimal || !isFinite(decimal)) return 0;
         return Number((decimal * 100).toFixed(2));
-    }
+    };
 
     const { id } = useParams();
 
     useEffect(() => {
         document.title = "SlideQuiz | Results";
 
-        async function fetchResults() {
+        const fetchResults = async () => {
             try {
                 const data = await getReponseById(id);
                 const playersMap = new Map();
@@ -98,7 +98,7 @@ export function ResultsPage() {
                 console.error(error.message);
                 toast.error(error.message);
             }
-        }
+        };
         fetchResults();
     }, [id]);
 

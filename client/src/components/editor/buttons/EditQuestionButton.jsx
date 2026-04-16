@@ -12,14 +12,14 @@ export function EditQuestonButton({ quizId, questionId, description, points, set
 
     const { id } = useParams();
 
-    function handleClick() {
+    const handleClick = () => {
         setUpdatedDescription(description);
         setUpdatedPoints(points);
 
         document.getElementById(`edit_question_modal/${questionId}`).showModal();
-    }
+    };
 
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const newQuestionData = {
@@ -38,7 +38,7 @@ export function EditQuestonButton({ quizId, questionId, description, points, set
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
     return (
         <>

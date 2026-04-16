@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 export function MCQInput({ description, correct, answerId, onChange, index, question, setQuestions, deleteTempAnswer }) {
     const { id } = useParams();
 
-    async function handleDelete() {
+    const handleDelete = async () => {
         if (!answerId) {
             deleteTempAnswer(index);
             return;
@@ -23,7 +23,7 @@ export function MCQInput({ description, correct, answerId, onChange, index, ques
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
     return (
         <motion.li className="text-3xl gap-4 border border-transparent group bg-base-200 p-6 rounded-2xl focus-within:border-primary relative my-4">
