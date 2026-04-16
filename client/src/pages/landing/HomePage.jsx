@@ -21,7 +21,7 @@ export function HomePage() {
     }
 
     useEffect(() => {
-        document.title = "SlideQuiz | Home";
+        document.title = "SlideQuiz - Interactive Quizzing Platform";
 
         // Some browsers refuse to autoplay videos. This is a fallback.
         const video = videoRef.current;
@@ -61,7 +61,7 @@ export function HomePage() {
                 <div className="w-full max-w-xl space-y-4">
                     <div className="flex flex-col sm:flex-row gap-4">
                         <label className="input input-lg flex items-center gap-2 w-full mb-4 border-none">
-                            <span className="font-bold text-sm mr-4 opacity-80 select-none">Join Quiz</span>
+                            <span className="font-bold text-sm mr-4 opacity-80 select-none max-[400px]:hidden">Join Quiz</span>
                             <input value={code} onChange={(e) => setCode(e.target.value)} type="text" className="grow" placeholder="Enter a code" />
                         </label>
 
@@ -104,7 +104,7 @@ export function HomePage() {
                     <h2 className="text-3xl md:text-4xl lg:text-5xl text-center my-6 font-bold">SlideQuiz In Action</h2>
 
                     <div className="divider my-10 max-[900px]:hidden">
-                        <span className="opacity-60 text-md italic font-bold">What is SlideQuiz? How does it work?</span>
+                        <span className="opacity-60 text-md italic font-bold">What is SlideQuiz?</span>
                     </div>
 
                     <div className="aspect-video w-full max-w-4xl mx-auto max-[900px]:mt-10">
