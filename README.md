@@ -34,9 +34,28 @@ The source code for SlideQuiz is split into three parts:
 └── infrastructure/ - The infrastructure  used to host/deploy SlideQuiz.
 ```
 
+## Showcase
+
+<p align="center">
+    <a href="https://www.youtube.com/watch?v=rRP1v0p7pHM">
+        <img src="/infrastructure/assets/thumbnail.png" width="650" />
+    </a>
+    <br />
+    <a href="https://www.youtube.com/watch?v=rRP1v0p7pHM">Watch on YouTube</a>
+</p>
+
 ## Hosting & Development
 
-## Showcase
+See [infrastructure](infrastructure/README.md).
+
+```sh
+cd infrastructure
+
+make dev-up
+
+# Alternative without GNU Make
+docker compose -f docker-compose.dev.yml up -d
+```
 
 ## Authors
 

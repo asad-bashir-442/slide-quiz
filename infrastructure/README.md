@@ -16,7 +16,7 @@ Start the required services for development.
 ```sh
 cd infrastructure
 
-# If you have GNU make
+# If you have GNU Make
 make dev-up
 
 # If not
