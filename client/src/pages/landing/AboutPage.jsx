@@ -11,20 +11,6 @@ export function AboutPage() {
         document.title = "SlideQuiz | About";
     });
 
-    // SlideQuiz is a web application designed to simplify the process of creating and hosting quizzes during live presentations. It provides tools that allow instructors and
-    // presenters to insert questions directly into their slides, enabling real-time participation from students or audiences.
-    //
-    // <br />
-    // <br />
-    // SlideQuiz offers detailed control over how quizzes are delivered. Users can choose from multiple question types and apply advanced formatting options for text, equations,
-    // and code, making the tool adaptable to a wide range of subjects and presentation styles.
-    //
-    // <br />
-    // <br />
-    //
-    // SlideQuiz focuses on flexibility, customization, and ease of use, supporting a more interactive and structured approach to presenting questions in classroom or presentation
-    // settings.
-
     const [tab, setTab] = useState(true);
 
     const scroll = (id) => {
@@ -39,7 +25,7 @@ export function AboutPage() {
 
     return (
         <motion.div {...fadeIn} className="w-[80%] mx-auto my-10 max-w-250 max-sm:w-[95%]">
-            <div>
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}>
                 <h2 className="font-bold text-4xl md:text-5xl w-full">
                     <span className="opacity-60">What is </span>
 
@@ -51,13 +37,11 @@ export function AboutPage() {
                     <span className="opacity-60">?</span>
                 </h2>
 
-                <h4 className="mb-2 mt-4 font-bold text-lg opacity-60 text-secondary">
-                    Click the navigation to jump to a section!
-                </h4>
+                <h4 className="mb-2 mt-4 font-bold text-lg opacity-60 text-secondary">Click the navigation to jump to a section!</h4>
 
                 <p className="py-4 md:text-lg opacity-60">
-                    Slide<span className="text-primary">Quiz</span> is a web application designed to simplify the process of creating and hosting quizzes during live presentations. It provides tools that allow instructors and
-                    presenters to insert questions directly into their slides, enabling real-time participation from students or audiences.
+                    Slide<span className="text-primary">Quiz</span> is a web application designed to simplify the process of creating and hosting quizzes during live presentations. It provides tools
+                    that allow instructors and presenters to insert questions directly into their slides, enabling real-time participation from students or audiences.
                 </p>
 
                 <div className="flex max-sm:justify-center">
@@ -89,14 +73,23 @@ export function AboutPage() {
                         </li>
                     </ul>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="my-10 divider"></div>
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="my-10 divider"></motion.div>
 
-            <div className="bg-base-100 rounded-lg p-4 my-8 shadow-lg m-auto" id="about-how-to">
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="bg-base-100 rounded-lg p-4 my-8 shadow-lg m-auto"
+                id="about-how-to"
+            >
                 <div className="flex justify-center mt-4">
                     <CircleQuestionMark className="mt-1 mr-4 max-[600px]:hidden" />
-                    <h2 className="text-2xl font-bold max-sm:text-lg">How to use Slide<span className="text-primary">Quiz</span>?</h2>
+                    <h2 className="text-2xl font-bold max-sm:text-lg">
+                        How to use Slide<span className="text-primary">Quiz</span>?
+                    </h2>
                 </div>
 
                 <div className="flex my-8 gap-4 max-[900px]:flex-col">
@@ -104,7 +97,11 @@ export function AboutPage() {
                         <div className="bg-base-300 rounded-lg shadow-lg p-4">
                             <h2 className="font-bold text-lg text-secondary">Step 1.</h2>
                             <p>
-                                Create an account and visit the <Link className="text-primary hover:underline" to="/dashboard">Dashboard</Link>.
+                                Create an account and visit the{" "}
+                                <Link className="text-primary hover:underline" to="/dashboard">
+                                    Dashboard
+                                </Link>
+                                .
                             </p>
                         </div>
 
@@ -118,19 +115,22 @@ export function AboutPage() {
                         <div className="bg-base-300 rounded-lg shadow-lg p-4">
                             <h2 className="font-bold text-lg text-secondary">Step 3.</h2>
                             <p>
-                                Head back to the <Link className="text-primary hover:underline" to="/dashboard">Dashboard</Link> and click <span className="text-secondary">host</span> on the newly created quiz.
+                                Head back to the{" "}
+                                <Link className="text-primary hover:underline" to="/dashboard">
+                                    Dashboard
+                                </Link>{" "}
+                                and click <span className="text-secondary">host</span> on the newly created quiz.
                             </p>
                         </div>
                     </div>
 
                     <div className="order-1 bg-base-300 rounded-lg shadow-lg p-4 text-center w-[40%] min-[900px]:min-w-[250px] max-[900px]:order-2 max-[900px]:w-full">
-                        <h2 className="font-bold text-lg">
-                            Automatic vs Manual Mode
-                        </h2>
+                        <h2 className="font-bold text-lg">Automatic vs Manual Mode</h2>
 
                         <div className="text-sm p-2 opacity-60">
                             <p>
-                                In <span className="italic font-bold">manual</span> mode, the host decides when each question appears, and all users see the same question at the same time. Ideal for presentations.
+                                In <span className="italic font-bold">manual</span> mode, the host decides when each question appears, and all users see the same question at the same time. Ideal for
+                                presentations.
                             </p>
 
                             <div className="divider"></div>
@@ -141,12 +141,21 @@ export function AboutPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-base-100 rounded-lg p-4 my-8 shadow-lg m-auto" id="about-install">
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="bg-base-100 rounded-lg p-4 my-8 shadow-lg m-auto"
+                id="about-install"
+            >
                 <div className="flex justify-center mt-4">
                     <Download className="mt-1 mr-4 max-[600px]:hidden" />
-                    <h2 className="text-2xl font-bold max-sm:text-lg">Installing Slide<span className="text-primary">Quiz</span></h2>
+                    <h2 className="text-2xl font-bold max-sm:text-lg">
+                        Installing Slide<span className="text-primary">Quiz</span>
+                    </h2>
                 </div>
 
                 <div className="mt-8 text-center">
@@ -184,9 +193,16 @@ export function AboutPage() {
                         For convenience, Slide<span className="text-primary">Quiz</span> can be installed as a webapp on both iOS and Android.
                     </p>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-base-100 rounded-lg p-4 my-8 shadow-lg m-auto" id="about-more">
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="bg-base-100 rounded-lg p-4 my-8 shadow-lg m-auto"
+                id="about-more"
+            >
                 <div className="flex justify-center mt-4">
                     <BookOpen className="mt-1 mr-4 max-[600px]:hidden" />
                     <h2 className="text-2xl font-bold max-sm:text-lg">Additional Information</h2>
@@ -207,10 +223,8 @@ export function AboutPage() {
                     </a>
                 </div>
 
-                <p className="mb-8 opacity-60 font-bold text-center">
-                    &copy; SlideQuiz {new Date().getFullYear()} - Interactive Quizzing Platform
-                </p>
-            </div>
+                <p className="mb-8 opacity-60 font-bold text-center">&copy; SlideQuiz {new Date().getFullYear()} - Interactive Quizzing Platform</p>
+            </motion.div>
         </motion.div>
     );
 }
