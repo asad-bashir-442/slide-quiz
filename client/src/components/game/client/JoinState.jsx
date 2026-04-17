@@ -1,8 +1,9 @@
+import { fadeIn } from "../../../utility/animation";
+
 import { generateUsername } from "unique-username-generator";
 import { User, Hash } from "lucide-react";
 import { useState } from "react";
 import { motion } from "motion/react";
-import { fadeIn } from "../../../utility/animation";
 
 export function JoinState({ joinGame, data }) {
     const [username, setUsername] = useState("");

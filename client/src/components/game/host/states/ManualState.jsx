@@ -1,5 +1,4 @@
 import { ClientManager } from "../ClientManager";
-
 import { SquareArrowRightExit, Settings, ArrowRight } from "lucide-react";
 
 export function ManualState({ code, allQuestions, currentQuestion, players, disconnectedPlayers, responses, kick, getQuestionIndex, end, jump, jumpNext }) {

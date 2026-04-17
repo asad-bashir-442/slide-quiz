@@ -1,5 +1,5 @@
-import { SquareArrowRightExit } from "lucide-react";
 import { Loading } from "../../utility/Loading";
+import { SquareArrowRightExit } from "lucide-react";
 
 export function IdleState({ username, code, leaveGame }) {
     return (
