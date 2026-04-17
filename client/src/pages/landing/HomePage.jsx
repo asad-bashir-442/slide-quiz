@@ -152,22 +152,22 @@ export function HomePage() {
                 <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}>
                     <div className="w-full bg-base-200 py-20 rounded-2xl">
                         <div className="w-[80%] mx-auto space-y-12 text-center">
-                            <h2 className="text-3xl md:text-4xl font-bold">How It Works</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-primary">How It Works</h2>
 
                             <div className="grid md:grid-cols-3 gap-10">
                                 <div>
-                                    <h3 className="text-2xl font-semibold">1. Create</h3>
-                                    <p>Build your quiz in seconds.</p>
+                                    <h3 className="text-2xl font-semibold text-secondary">1. Create</h3>
+                                    <p className="opacity-60 font-bold">Build your quiz in seconds.</p>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-2xl font-semibold">2. Share</h3>
-                                    <p>Send a code to your audience.</p>
+                                    <h3 className="text-2xl font-semibold text-secondary">2. Share</h3>
+                                    <p className="opacity-60 font-bold">Send a code to your audience.</p>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-2xl font-semibold">3. Interact</h3>
-                                    <p>Watch responses live.</p>
+                                    <h3 className="text-2xl font-semibold text-secondary">3. Interact</h3>
+                                    <p className="opacity-60 font-bold">Watch responses live.</p>
                                 </div>
                             </div>
                         </div>
