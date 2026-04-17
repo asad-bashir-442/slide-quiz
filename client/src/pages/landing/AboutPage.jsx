@@ -40,8 +40,7 @@ export function AboutPage() {
                 <h4 className="mb-2 mt-4 font-bold text-lg opacity-60 text-secondary">Click the navigation to jump to a section!</h4>
 
                 <p className="py-4 md:text-lg opacity-60">
-                    Slide<span className="text-primary">Quiz</span> is a web application designed to simplify the process of creating and hosting quizzes during live presentations. It provides tools
-                    that allow instructors and presenters to insert questions directly into their slides, enabling real-time participation from students or audiences.
+                    Slide<span className="text-primary">Quiz</span> is a web application that simplifies creating and hosting live quizzes during presentations. It gives instructors and presenters the tools to ask questions alongside their slides, enabling real-time participation from students or audience members.
                 </p>
 
                 <div className="flex max-sm:justify-center">

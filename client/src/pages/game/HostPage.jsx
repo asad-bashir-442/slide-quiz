@@ -28,17 +28,13 @@ export function HostPage() {
     const [game, setGame] = useState("");
 
     const [allQuestions, setAllQuestions] = useState([]);
-    const [showResults, setShowResults] = useState(false);
+    const [showResults, setShowResults] = useState(true);
     const [currentQuestion, setCurrentQuestion] = useState({
         id: "0123",
         description: "Loading question...",
         shortAnswer: 1,
         points: 1,
     });
-
-    const updateResults = () => {
-        setShowResults(!showResults);
-    };
 
     const getQuestionIndex = (id) => {
         for (let i = 0; i < allQuestions.length; i++) {
@@ -298,7 +294,7 @@ export function HostPage() {
                 showResults={showResults}
                 automatic={automatic}
                 updateMode={updateMode}
-                updateResults={updateResults}
+                updateResults={setShowResults}
                 kick={kick}
                 start={start}
             />

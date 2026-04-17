@@ -35,13 +35,11 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
                             <div className="max-w-[60%] max-[900px]:max-w-full max-[900px]:flex-row text-left">
                                 <div className="my-4">
                                     <input type="checkbox" value="light" className="toggle toggle-primary" checked={automatic} onChange={updateMode} />
-
                                     <span className="ml-4">Automatic Mode?</span>
                                 </div>
 
                                 <div className="my-4">
-                                    <input type="checkbox" value="light" className="toggle toggle-primary" checked={showResults} onChange={updateResults} />
-
+                                    <input type="checkbox" value="light" className="toggle toggle-primary" checked={!showResults} onChange={() => updateResults(!showResults)} />
                                     <span className="ml-4">Show Results?</span>
                                 </div>
 
