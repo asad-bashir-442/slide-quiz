@@ -142,7 +142,7 @@ export function ResultsPage() {
         <>
             <UserPopup target={targetPlayer} />
 
-            <motion.div {...fadeIn} className="p-8">
+            <motion.div {...fadeIn} className="p-8 max-[400px]:px-1 max-[400px]:py-8 ">
                 <div className="bg-base-100 rounded-2xl p-4 max-w-400 m-auto">
                     <h1 className="text-3xl text-center capitalize pt-6 font-bold mb-2">{quizName}</h1>
 
@@ -150,22 +150,22 @@ export function ResultsPage() {
                         <h2 className="text-lg font-bold opacity-60">Overall Results</h2>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
-                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg">
+                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg max-[400px]:px-4">
                                 <p className="font-bold opacity-60">Total Questions</p>
                                 <p className="text-4xl">{questions?.length}</p>
                             </article>
 
-                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg">
+                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg max-[400px]:px-4">
                                 <p className="font-bold opacity-60">Total Responses</p>
                                 <p className="text-4xl">{totalAnswers}</p>
                             </article>
 
-                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg">
+                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg max-[400px]:px-4">
                                 <p className="font-bold opacity-60">Total Players</p>
                                 <p className="text-4xl">{totalPlayers}</p>
                             </article>
 
-                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg">
+                            <article className="px-20 py-5 text-center bg-base-300 rounded-lg max-[400px]:w-full max-[400px]:px-2">
                                 <p className="font-bold opacity-60">Correct</p>
                                 <p className="text-4xl">{formatPercent(totalPoints / (maxTotalPoints * totalPlayers))}%</p>
                             </article>

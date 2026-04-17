@@ -33,6 +33,7 @@ export function DashboardPage() {
                             <button className={`tab [--tab-bg:theme(colors.primary)] ${!tabs ? "tab-active" : ""}`} onClick={() => setTabs(false)}>
                                 My Quizzes
                             </button>
+
                             <button className={`tab [--tab-bg:theme(colors.primary)] ${tabs ? "tab-active" : ""}`} onClick={() => setTabs(true)}>
                                 Quiz Results
                             </button>
