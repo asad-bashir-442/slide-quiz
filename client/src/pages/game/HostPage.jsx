@@ -6,7 +6,7 @@ import { ManualState } from "../../components/game/host/states/ManualState";
 import { AutomaticState } from "../../components/game/host/states/AutomaticState";
 import { Loading } from "../../components/utility/Loading";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
@@ -28,13 +28,16 @@ export function HostPage() {
     const [game, setGame] = useState("");
 
     const [allQuestions, setAllQuestions] = useState([]);
-    const [showResults, setShowResults] = useState(true);
+    const [showResults, setShowResults] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState({
         id: "0123",
         description: "Loading question...",
         shortAnswer: 1,
         points: 1,
     });
+
+    const showResultsRef = useRef(showResults);
+    const gameRef = useRef(game);
 
     const getQuestionIndex = (id) => {
         for (let i = 0; i < allQuestions.length; i++) {
@@ -158,8 +161,8 @@ export function HostPage() {
         socket.disconnect(true);
 
         setTimeout(() => {
-            if (showResults) {
-                navigate(`/results/${game.results}`);
+            if (showResultsRef.current) {
+                navigate(`/results/${gameRef.current.results}`);
                 return;
             }
 
@@ -176,6 +179,18 @@ export function HostPage() {
 
         return true;
     };
+
+    const updateResults = (value) => {
+        setShowResults(value);
+    };
+
+    useEffect(() => {
+        showResultsRef.current = showResults;
+    }, [showResults]);
+
+    useEffect(() => {
+        gameRef.current = game;
+    }, [game]);
 
     useEffect(() => {
         document.title = "SlideQuiz | Host";
@@ -234,7 +249,11 @@ export function HostPage() {
             socket.disconnect();
         };
 
-        const onHostCreated = (msg) => setGame(msg);
+        const onHostCreated = (msg) => {
+            setGame(msg);
+            gameRef.current = msg;
+        };
+
         const onHostPlayers = (msg) => addPlayer(msg);
         const onHostQuestions = (msg) => setAllQuestions(msg.questions);
         const onHostResponse = (msg) => addAnswer(msg);
@@ -294,7 +313,7 @@ export function HostPage() {
                 showResults={showResults}
                 automatic={automatic}
                 updateMode={updateMode}
-                updateResults={setShowResults}
+                updateResults={updateResults}
                 kick={kick}
                 start={start}
             />

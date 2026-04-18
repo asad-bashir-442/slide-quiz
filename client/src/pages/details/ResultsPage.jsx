@@ -51,6 +51,8 @@ export function ResultsPage() {
 
                 document.title = `SlideQuiz | ${truncateText(name, 25)} Results`;
 
+                if (!questions) return;
+
                 questions.forEach((question) => {
                     if (!question.shortAnswer) {
                         maxPoints += question.points;

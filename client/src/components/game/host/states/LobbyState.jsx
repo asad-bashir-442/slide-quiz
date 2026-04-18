@@ -39,7 +39,7 @@ export function LobbyState({ quiz, game, players, softError, showResults, update
                                 </div>
 
                                 <div className="my-4">
-                                    <input type="checkbox" value="light" className="toggle toggle-primary" checked={!showResults} onChange={() => updateResults(!showResults)} />
+                                    <input type="checkbox" value="light" className="toggle toggle-primary" checked={showResults} onChange={() => updateResults(!showResults)} />
                                     <span className="ml-4">Show Results?</span>
                                 </div>
 
