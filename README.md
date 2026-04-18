@@ -20,8 +20,8 @@ SlideQuiz is a web application that simplifies creating and hosting live quizzes
 - Quiz creation/management
 - Live quiz sessions with unique session codes for participants
 - Real-time participant answer submission
-- Manual (presentation) mode: host controls when each question appears
-- Automatic mode: questions advance based on user
+- Manual Mode: Host controls when each question appears
+- Automatic Mode: Questions advance as the user answers a question
 - Export quizzes and results to `.csv`
 
 ## Project Structure
@@ -50,7 +50,6 @@ See [infrastructure](infrastructure/README.md).
 
 ```sh
 cd infrastructure
-
 make dev-up
 
 # Alternative without GNU Make

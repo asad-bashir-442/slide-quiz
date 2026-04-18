@@ -171,18 +171,16 @@ export function AboutPage() {
                     </div>
 
                     <div className="aspect-video w-full max-w-4xl max-h-[250px] my-8 mx-auto max-[900px]:mt-10">
-                        {/* TODO: Replace with iOS video */}
                         <iframe
                             className={`w-[450px] h-[250px] max-sm:w-full rounded-xl shadow-lg m-auto border border-transparent ${!tab && "hidden"}`}
-                            src="https://www.youtube.com/embed/rRP1v0p7pHM"
+                            src="https://www.youtube.com/embed/QciPmpvFQSk"
                             title="SlideQuiz iOS Install"
                             allowFullScreen
                         />
 
-                        {/* TODO: Replace with Android video */}
                         <iframe
                             className={`w-[450px] h-[250px] max-sm:w-full rounded-xl shadow-lg m-auto border border-transparent ${tab && "hidden"}`}
-                            src="https://www.youtube.com/embed/rRP1v0p7pHM"
+                            src="https://www.youtube.com/embed/fDqJZP00YXw"
                             title="SlideQuiz Android Install"
                             allowFullScreen
                         />
