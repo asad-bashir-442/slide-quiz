@@ -37,11 +37,11 @@ The source code for SlideQuiz is split into three parts:
 ## Showcase
 
 <p align="center">
-    <a href="https://www.youtube.com/watch?v=rRP1v0p7pHM">
+    <a href="https://www.youtube.com/watch?v=2cZ2lFAUXWQ">
         <img src="/infrastructure/assets/thumbnail.png" width="650" />
     </a>
     <br />
-    <a href="https://www.youtube.com/watch?v=rRP1v0p7pHM">Watch on YouTube</a>
+    <a href="https://www.youtube.com/watch?v=2cZ2lFAUXWQ">Watch on YouTube</a>
 </p>
 
 ## Hosting & Development
