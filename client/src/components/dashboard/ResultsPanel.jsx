@@ -1,9 +1,32 @@
+import { getAllResponses } from "../../api/responses.js";
+
 import { Loading } from "../utility/Loading.jsx";
 import { Error } from "../utility/Error.jsx";
 
 import { ResultDetailCard } from "./results/details/ResultDetailCard.jsx";
 
-export function ResultsPanel({ loading, error, responses, setResponses }) {
+import { useState, useEffect } from "react";
+
+export function ResultsPanel({ responses, setResponses }) {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchResults = async () => {
+            try {
+                const responses = await getAllResponses();
+                setResponses(responses?.data);
+            } catch (err) {
+                console.log("[Dashboard]", err);
+                setError("Fetching error! Try reloading the page?");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchResults();
+    }, []);
+
     if (loading)
         return (
             <div className="text-center">
@@ -37,7 +60,7 @@ export function ResultsPanel({ loading, error, responses, setResponses }) {
             </div>
 
             {responses.length === 0 && (
-                <div className="text-center text-primary">
+                <div className="text-center text-primary mb-10">
                     <Error message="No results found! Try hosting a game?" />
                 </div>
             )}

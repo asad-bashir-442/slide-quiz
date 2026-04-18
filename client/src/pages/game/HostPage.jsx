@@ -6,7 +6,7 @@ import { ManualState } from "../../components/game/host/states/ManualState";
 import { AutomaticState } from "../../components/game/host/states/AutomaticState";
 import { Loading } from "../../components/utility/Loading";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
@@ -36,9 +36,8 @@ export function HostPage() {
         points: 1,
     });
 
-    const updateResults = () => {
-        setShowResults(!showResults);
-    };
+    const showResultsRef = useRef(showResults);
+    const gameRef = useRef(game);
 
     const getQuestionIndex = (id) => {
         for (let i = 0; i < allQuestions.length; i++) {
@@ -146,7 +145,6 @@ export function HostPage() {
             if (removedPlayers.length > 0) {
                 setDisconnectedPlayers((prev) => {
                     const newDisconnected = removedPlayers.filter((removedPlayer) => !prev.some((p) => p.id === removedPlayer.id));
-
                     return [...prev, ...newDisconnected];
                 });
             }
@@ -156,15 +154,43 @@ export function HostPage() {
     };
 
     const end = () => {
-        if (showResults) {
-            socket.disconnect();
-            navigate(`/results/${game.results}`);
+        socket.emit("host:end", { code: game.code });
+    };
 
-            return;
+    const ended = () => {
+        socket.disconnect(true);
+
+        setTimeout(() => {
+            if (showResultsRef.current) {
+                navigate(`/results/${gameRef.current.results}`);
+                return;
+            }
+
+            navigate("/dashboard");
+        }, 50);
+    };
+
+    const validMCQ = (questions) => {
+        for (const q of questions) {
+            if (!q.shortAnswer && [undefined, 0].includes(q.answers?.length)) {
+                return false;
+            }
         }
 
-        navigate("/dashboard");
+        return true;
     };
+
+    const updateResults = (value) => {
+        setShowResults(value);
+    };
+
+    useEffect(() => {
+        showResultsRef.current = showResults;
+    }, [showResults]);
+
+    useEffect(() => {
+        gameRef.current = game;
+    }, [game]);
 
     useEffect(() => {
         document.title = "SlideQuiz | Host";
@@ -194,6 +220,11 @@ export function HostPage() {
                     return;
                 }
 
+                if (!validMCQ(details.data.questions)) {
+                    setSoftError("A multiple choice question has no answers!");
+                    return;
+                }
+
                 createGame(isAutomatic);
             } catch (err) {
                 console.error(err);
@@ -218,7 +249,11 @@ export function HostPage() {
             socket.disconnect();
         };
 
-        const onHostCreated = (msg) => setGame(msg);
+        const onHostCreated = (msg) => {
+            setGame(msg);
+            gameRef.current = msg;
+        };
+
         const onHostPlayers = (msg) => addPlayer(msg);
         const onHostQuestions = (msg) => setAllQuestions(msg.questions);
         const onHostResponse = (msg) => addAnswer(msg);
@@ -231,6 +266,7 @@ export function HostPage() {
         socket.on("host:players", onHostPlayers);
         socket.on("host:questions", onHostQuestions);
         socket.on("host:response", onHostResponse);
+        socket.on("host:ended", ended);
         socket.on("game:question", onGameQuestion);
 
         // Cleanup on unmount

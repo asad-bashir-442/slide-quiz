@@ -8,7 +8,7 @@ const idSchema = Joi.string().uuid().required();
 export const getAllResponses = async (req, res) => {
     try {
         const sessions = await getAllSessions(req.server.redis, req.user.id);
-        const sorted = sessions.sort((a, b) => a.createdAt - b.createdAt);
+        const sorted = sessions.sort((a, b) => b.createdAt - a.createdAt);
 
         // Don't return all questions
         for (const sesh of sorted) {
@@ -78,7 +78,7 @@ export const getResponse = async (req, res) => {
 
                 responses[question][answer.player.id] = {
                     username: answer.player.username,
-                    response: answer.response
+                    response: answer.response,
                 };
 
                 delete responses[question][id];

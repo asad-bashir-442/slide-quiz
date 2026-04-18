@@ -1,30 +1,25 @@
-# Server
+# SlideQuiz/Server <img src="../infrastructure/assets/logo-small.png" align="right" width="150" />
+
+![last-commit](https://img.shields.io/github/last-commit/asad-bashir-442/slide-quiz)
+![repo-size](https://img.shields.io/github/repo-size/asad-bashir-442/slide-quiz)
+
+The backend for SlideQuiz. Built with Fastify and Socket.IO.
 
 ## Development
 
-Install the dependencies and copy the `.env`.
+Install the dependencies and copy `.env.example` to `.env`.
 
 ```sh
-# Install dependencies
-cd server
-npm i # or pnpm
-
-# Copy config
-cp .env.example .env
+pnpm run dev # Run (development)
+pnpm run format # Format the codebase
 ```
 
-## Development Commands Cheat Sheet
-
-All commands can be found in the [package.json](package.json).
+## Production
 
 ```sh
-# Start the server (production)
-npm start
-
-# Start the server (development, live reload)
-npm run dev
-
-# Format the code
-npm run format
+pnpm start # Run (production)
 ```
 
+## License
+
+[MIT](LICENSE)

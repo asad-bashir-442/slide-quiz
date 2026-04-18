@@ -9,16 +9,16 @@ export function EditQuizButton({ id, name, descrption, isAutomatic, setQuizzes }
     const [quizDescription, setQuizDescription] = useState("");
     const [isChecked, setIsChecked] = useState(isAutomatic);
 
-    function handleClick(e) {
+    const handleClick = (e) => {
         e.stopPropagation();
 
         setQuizName(name);
         setQuizDescription(descrption);
 
         document.getElementById(`edit_quiz_modal/${id}`).showModal();
-    }
+    };
 
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const quizTypeInput = document.getElementById(`edit_quiz_type/${id}`);
@@ -39,7 +39,7 @@ export function EditQuizButton({ id, name, descrption, isAutomatic, setQuizzes }
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
     return (
         <>

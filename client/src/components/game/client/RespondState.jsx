@@ -6,7 +6,7 @@ export function RespondState({ currentQuestion, responses, code, respond }) {
 
     const updateValid = (e) => {
         setResponse(e.target.value);
-        setValid(e.target.value.trim().length > 3 && e.target.value.trim().length < 999);
+        setValid(e.target.value.trim().length > 0 && e.target.value.trim().length < 999);
     };
 
     const answer = () => {
@@ -20,7 +20,8 @@ export function RespondState({ currentQuestion, responses, code, respond }) {
         return (
             <div className="w-full p-6 rounded-xl bg-base-200 my-4 max-w-[1000px] mx-auto">
                 <div className="flex justify-between">
-                    <h4 className="text-xs">Points: {currentQuestion.points}</h4>
+                    {!currentQuestion.shortAnswer && <h4 className="text-xs">Points: {currentQuestion.points}</h4>}
+
                     <h4 className="text-xs">Code: {code}</h4>
                 </div>
                 <h2 className="text-2xl font-bold my-4 break-words">{currentQuestion.description}</h2>
@@ -35,7 +36,8 @@ export function RespondState({ currentQuestion, responses, code, respond }) {
         return (
             <div className="w-full p-6 rounded-xl bg-base-200 my-4 max-w-[1000px] mx-auto">
                 <div className="flex justify-between">
-                    <h4 className="text-xs">Points: {currentQuestion.points}</h4>
+                    {!currentQuestion.shortAnswer && <h4 className="text-xs">Points: {currentQuestion.points}</h4>}
+
                     <h4 className="text-xs">Code: {code}</h4>
                 </div>
                 <h2 className="text-2xl font-bold my-4 break-words">{currentQuestion.description}</h2>
@@ -49,7 +51,8 @@ export function RespondState({ currentQuestion, responses, code, respond }) {
     return (
         <div className="w-full p-6 rounded-xl bg-base-200 my-4 max-w-[1000px] mx-auto">
             <div className="flex justify-between">
-                <h4 className="text-xs">Points: {currentQuestion.points}</h4>
+                {!currentQuestion.shortAnswer && <h4 className="text-xs">Points: {currentQuestion.points}</h4>}
+
                 <h4 className="text-xs">Code: {code}</h4>
             </div>
 

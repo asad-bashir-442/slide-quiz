@@ -7,7 +7,7 @@ import { toast } from "sonner";
 export function DeleteQuestionButton({ question, setQuestions }) {
     const { id } = useParams();
 
-    async function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
@@ -21,7 +21,7 @@ export function DeleteQuestionButton({ question, setQuestions }) {
         } catch (error) {
             toast.error(error.message);
         }
-    }
+    };
 
     return (
         <>
@@ -52,7 +52,6 @@ export function DeleteQuestionButton({ question, setQuestions }) {
                                     Cancel
                                 </button>
 
-                                {/* TODO: Maybe an icon here */}
                                 <button type="submit" className="btn btn-error max-[900px]:w-full">
                                     Yes I know what I'm doing
                                 </button>
