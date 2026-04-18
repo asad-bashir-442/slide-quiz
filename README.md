@@ -31,7 +31,7 @@ The source code for SlideQuiz is split into three parts:
 ```
 ├── client/         - The frontend of SlideQuiz.
 ├── server/         - The backend of SlideQuiz.
-└── infrastructure/ - The infrastructure  used to host/deploy SlideQuiz.
+└── infrastructure/ - The infrastructure used to host/deploy SlideQuiz.
 ```
 
 ## Showcase
@@ -59,7 +59,7 @@ docker compose -f docker-compose.dev.yml up -d
 ## Authors
 
 - Micah Seip - 0864556
-- Asad Bashir – 0848761
+- Asad Bashir - 0848761
 - Kirsten Arnold - 0863060
 
 ## License
