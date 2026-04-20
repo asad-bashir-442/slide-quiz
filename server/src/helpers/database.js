@@ -1,0 +1,68 @@
+import consola from "consola";
+
+export const queryQuestions = async (database, userID, quizID) => {
+    const connection = await database.getConnection();
+
+    try {
+        const data = {
+            id: -1,
+            name: "",
+            description: "",
+            automatic: false,
+            questions: [],
+        };
+
+        // Fetch details
+        const [details] = await connection.query("SELECT ID, Name, Description, AutomaticDefault FROM Quizzes WHERE ID = ? AND UserID = ? LIMIT 1", [quizID, userID]);
+
+        if (details.length == 0) {
+            connection.release();
+            return 404;
+        }
+
+        data.id = details[0].ID;
+        data.name = details[0].Name;
+        data.description = details[0].Description;
+        data.automatic = details[0].AutomaticDefault;
+
+        // Fetch questions
+        const [questions] = await connection.query("SELECT ID, Description, ShortAnswer, Points, CreatedAt, UpdatedAt FROM Questions WHERE QuizID = ?", [quizID]);
+
+        for (const question of questions) {
+            const q = {
+                id: question.ID,
+                description: question.Description,
+                shortAnswer: question.ShortAnswer,
+                points: question.Points,
+                createdAt: question.CreatedAt,
+                updatedAt: question.UpdatedAt,
+            };
+
+            if (!q.shortAnswer) {
+                const [answers] = await connection.query("SELECT ID, Description, Correct, CreatedAt, UpdatedAt FROM Answers WHERE QuestionID = ?", [q.id]);
+
+                q.answers = [];
+
+                for (const answer of answers) {
+                    q.answers.push({
+                        id: answer.ID,
+                        description: answer.Description,
+                        correct: answer.Correct,
+                        createdAt: answer.CreatedAt,
+                        updatedAt: answer.UpdatedAt,
+                    });
+                }
+            }
+
+            data.questions.push(q);
+        }
+
+        connection.release();
+        return data;
+    } catch (err) {
+        consola.error(`[database] Cannot fetch all details - ${err}`);
+        connection.release();
+
+        return -1;
+    }
+};
