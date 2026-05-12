@@ -58,9 +58,9 @@ docker compose -f docker-compose.dev.yml up -d
 
 ## Authors
 
-- Micah Seip - 0864556
-- Asad Bashir - 0848761
-- Kirsten Arnold - 0863060
+- Micah Seip
+- Asad Bashir
+- Kirsten Arnold
 
 ## License
 
